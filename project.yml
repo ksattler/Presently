@@ -42,6 +42,7 @@ targets:
       path: Presently/Info.plist
       properties:
         CFBundleDisplayName: Presently
+        NSHumanReadableCopyright: "© 2026 Kai-Uwe Sattler"
         CFBundleLocalizations:
           - en
           - de

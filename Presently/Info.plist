@@ -44,6 +44,8 @@
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2026 Kai-Uwe Sattler</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

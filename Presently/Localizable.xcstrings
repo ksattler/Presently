@@ -71,6 +71,16 @@
         }
       }
     },
+    "About Presently": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über Presently"
+          }
+        }
+      }
+    },
     "After the marked end of the talk": {
       "localizations": {
         "de": {
@@ -191,6 +201,16 @@
         }
       }
     },
+    "Black / white screen": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schwarz / Weiß"
+          }
+        }
+      }
+    },
     "Blue": {
       "localizations": {
         "de": {
@@ -217,6 +237,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zeichnungen dieser Folie löschen (X)"
+          }
+        }
+      }
+    },
+    "Close, then end": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließen, dann Ende"
           }
         }
       }
@@ -381,12 +411,32 @@
         }
       }
     },
+    "First / last page": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erste / letzte Seite"
+          }
+        }
+      }
+    },
     "Freeze": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Einfrieren"
+          }
+        }
+      }
+    },
+    "Freeze audience view": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikum einfrieren"
           }
         }
       }
@@ -417,6 +467,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gehe zu %@ ⏎"
+          }
+        }
+      }
+    },
+    "Go to page": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zu Seite springen"
           }
         }
       }
@@ -461,12 +521,32 @@
         }
       }
     },
+    "Home / End": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pos1 / Ende"
+          }
+        }
+      }
+    },
     "In the PDF: %@": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Im PDF: %@"
+          }
+        }
+      }
+    },
+    "Keyboard Shortcuts": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tastenkürzel"
           }
         }
       }
@@ -482,6 +562,16 @@
       }
     },
     "Laser Pointer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laserpointer"
+          }
+        }
+      }
+    },
+    "Laser pointer": {
       "localizations": {
         "de": {
           "stringUnit": {
@@ -527,6 +617,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nächste Folie"
+          }
+        }
+      }
+    },
+    "Next page": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste Seite"
           }
         }
       }
@@ -631,6 +731,16 @@
         }
       }
     },
+    "Number ⏎": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nummer ⏎"
+          }
+        }
+      }
+    },
     "OK": {
       "localizations": {
         "de": {
@@ -647,6 +757,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aus"
+          }
+        }
+      }
+    },
+    "Overview": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersicht"
           }
         }
       }
@@ -687,6 +807,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stift"
+          }
+        }
+      }
+    },
+    "Pen / highlighter / eraser": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stift / Marker / Radierer"
           }
         }
       }
@@ -737,6 +867,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Referentenansicht im Vollbild"
+          }
+        }
+      }
+    },
+    "Previous page": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorherige Seite"
           }
         }
       }
@@ -821,6 +961,16 @@
         }
       }
     },
+    "Skip overlays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overlays überspringen"
+          }
+        }
+      }
+    },
     "Slide %@": {
       "localizations": {
         "de": {
@@ -852,6 +1002,26 @@
       }
     },
     "Start Presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentation starten"
+          }
+        }
+      }
+    },
+    "Start or pause / reset timer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timer an/aus / zurücksetzen"
+          }
+        }
+      }
+    },
+    "Start presentation": {
       "localizations": {
         "de": {
           "stringUnit": {
@@ -921,6 +1091,26 @@
         }
       }
     },
+    "Swap displays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirme tauschen"
+          }
+        }
+      }
+    },
+    "Tab / O": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tab / O"
+          }
+        }
+      }
+    },
     "Talk Ends Here (Backup After)": {
       "localizations": {
         "de": {
@@ -967,6 +1157,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Timer startet beim ersten Blättern"
+          }
+        }
+      }
+    },
+    "Undo / clear drawing": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strich zurück / alle löschen"
           }
         }
       }
@@ -1081,12 +1281,42 @@
         }
       }
     },
+    "← ↑ Page Up ⌫": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "← ↑ Bild↑ ⌫"
+          }
+        }
+      }
+    },
     "← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende"
+          }
+        }
+      }
+    },
+    "→ ↓ Page Down Space": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "→ ↓ Bild↓ Leertaste"
+          }
+        }
+      }
+    },
+    "⇧ + arrow": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⇧ + Pfeil"
           }
         }
       }

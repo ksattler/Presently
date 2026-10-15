@@ -41,6 +41,9 @@ struct AppCommands: Commands {
     @FocusedObject private var deck: SlideDeck?
 
     var body: some Commands {
+        CommandGroup(replacing: .appInfo) {
+            Button("About Presently") { AboutPanel.show() }
+        }
         CommandMenu("Presentation") {
             if actions?.isPresenting == true {
                 Button("End Presentation") { actions?.stop() }

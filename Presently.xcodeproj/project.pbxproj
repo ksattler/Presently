@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		091BF58454B5668A166424CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80AE78C718DD0D750FF53023 /* Assets.xcassets */; };
+		0AD23E99F6E6B6C57EBFD554 /* AboutPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124EBB2AB7E774987EF96F9A /* AboutPanel.swift */; };
 		0E1A66F7E72714BCCDE8B4AE /* DrawingLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CB4D80A000CE3628E88FD5 /* DrawingLayer.swift */; };
 		0E7B74C78E480153057758BA /* PDFPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C81D256DD67DF9D175D3EE /* PDFPageView.swift */; };
 		1236756B8F79CC55B44466E2 /* ThumbnailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C45AB72192705FBED793345 /* ThumbnailRenderer.swift */; };
@@ -59,6 +60,7 @@
 		02D26F90A15C92F28DD85F52 /* PresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterView.swift; sourceTree = "<group>"; };
 		05C4B4D221A78BD7C8B28A8D /* PDFFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFFixture.swift; sourceTree = "<group>"; };
 		1075A858B52885C4DAC0CEC7 /* AudienceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceView.swift; sourceTree = "<group>"; };
+		124EBB2AB7E774987EF96F9A /* AboutPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPanel.swift; sourceTree = "<group>"; };
 		2190FCD98E632AB7E887D1E4 /* DrawingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingTests.swift; sourceTree = "<group>"; };
 		22A41BED5673410CCD51BD5E /* PresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationTests.swift; sourceTree = "<group>"; };
 		254B8E3CA106AFC93770A894 /* NotesLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesLayout.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 		431518B881E2A760E9F6EB59 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				124EBB2AB7E774987EF96F9A /* AboutPanel.swift */,
 				64319EA167BD70178267DA5C /* PresentlyApp.swift */,
 			);
 			path = App;
@@ -294,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AD23E99F6E6B6C57EBFD554 /* AboutPanel.swift in Sources */,
 				7AD2BE2F132C59200BCC5569 /* AudienceView.swift in Sources */,
 				CCBBFEDAEBBED0E5C1B181A5 /* ContentView.swift in Sources */,
 				0E1A66F7E72714BCCDE8B4AE /* DrawingLayer.swift in Sources */,
