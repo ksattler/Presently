@@ -99,6 +99,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
         }
         madePresenterFullScreen = false
         session?.end()
+        session?.deck.saveNow()   // notes edited during the talk
         presenterWindow?.makeKeyAndOrderFront(nil)
         if Self.active === self { Self.active = nil }
     }
@@ -130,8 +131,9 @@ final class PresentationController: NSObject, NSWindowDelegate {
                 session.handle(.previous)
                 return nil
             case .keyDown where inAudience || inPresenter:
-                // Typing in a text field of the presenter window (timer duration) stays there.
-                if event.window?.firstResponder is NSText { return event }
+                // Typing in the presenter window (notes, timer duration) stays there — except the
+                // clicker's page keys, so the talk can go on while a note is being edited.
+                if event.window?.firstResponder is NSText, !Self.isClickerPageKey(event.keyCode) { return event }
                 guard let action = PresentKeyAction(keyCode: event.keyCode, characters: event.charactersIgnoringModifiers,
                                                     modifiers: event.modifierFlags)
                 else { return event }
@@ -142,6 +144,12 @@ final class PresentationController: NSObject, NSWindowDelegate {
                 return event
             }
         }
+    }
+
+    /// Page Up / Page Down: what clickers send for back / next. Plain keyboards rarely use them
+    /// for text editing, so they keep turning pages while a text field has focus.
+    nonisolated static func isClickerPageKey(_ keyCode: UInt16) -> Bool {
+        keyCode == PresentKeyAction.KeyCode.pageUp || keyCode == PresentKeyAction.KeyCode.pageDown
     }
 
     private func removeMonitor() {

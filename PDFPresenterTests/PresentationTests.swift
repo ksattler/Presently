@@ -37,6 +37,13 @@ final class PresentKeyActionTests: XCTestCase {
         XCTAssertNil(action(0, "a"))
     }
 
+    func testClickerPageKeysWorkWhileEditing() {
+        XCTAssertTrue(PresentationController.isClickerPageKey(121))   // Page Down
+        XCTAssertTrue(PresentationController.isClickerPageKey(116))   // Page Up
+        XCTAssertFalse(PresentationController.isClickerPageKey(124), "arrows move the text cursor")
+        XCTAssertFalse(PresentationController.isClickerPageKey(53), "Escape ends editing")
+    }
+
     func testMenuShortcutsPassThrough() {
         XCTAssertNil(action(12, "q", .command))
         XCTAssertNil(action(124, nil, .command))

@@ -8,6 +8,7 @@ struct PresenterView: View {
     let stop: () -> Void
     @AppStorage("presenterNotesFontSize") private var notesFontSize: Double = 22
     @AppStorage("presenterUpcomingCount") private var upcomingCount = 4
+    @State private var isEditingNotes = false
 
     private var index: Int { session.currentIndex }
     private var nextIndex: Int? { index + 1 < deck.pageCount ? index + 1 : nil }
@@ -107,11 +108,18 @@ struct PresenterView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 caption("Notizen")
+                if isEditingNotes, deck.overlayGroup(of: index).count > 1 {
+                    Text("alle Overlays").font(.caption).foregroundStyle(.secondary)
+                }
                 Spacer()
                 Button { notesFontSize = max(12, notesFontSize - 2) } label: { Image(systemName: "textformat.size.smaller") }
                     .help("Kleinere Schrift")
                 Button { notesFontSize = min(72, notesFontSize + 2) } label: { Image(systemName: "textformat.size.larger") }
                     .help("Größere Schrift")
+                Button { isEditingNotes.toggle() } label: {
+                    Image(systemName: isEditingNotes ? "checkmark.circle.fill" : "pencil")
+                }
+                .help(isEditingNotes ? "Bearbeiten beenden (Esc)" : "Notizen bearbeiten (Doppelklick)")
             }
             .buttonStyle(.borderless)
 
@@ -119,20 +127,47 @@ struct PresenterView: View {
                 PDFPageView(page: deck.page(index), region: region, background: .black)
                     .frame(maxHeight: .infinity)
             }
-            let text = deck.note(for: index)
-            if !text.isEmpty || deck.notesLayout.notesRegion == nil {
-                ScrollView {
-                    Group {
-                        if text.isEmpty {
-                            Text("Keine Notizen für diese Folie.").foregroundStyle(.tertiary)
-                        } else {
-                            NotesText(text: text)
+            if isEditingNotes {
+                notesEditor
+            } else {
+                let text = deck.note(for: index)
+                if !text.isEmpty || deck.notesLayout.notesRegion == nil {
+                    ScrollView {
+                        Group {
+                            if text.isEmpty {
+                                Text("Keine Notizen für diese Folie.").foregroundStyle(.tertiary)
+                            } else {
+                                NotesText(text: text)
+                            }
                         }
+                        .font(.system(size: notesFontSize))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .font(.system(size: notesFontSize))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .textSelection(.enabled)
+                    .contentShape(Rectangle())
+                    .onTapGesture(count: 2) { isEditingNotes = true }
                 }
+            }
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    /// Edits the pdfpc note of the current page. Keys go into the text; the clicker's
+    /// Page Up / Page Down still turn pages (see `PresentationController`), Escape ends editing.
+    private var notesEditor: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            NotesTextView(text: Binding(get: { deck.editableNote(for: index) },
+                                        set: { deck.setNote($0, for: index) }),
+                          fontSize: notesFontSize, textColor: .white, focusOnAppear: true,
+                          onEscape: { isEditingNotes = false })
+                .padding(4)
+                .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 6))
+                .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.accentColor.opacity(0.6)))
+            if let embedded = deck.embeddedNotes[index], !embedded.isEmpty {
+                Text("Im PDF: \(embedded)")
+                    .font(.callout).foregroundStyle(.secondary).lineLimit(3)
+            }
+            if deck.fileURL == nil {
+                Text("Nicht speicherbar (keine Datei)").font(.caption).foregroundStyle(.secondary)
             }
         }
         .frame(maxHeight: .infinity)
@@ -168,7 +203,7 @@ struct PresenterView: View {
         HStack(spacing: 18) {
             Button { session.handle(.previous) } label: { Label("Zurück", systemImage: "chevron.left") }
                 .disabled(index == 0)
-            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · Tab Übersicht · P Timer · Esc Ende")
+            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)

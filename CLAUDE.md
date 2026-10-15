@@ -33,7 +33,7 @@ PageRenderer          vector drawing of a PageRegion (PDFPageView) and cached th
 
 ## Conventions
 
-- **Keys:** all presentation keys go through `PresentKeyAction` → `PresentationSession.handle`. ⌘/⌥/⌃ combinations are never handled (menu shortcuts keep working). `handle(.exit)` returns false when there is nothing left to close — only then the controller ends the presentation. Keys are ignored while an `NSText` is first responder.
+- **Keys:** all presentation keys go through `PresentKeyAction` → `PresentationSession.handle`. ⌘/⌥/⌃ combinations are never handled (menu shortcuts keep working). `handle(.exit)` returns false when there is nothing left to close — only then the controller ends the presentation. Keys are ignored while an `NSText` is first responder (notes editor in the presenter view), except Page Up / Page Down (`isClickerPageKey`) so a clicker keeps working.
 - **Notes:** the editable source is the pdfpc sidecar (`talk.pdf` → `talk.pdfpc`, format 2). `PdfpcFile` keeps every key it doesn't interpret — don't drop unknown keys. Text annotations in the PDF are read-only notes and are hidden (`shouldDisplay = false`) so the audience doesn't see their icons. Beamer overlays (consecutive pages with equal labels) share one note via `noteOwner(for:)`.
 - **No document undo:** text input must not use the window's/document's `UndoManager` (marks the read-only PDF as edited, autosave fails). Use `NotesTextView` (own undo manager), not `TextEditor`.
 - **Beamer notes on page:** `NotesLayout` picks the slide half (`slideRegion`) for the audience and the notes half for the presenter. Regions are in y-up page display space (rotation applied).
