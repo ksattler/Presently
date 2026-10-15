@@ -9,6 +9,8 @@ enum PDFFixture {
         var label: String? = nil
         var note: String? = nil
         var links: [Link] = []
+        /// Contents of a `/Trans` dictionary, e.g. "/S /Wipe /D 0.5".
+        var transition: String? = nil
     }
 
     /// Link annotation; `rect` in page space (unrotated, origin bottom-left).
@@ -45,7 +47,8 @@ enum PDFFixture {
                 annots.append(add("<< /Type /Annot /Subtype /Link /Rect [\(Int(r.minX)) \(Int(r.minY)) \(Int(r.maxX)) \(Int(r.maxY))] /Border [0 0 0] \(target) >>"))
             }
             let annotsEntry = annots.isEmpty ? "" : " /Annots [\(annots.map { "\($0) 0 R" }.joined(separator: " "))]"
-            objects[kids[i] - 1] = "<< /Type /Page /Parent \(pagesObj) 0 R /MediaBox [0 0 \(w) \(h)] /Rotate \(rotation) /Contents \(stream) 0 R\(annotsEntry) >>"
+            let trans = page.transition.map { " /Trans << \($0) >>" } ?? ""
+            objects[kids[i] - 1] = "<< /Type /Page /Parent \(pagesObj) 0 R /MediaBox [0 0 \(w) \(h)] /Rotate \(rotation) /Contents \(stream) 0 R\(annotsEntry)\(trans) >>"
         }
         objects[pagesObj - 1] = "<< /Type /Pages /Kids [\(kids.map { "\($0) 0 R" }.joined(separator: " "))] /Count \(kids.count) >>"
         var labels = ""

@@ -38,6 +38,8 @@ final class SlideDeck: ObservableObject {
     @Published private(set) var pageCount: Int
     @Published private(set) var labels: [String]
     @Published private(set) var embeddedNotes: [Int: String]
+    /// Page index → transition when moving onto that page (`/Trans`).
+    @Published private(set) var transitions: [Int: PageTransition]
     /// Counts reloads; views that cache per page (thumbnails) key on it.
     @Published private(set) var revision = 0
 
@@ -65,6 +67,7 @@ final class SlideDeck: ObservableObject {
         pageCount = pdf.pageCount
         labels = Self.labels(of: pdf)
         embeddedNotes = Self.extractAnnotationNotes(from: pdf)
+        transitions = Self.transitions(of: pdf)
 
         var sidecar = PdfpcFile()
         if let fileURL, let data = try? Data(contentsOf: PdfpcFile.url(forPDF: fileURL)) {
@@ -97,8 +100,22 @@ final class SlideDeck: ObservableObject {
         pageCount = newPDF.pageCount
         labels = Self.labels(of: newPDF)
         embeddedNotes = Self.extractAnnotationNotes(from: newPDF)
+        transitions = Self.transitions(of: newPDF)
         if let e = endPage, e >= pageCount { endPage = nil }
         revision += 1
+    }
+
+    private static func transitions(of pdf: PDFDocument) -> [Int: PageTransition] {
+        var result: [Int: PageTransition] = [:]
+        for i in 0..<pdf.pageCount {
+            if let page = pdf.page(at: i), let t = PageTransition.parse(page), t.style != .replace { result[i] = t }
+        }
+        return result
+    }
+
+    /// Transition to play when the audience view goes from page `old` to `new`.
+    func transition(from old: Int, to new: Int) -> PageTransition? {
+        PageTransition.plays(from: old, to: new) ? transitions[new] : nil
     }
 
     private static func labels(of pdf: PDFDocument) -> [String] {

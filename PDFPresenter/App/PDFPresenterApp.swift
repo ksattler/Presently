@@ -48,6 +48,8 @@ struct AppCommands: Commands {
                     .disabled(!(actions?.canPresent ?? false))
             }
             Divider()
+            TransitionsToggle()
+            Divider()
             PresentationScreenMenu()
             Divider()
             if let deck {
@@ -57,5 +59,13 @@ struct AppCommands: Commands {
                 }
             }
         }
+    }
+}
+
+private struct TransitionsToggle: View {
+    @AppStorage(PageTransition.enabledKey) private var enabled = true
+
+    var body: some View {
+        Toggle("Übergänge aus dem PDF abspielen", isOn: $enabled)
     }
 }

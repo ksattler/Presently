@@ -4,6 +4,7 @@ import SwiftUI
 struct AudienceView: View {
     @ObservedObject var session: PresentationSession
     @ObservedObject private var deck: SlideDeck
+    @AppStorage(PageTransition.enabledKey) private var transitionsEnabled = true
 
     init(session: PresentationSession) {
         self.session = session
@@ -12,7 +13,9 @@ struct AudienceView: View {
 
     var body: some View {
         ZStack {
-            PDFPageView(page: deck.page(session.audienceIndex), region: deck.notesLayout.slideRegion)
+            PDFPageView(page: deck.page(session.audienceIndex), region: deck.notesLayout.slideRegion,
+                        pageIndex: session.audienceIndex,
+                        transition: transitionsEnabled ? { [deck] in deck.transition(from: $0, to: $1) } : nil)
             LaserPointerLayer(pointer: session.pointer, page: deck.page(session.audienceIndex),
                               region: deck.notesLayout.slideRegion,
                               showsDot: session.audienceIndex == session.currentIndex)

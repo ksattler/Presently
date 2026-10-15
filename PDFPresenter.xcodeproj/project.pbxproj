@@ -26,6 +26,7 @@
 		88ACA5513EF705AE921235C1 /* PresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2538EB610C2BBB82BB2DC6EB /* PresenterView.swift */; };
 		8BE543D555F0F2E56091E058 /* LinkAndSwapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06233D30F0BE26BE9EC99C1 /* LinkAndSwapTests.swift */; };
 		8FA84AA3A00C0E0CBAC8F6D8 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EF6619D40C57B34305607E /* PresentationController.swift */; };
+		9D93A7ECBE1CFC05D189EAAF /* PageTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F4FC1FEADE048C42C23891 /* PageTransition.swift */; };
 		9ED5179C908D090805910399 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2203002581754FF90841011 /* ContentView.swift */; };
 		ACADD537AEA78AE8D56EF7D2 /* DeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15BCC86926F73EEBF750E87 /* DeckTests.swift */; };
 		B4F3159972A2637EC51D39A2 /* NotesTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657ABBD152554C20A532478 /* NotesTextView.swift */; };
@@ -34,6 +35,8 @@
 		CBECE0B7064AFA13B3A95CCB /* PresentationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9620B1B6A835EA6E8402C9C /* PresentationSession.swift */; };
 		CFC8B1D1ABD70D03A8C13586 /* NotesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5B13D31BD6BB03EED57517 /* NotesLayout.swift */; };
 		D0821AE606B998452D809698 /* PageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06102F11AC5B05D1BB6C6B6D /* PageRenderer.swift */; };
+		D114312CE895B5DA6149D1B3 /* TransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32208C1FBDFD3F3B675922A0 /* TransitionTests.swift */; };
+		E6345D5F96E262897D8BE9D8 /* PageTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455E5A84FA954F0D3B152070 /* PageTransitionAnimator.swift */; };
 		EA47884276AF91ECC29297C8 /* AudienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05C3099CE8C1707C20B2F4 /* AudienceView.swift */; };
 		F7A2ADD806469ED47A19CD83 /* DrawingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EADA2B9451493C618EB09B5 /* DrawingTests.swift */; };
 		F9447A87340F85A6D0CBE88A /* FreezeReloadPointerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAD3412E13781A51F79C3F3 /* FreezeReloadPointerTests.swift */; };
@@ -54,11 +57,14 @@
 		06102F11AC5B05D1BB6C6B6D /* PageRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRenderer.swift; sourceTree = "<group>"; };
 		0A05C3099CE8C1707C20B2F4 /* AudienceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceView.swift; sourceTree = "<group>"; };
 		0EADA2B9451493C618EB09B5 /* DrawingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingTests.swift; sourceTree = "<group>"; };
+		20F4FC1FEADE048C42C23891 /* PageTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTransition.swift; sourceTree = "<group>"; };
 		24EF6619D40C57B34305607E /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
 		2538EB610C2BBB82BB2DC6EB /* PresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterView.swift; sourceTree = "<group>"; };
 		2815022FDA32BA690C0979E2 /* PDFLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFLinks.swift; sourceTree = "<group>"; };
 		2F9FE19F546D9E6D0A737773 /* PDFFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFFixture.swift; sourceTree = "<group>"; };
+		32208C1FBDFD3F3B675922A0 /* TransitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionTests.swift; sourceTree = "<group>"; };
 		342ADCA406F1620C0F7ED079 /* LaserPointerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserPointerView.swift; sourceTree = "<group>"; };
+		455E5A84FA954F0D3B152070 /* PageTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTransitionAnimator.swift; sourceTree = "<group>"; };
 		55806B8F722E6B2E7AD71A83 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		6657ABBD152554C20A532478 /* NotesTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextView.swift; sourceTree = "<group>"; };
 		6B3D8D1050A5BCAB32110827 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -97,6 +103,7 @@
 				753B44BA5AFAC5B30668D836 /* DrawingLayer.swift */,
 				342ADCA406F1620C0F7ED079 /* LaserPointerView.swift */,
 				6657ABBD152554C20A532478 /* NotesTextView.swift */,
+				455E5A84FA954F0D3B152070 /* PageTransitionAnimator.swift */,
 				FD3C3679F907848978E6AD8B /* PDFPageView.swift */,
 				AB3B242AD1150BBC6242AA45 /* PresenterLayout.swift */,
 				2538EB610C2BBB82BB2DC6EB /* PresenterView.swift */,
@@ -154,6 +161,7 @@
 				55806B8F722E6B2E7AD71A83 /* FileWatcher.swift */,
 				DB5B13D31BD6BB03EED57517 /* NotesLayout.swift */,
 				06102F11AC5B05D1BB6C6B6D /* PageRenderer.swift */,
+				20F4FC1FEADE048C42C23891 /* PageTransition.swift */,
 				2815022FDA32BA690C0979E2 /* PDFLinks.swift */,
 				9CFC1A97A5052F880E1BDE11 /* PdfpcFile.swift */,
 				B7CC619396CFDBA96B13DC7A /* SlideDeck.swift */,
@@ -182,6 +190,7 @@
 				2F9FE19F546D9E6D0A737773 /* PDFFixture.swift */,
 				DDC7E3BDB4160459F47D8519 /* PresentationTests.swift */,
 				78FF41B3006A1CA952394B45 /* TalkPlanTests.swift */,
+				32208C1FBDFD3F3B675922A0 /* TransitionTests.swift */,
 			);
 			path = PDFPresenterTests;
 			sourceTree = "<group>";
@@ -287,6 +296,7 @@
 				0DFC8AB0D69B4E2F26D8036D /* PDFFixture.swift in Sources */,
 				69D4BA619D41836D6875101C /* PresentationTests.swift in Sources */,
 				5A984D2DC5EBCB59F920AD00 /* TalkPlanTests.swift in Sources */,
+				D114312CE895B5DA6149D1B3 /* TransitionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +316,8 @@
 				328C872AD6CF52E2253F00A0 /* PDFPageView.swift in Sources */,
 				83EA6FAA92825E3FA4194200 /* PDFPresenterApp.swift in Sources */,
 				D0821AE606B998452D809698 /* PageRenderer.swift in Sources */,
+				9D93A7ECBE1CFC05D189EAAF /* PageTransition.swift in Sources */,
+				E6345D5F96E262897D8BE9D8 /* PageTransitionAnimator.swift in Sources */,
 				399EB1FEC7936B88A9883A1F /* PdfpcFile.swift in Sources */,
 				08C8DF3805D4221757452378 /* PresentKeyAction.swift in Sources */,
 				8FA84AA3A00C0E0CBAC8F6D8 /* PresentationController.swift in Sources */,
