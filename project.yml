@@ -1,0 +1,57 @@
+name: PDFPresenter
+options:
+  minimumXcodeVersion: "15.0"
+  deploymentTarget:
+    macOS: "14.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  PDFPresenter:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: PDFPresenter
+    entitlements:
+      path: PDFPresenter/PDFPresenter.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pdfpresenter.app
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_ENTITLEMENTS: PDFPresenter/PDFPresenter.entitlements
+    scheme:
+      testTargets:
+        - PDFPresenterTests
+    info:
+      path: PDFPresenter/Info.plist
+      properties:
+        CFBundleDisplayName: PDF Presenter
+        NSPrincipalClass: NSApplication
+        LSMinimumSystemVersion: "$(MACOSX_DEPLOYMENT_TARGET)"
+        LSApplicationCategoryType: public.app-category.productivity
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: PDF
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - com.adobe.pdf
+
+  PDFPresenterTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: PDFPresenterTests
+    dependencies:
+      - target: PDFPresenter
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pdfpresenter.app.tests
+        GENERATE_INFOPLIST_FILE: YES
