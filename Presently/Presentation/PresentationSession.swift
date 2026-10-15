@@ -137,7 +137,10 @@ final class PresentationSession: ObservableObject {
 
     func go(to index: Int) {
         guard deck.pageCount > 0 else { return }
-        currentIndex = min(max(index, 0), deck.pageCount - 1)
+        // Assigning an equal value still publishes; the page list writes its selection back
+        // during view updates, which SwiftUI flags as "publishing changes from within view updates".
+        let index = min(max(index, 0), deck.pageCount - 1)
+        if index != currentIndex { currentIndex = index }
     }
 
     func next() { go(to: currentIndex + 1) }

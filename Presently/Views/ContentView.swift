@@ -53,10 +53,13 @@ private struct BrowseView: View {
     @ObservedObject var session: PresentationSession
     @ObservedObject var deck: SlideDeck
     let startPresenting: () -> Void
+    /// The list's own selection, synced with the session via `onChange`: List writes its
+    /// selection during view updates, and publishing session changes from there is not allowed.
+    @State private var selection: Int?
 
     var body: some View {
         NavigationSplitView {
-            List(selection: Binding(get: { session.currentIndex }, set: { if let i = $0 { session.go(to: i) } })) {
+            List(selection: $selection) {
                 ForEach(0..<deck.pageCount, id: \.self) { i in
                     VStack(spacing: 4) {
                         PageThumbnail(deck: deck, index: i, region: deck.notesLayout.slideRegion,
@@ -94,6 +97,9 @@ private struct BrowseView: View {
                 }
             }
             .navigationSplitViewColumnWidth(min: 160, ideal: 200, max: 320)
+            .onAppear { selection = session.currentIndex }
+            .onChange(of: selection) { if let selection { session.go(to: selection) } }
+            .onChange(of: session.currentIndex) { selection = session.currentIndex }
         } detail: {
             VStack(spacing: 0) {
             NotesLayoutWarning(deck: deck)

@@ -247,6 +247,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
         }
         guard pw.styleMask.contains(.fullScreen) else { place(); return }
         // A full-screen window can't be moved: leave full screen, move, enter it again.
+        let targetDisplayID = screen.displayID
         if let o = fullScreenObserver { NotificationCenter.default.removeObserver(o) }
         fullScreenObserver = NotificationCenter.default.addObserver(
             forName: NSWindow.didExitFullScreenNotification, object: pw, queue: .main
@@ -261,7 +262,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
                 DispatchQueue.main.async {
                     place()
                     DispatchQueue.main.async {
-                        guard self.audienceWindow != nil, let pw, pw.screen == screen,
+                        guard self.audienceWindow != nil, let pw, pw.screen?.displayID == targetDisplayID,
                               !pw.styleMask.contains(.fullScreen) else { return }
                         pw.toggleFullScreen(nil)
                     }
