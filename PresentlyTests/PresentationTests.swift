@@ -1,6 +1,6 @@
 import AppKit
 import XCTest
-@testable import PDFPresenter
+@testable import Presently
 
 final class PresentKeyActionTests: XCTestCase {
     private func action(_ code: UInt16, _ chars: String? = nil, _ mods: NSEvent.ModifierFlags = []) -> PresentKeyAction? {

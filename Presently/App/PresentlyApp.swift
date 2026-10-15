@@ -1,7 +1,11 @@
 import SwiftUI
 
 @main
-struct PDFPresenterApp: App {
+struct PresentlyApp: App {
+    init() {
+        LegacySettings.migrate(from: "com.pdfpresenter.app", to: .standard)
+    }
+
     var body: some Scene {
         DocumentGroup(viewing: PDFFile.self) { file in
             ContentView(file: file.document, fileURL: file.fileURL)
@@ -67,5 +71,20 @@ private struct TransitionsToggle: View {
 
     var body: some View {
         Toggle("Übergänge aus dem PDF abspielen", isOn: $enabled)
+    }
+}
+
+/// Settings (display choice, presenter layout, last pages, …) from before the rename to
+/// Presently lived under the old bundle ID. Copied once; keys already set in the new domain win.
+enum LegacySettings {
+    static let migratedKey = "migratedLegacySettings"
+
+    static func migrate(from oldDomain: String, to defaults: UserDefaults) {
+        guard !defaults.bool(forKey: migratedKey) else { return }
+        defer { defaults.set(true, forKey: migratedKey) }
+        guard let old = UserDefaults.standard.persistentDomain(forName: oldDomain) else { return }
+        for (key, value) in old where defaults.object(forKey: key) == nil {
+            defaults.set(value, forKey: key)
+        }
     }
 }

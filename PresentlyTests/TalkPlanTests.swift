@@ -1,6 +1,6 @@
 import PDFKit
 import XCTest
-@testable import PDFPresenter
+@testable import Presently
 
 final class TalkPlanTests: XCTestCase {
     private var calendar: Calendar {
@@ -44,15 +44,40 @@ final class TalkPlanTests: XCTestCase {
     }
 
     func testPdfpcEndTimeAndEndPage() throws {
-        var file = try PdfpcFile(data: Data(#"{"pdfpcFormat": 2, "endTime": "14:30", "pdfpresenterEndPage": 7}"#.utf8))
+        var file = try PdfpcFile(data: Data(#"{"pdfpcFormat": 2, "endTime": "14:30", "presentlyEndPage": 7}"#.utf8))
         XCTAssertEqual(file.endTime, DateComponents(hour: 14, minute: 30))
         XCTAssertEqual(file.endPage, 7)
         file.endTime = DateComponents(hour: 9, minute: 5)
         file.endPage = nil
         let root = try XCTUnwrap(JSONSerialization.jsonObject(with: file.serialized(pageLabels: [])) as? [String: Any])
         XCTAssertEqual(root["endTime"] as? String, "09:05")
-        XCTAssertNil(root["pdfpresenterEndPage"])
+        XCTAssertNil(root["presentlyEndPage"])
         XCTAssertNil(PdfpcFile.parseTime("25:00"))
+    }
+
+    func testReadsEndPageWrittenBeforeRename() throws {
+        var file = try PdfpcFile(data: Data(#"{"pdfpcFormat": 2, "pdfpresenterEndPage": 4}"#.utf8))
+        XCTAssertEqual(file.endPage, 4)
+        file.endPage = 5
+        let root = try XCTUnwrap(JSONSerialization.jsonObject(with: file.serialized(pageLabels: [])) as? [String: Any])
+        XCTAssertEqual(root["presentlyEndPage"] as? Int, 5)
+        XCTAssertNil(root["pdfpresenterEndPage"], "old key replaced, not duplicated")
+    }
+
+    func testMigratesSettingsFromOldBundleID() {
+        let oldDomain = "PresentlyTests-old-\(UUID().uuidString)"
+        UserDefaults.standard.setPersistentDomain(["presentationDisplayID": 7, "presenterCurrentFraction": 0.5], forName: oldDomain)
+        defer { UserDefaults.standard.removePersistentDomain(forName: oldDomain) }
+        let defaults = UserDefaults(suiteName: "PresentlyTests-new-\(UUID().uuidString)")!
+        defaults.set(0.7, forKey: "presenterCurrentFraction")   // already set in the new domain: wins
+
+        LegacySettings.migrate(from: oldDomain, to: defaults)
+        XCTAssertEqual(defaults.integer(forKey: "presentationDisplayID"), 7)
+        XCTAssertEqual(defaults.double(forKey: "presenterCurrentFraction"), 0.7)
+
+        defaults.removeObject(forKey: "presentationDisplayID")
+        LegacySettings.migrate(from: oldDomain, to: defaults)
+        XCTAssertNil(defaults.object(forKey: "presentationDisplayID"), "runs only once")
     }
 
     func testLastPageStore() {

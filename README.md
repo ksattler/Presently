@@ -1,4 +1,4 @@
-# PDF Presenter
+# Presently
 
 Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
 
@@ -54,6 +54,6 @@ Klicker senden in der Regel Bild↑/Bild↓, B bzw. „.“ und F5/Esc für Star
 ```bash
 brew install xcodegen
 xcodegen generate
-xcodebuild -project PDFPresenter.xcodeproj -scheme PDFPresenter build
-xcodebuild test -project PDFPresenter.xcodeproj -scheme PDFPresenter CODE_SIGN_IDENTITY=-
+xcodebuild -project Presently.xcodeproj -scheme Presently build
+xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
 ```

@@ -1,5 +1,5 @@
 import XCTest
-@testable import PDFPresenter
+@testable import Presently
 
 @MainActor
 final class DrawingTests: XCTestCase {

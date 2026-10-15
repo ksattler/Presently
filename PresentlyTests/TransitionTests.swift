@@ -1,6 +1,6 @@
 import PDFKit
 import XCTest
-@testable import PDFPresenter
+@testable import Presently
 
 @MainActor
 final class TransitionTests: XCTestCase {

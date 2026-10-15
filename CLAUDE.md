@@ -4,23 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-PDF Presenter is a small native macOS app (SwiftUI + PDFKit) that presents PDF slides: audience view full screen on a chosen display, presenter view with current/next slide, upcoming pages, speaker notes and timer. Clickers work (they emulate keyboard keys). Display selection and the presentation window are derived from `../Slidescape` (`Views/Present/`).
+Presently (formerly "PDF Presenter", renamed because the name was taken) is a small native macOS app (SwiftUI + PDFKit) that presents PDF slides: audience view full screen on a chosen display, presenter view with current/next slide, upcoming pages, speaker notes and timer. Clickers work (they emulate keyboard keys). Display selection and the presentation window are derived from `../Slidescape` (`Views/Present/`).
 
 UI strings and docs are German; code, comments and commit messages are English.
 
 ## Commands
 
 ```bash
-xcodegen generate     # regenerate PDFPresenter.xcodeproj from project.yml — required after adding/removing files
-xcodebuild -project PDFPresenter.xcodeproj -scheme PDFPresenter build
-xcodebuild test -project PDFPresenter.xcodeproj -scheme PDFPresenter CODE_SIGN_IDENTITY=-
-xcodebuild test ... -only-testing:PDFPresenterTests/SlideDeckTests    # single test class
+xcodegen generate     # regenerate Presently.xcodeproj from project.yml — required after adding/removing files
+xcodebuild -project Presently.xcodeproj -scheme Presently build
+xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
+xcodebuild test ... -only-testing:PresentlyTests/SlideDeckTests    # single test class
 ```
 
 ## Architecture
 
 ```
-PDFPresenterApp       DocumentGroup(viewing: PDFFile) — read-only, the PDF is never written
+PresentlyApp          DocumentGroup(viewing: PDFFile) — read-only, the PDF is never written
 ContentView           per window: BrowseView (page list, preview, notes editor) or PresenterView
 PresentationSession   @MainActor ObservableObject: current page, frozen audience page, black/white
                       screen, typed page number, overview, PresentationTimer, LaserPointer,
@@ -51,6 +51,7 @@ TalkPlan / TalkLimit  remaining time, pace, talk progress; LastPageStore (UserDe
 - **Transitions:** `PageTransition.parse` reads `/Trans` via `page.pageRef` (CoreGraphics; PDFKit has no API). Only the audience `PDFPageView` gets a `transition` closure; `PDFPageNSView.show` snapshots old/new page and `PageTransitionAnimator` animates image layers in a layer-hosting overlay subview (y-up, like `/Di`), the vector page underneath is already the new one. Any further page change or resize cancels the overlay.
 - **Reload:** `FileWatcher` re-arms after rename/delete (atomic saves) and debounces chunked writes. `SlideDeck.reload(pdf:)` swaps pages/labels and bumps `revision`; anything caching per page must key on `revision`. Unparseable files are ignored (old version stays).
 - **Thumbnails:** never render PDFKit objects of the main-thread `SlideDeck.pdf` off the main thread — the `ThumbnailRenderer` actor owns a separate `PDFDocument` built from the same data (recreated on reload; results from before a reload are dropped via `revision`).
-- **Sidecar keys:** `duration` / `endTime` ("HH:MM") are pdfpc's; the talk's end page is our own `pdfpresenterEndPage` (pdfpc's `endSlide` counts user slides — not mapped). The last shown page lives in UserDefaults (`LastPageStore`), so merely viewing a PDF never creates a sidecar.
+- **Sidecar keys:** `duration` / `endTime` ("HH:MM") are pdfpc's; the talk's end page is our own `presentlyEndPage` (older files: `pdfpresenterEndPage`, still read) (pdfpc's `endSlide` counts user slides — not mapped). The last shown page lives in UserDefaults (`LastPageStore`), so merely viewing a PDF never creates a sidecar.
 - **Timer start:** `timerStartsOnFirstTurn` (UserDefaults, default true): `begin()` arms the timer, the first change of `currentIndex` starts it.
+- **Rename:** settings from the old bundle ID `com.pdfpresenter.app` are copied once at launch (`LegacySettings`). The bundle ID `com.presently.app` is a placeholder until a real one (own domain) is chosen.
 - **Tests** build PDFs in code (`PDFFixture`: page labels, text annotations, red/blue halves).

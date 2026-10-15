@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0960F0F78242C851AD0263C2"
-               BuildableName = "PDFPresenter.app"
-               BlueprintName = "PDFPresenter"
-               ReferencedContainer = "container:PDFPresenter.xcodeproj">
+               BlueprintIdentifier = "F84A6CD911EC101BBCDE276C"
+               BuildableName = "Presently.app"
+               BlueprintName = "Presently"
+               ReferencedContainer = "container:Presently.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0960F0F78242C851AD0263C2"
-            BuildableName = "PDFPresenter.app"
-            BlueprintName = "PDFPresenter"
-            ReferencedContainer = "container:PDFPresenter.xcodeproj">
+            BlueprintIdentifier = "F84A6CD911EC101BBCDE276C"
+            BuildableName = "Presently.app"
+            BlueprintName = "Presently"
+            ReferencedContainer = "container:Presently.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -44,10 +44,10 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "69CACB0C2176C46C7B06C4CD"
-               BuildableName = "PDFPresenterTests.xctest"
-               BlueprintName = "PDFPresenterTests"
-               ReferencedContainer = "container:PDFPresenter.xcodeproj">
+               BlueprintIdentifier = "2D5F9CC7B8E89256A7BE0D0D"
+               BuildableName = "PresentlyTests.xctest"
+               BlueprintName = "PresentlyTests"
+               ReferencedContainer = "container:Presently.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -68,10 +68,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0960F0F78242C851AD0263C2"
-            BuildableName = "PDFPresenter.app"
-            BlueprintName = "PDFPresenter"
-            ReferencedContainer = "container:PDFPresenter.xcodeproj">
+            BlueprintIdentifier = "F84A6CD911EC101BBCDE276C"
+            BuildableName = "Presently.app"
+            BlueprintName = "Presently"
+            ReferencedContainer = "container:Presently.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -87,10 +87,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0960F0F78242C851AD0263C2"
-            BuildableName = "PDFPresenter.app"
-            BlueprintName = "PDFPresenter"
-            ReferencedContainer = "container:PDFPresenter.xcodeproj">
+            BlueprintIdentifier = "F84A6CD911EC101BBCDE276C"
+            BuildableName = "Presently.app"
+            BlueprintName = "Presently"
+            ReferencedContainer = "container:Presently.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>

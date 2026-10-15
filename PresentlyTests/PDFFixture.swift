@@ -1,6 +1,6 @@
 import Foundation
 import PDFKit
-@testable import PDFPresenter
+@testable import Presently
 
 /// Builds small PDFs in code: page labels (Beamer overlays), text annotations, and pages split
 /// into a red left and a blue right half (to check regions).
@@ -79,7 +79,7 @@ enum PDFFixture {
     static let overlayPages: [Page] = ["1", "2", "2", "2", "3"].map { Page(label: $0) }
 
     static func temporaryDirectory() throws -> URL {
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("PDFPresenterTests-\(UUID().uuidString)")
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("PresentlyTests-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         return url
     }

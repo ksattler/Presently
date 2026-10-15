@@ -1,4 +1,4 @@
-name: PDFPresenter
+name: Presently
 options:
   minimumXcodeVersion: "15.0"
   deploymentTarget:
@@ -13,26 +13,26 @@ settings:
     DEVELOPMENT_TEAM: ""
 
 targets:
-  PDFPresenter:
+  Presently:
     type: application
     platform: macOS
     deploymentTarget: "14.0"
     sources:
-      - path: PDFPresenter
+      - path: Presently
     entitlements:
-      path: PDFPresenter/PDFPresenter.entitlements
+      path: Presently/Presently.entitlements
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.pdfpresenter.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.presently.app
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        CODE_SIGN_ENTITLEMENTS: PDFPresenter/PDFPresenter.entitlements
+        CODE_SIGN_ENTITLEMENTS: Presently/Presently.entitlements
     scheme:
       testTargets:
-        - PDFPresenterTests
+        - PresentlyTests
     info:
-      path: PDFPresenter/Info.plist
+      path: Presently/Info.plist
       properties:
-        CFBundleDisplayName: PDF Presenter
+        CFBundleDisplayName: Presently
         NSPrincipalClass: NSApplication
         LSMinimumSystemVersion: "$(MACOSX_DEPLOYMENT_TARGET)"
         LSApplicationCategoryType: public.app-category.productivity
@@ -43,15 +43,15 @@ targets:
             LSItemContentTypes:
               - com.adobe.pdf
 
-  PDFPresenterTests:
+  PresentlyTests:
     type: bundle.unit-test
     platform: macOS
     deploymentTarget: "14.0"
     sources:
-      - path: PDFPresenterTests
+      - path: PresentlyTests
     dependencies:
-      - target: PDFPresenter
+      - target: Presently
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.pdfpresenter.app.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.presently.app.tests
         GENERATE_INFOPLIST_FILE: YES

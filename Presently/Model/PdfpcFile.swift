@@ -4,7 +4,7 @@ import Foundation
 /// so notes are shared with pdfpc and tools that write its files.
 ///
 /// Interpreted: `note`s per page, `duration` (minutes), `endTime` ("HH:MM") and our own
-/// `pdfpresenterEndPage` (last page of the talk; later pages are backup). Every other key — top
+/// `presentlyEndPage` (last page of the talk; later pages are backup). Every other key — top
 /// level and per page — is kept and written back unchanged.
 struct PdfpcFile {
     static let fileExtension = "pdfpc"
@@ -19,7 +19,9 @@ struct PdfpcFile {
     /// differently (user slides), so it is left alone.
     var endPage: Int?
 
-    static let endPageKey = "pdfpresenterEndPage"
+    static let endPageKey = "presentlyEndPage"
+    /// Written before the app was renamed to Presently; read, replaced on save.
+    static let legacyEndPageKey = "pdfpresenterEndPage"
 
     private var topLevel: [String: Any] = [:]
     private var pageExtras: [Int: [String: Any]] = [:]
@@ -41,7 +43,8 @@ struct PdfpcFile {
         topLevel["pages"] = nil
         if let d = root["duration"] as? Int, d > 0 { durationMinutes = d }
         if let t = root["endTime"] as? String { endTime = Self.parseTime(t) }
-        if let e = root[Self.endPageKey] as? Int, e >= 0 { endPage = e }
+        if let e = (root[Self.endPageKey] ?? root[Self.legacyEndPageKey]) as? Int, e >= 0 { endPage = e }
+        topLevel[Self.legacyEndPageKey] = nil
         for page in root["pages"] as? [[String: Any]] ?? [] {
             guard let idx = page["idx"] as? Int else { continue }
             if let note = page["note"] as? String, !note.isEmpty { notes[idx] = note }

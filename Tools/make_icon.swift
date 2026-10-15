@@ -1,5 +1,5 @@
 // Renders the app icon: a slide on a projection screen with a folded "PDF" corner and a play
-// badge. Usage: swift Tools/make_icon.swift PDFPresenter/Assets.xcassets/AppIcon.appiconset
+// badge. Usage: swift Tools/make_icon.swift Presently/Assets.xcassets/AppIcon.appiconset
 import AppKit
 
 let outDir = URL(fileURLWithPath: CommandLine.arguments.dropFirst().first ?? ".")
