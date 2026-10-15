@@ -8,6 +8,14 @@ enum PDFFixture {
     struct Page {
         var label: String? = nil
         var note: String? = nil
+        var links: [Link] = []
+    }
+
+    /// Link annotation; `rect` in page space (unrotated, origin bottom-left).
+    struct Link {
+        enum Kind { case page(Int), uri(String), named(String) }
+        var rect: CGRect
+        var kind: Kind
     }
 
     static func data(pages: [Page], size: CGSize = CGSize(width: 400, height: 300), rotation: Int = 0) -> Data {
@@ -18,15 +26,26 @@ enum PDFFixture {
         let content = "1 0 0 rg 0 0 \(w / 2) \(h) re f 0 0 1 rg \(w / 2) 0 \(w - w / 2) \(h) re f"
         let catalog = add("")   // filled in below
         let pagesObj = add("")
-        var kids: [Int] = []
-        for page in pages {
+        // Page objects first, so links can refer to any page.
+        let kids = pages.map { _ in add("") }
+        for (i, page) in pages.enumerated() {
             let stream = add("<< /Length \(content.utf8.count) >>\nstream\n\(content)\nendstream")
-            var annots = ""
+            var annots: [Int] = []
             if let note = page.note {
-                let a = add("<< /Type /Annot /Subtype /Text /Rect [10 10 30 30] /Contents (\(note)) >>")
-                annots = " /Annots [\(a) 0 R]"
+                annots.append(add("<< /Type /Annot /Subtype /Text /Rect [10 10 30 30] /Contents (\(note)) >>"))
             }
-            kids.append(add("<< /Type /Page /Parent \(pagesObj) 0 R /MediaBox [0 0 \(w) \(h)] /Rotate \(rotation) /Contents \(stream) 0 R\(annots) >>"))
+            for link in page.links {
+                let r = link.rect
+                let target: String
+                switch link.kind {
+                case .page(let p):  target = "/Dest [\(kids[p]) 0 R /Fit]"
+                case .uri(let u):   target = "/A << /S /URI /URI (\(u)) >>"
+                case .named(let n): target = "/A << /S /Named /N /\(n) >>"
+                }
+                annots.append(add("<< /Type /Annot /Subtype /Link /Rect [\(Int(r.minX)) \(Int(r.minY)) \(Int(r.maxX)) \(Int(r.maxY))] /Border [0 0 0] \(target) >>"))
+            }
+            let annotsEntry = annots.isEmpty ? "" : " /Annots [\(annots.map { "\($0) 0 R" }.joined(separator: " "))]"
+            objects[kids[i] - 1] = "<< /Type /Page /Parent \(pagesObj) 0 R /MediaBox [0 0 \(w) \(h)] /Rotate \(rotation) /Contents \(stream) 0 R\(annotsEntry) >>"
         }
         objects[pagesObj - 1] = "<< /Type /Pages /Kids [\(kids.map { "\($0) 0 R" }.joined(separator: " "))] /Count \(kids.count) >>"
         var labels = ""

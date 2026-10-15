@@ -14,6 +14,7 @@ enum PresentKeyAction: Equatable {
     case toggleTimer, resetTimer
     case toggleFreeze               // audience keeps the current page while the presenter browses
     case togglePointer              // laser pointer
+    case swapScreens                // audience and presenter trade displays
     case ignore                     // consumed without effect (F5 from a clicker's start button)
 
     enum KeyCode {
@@ -53,6 +54,7 @@ enum PresentKeyAction: Equatable {
         case "o":      self = .toggleOverview
         case "f":      self = .toggleFreeze
         case "l":      self = .togglePointer
+        case "s":      self = .swapScreens
         case let c? where c.count == 1 && c.first!.isASCII && c.first!.isNumber:
             self = .digit(Int(c)!)
         default: return nil

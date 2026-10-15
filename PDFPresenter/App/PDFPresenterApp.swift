@@ -18,6 +18,7 @@ struct PresentationActions {
     var canPresent: Bool
     var start: () -> Void
     var stop: () -> Void
+    var swapScreens: () -> Void
 }
 
 private struct PresentationActionsKey: FocusedValueKey {
@@ -40,6 +41,7 @@ struct AppCommands: Commands {
             if actions?.isPresenting == true {
                 Button("Präsentation beenden") { actions?.stop() }
                     .keyboardShortcut(.return, modifiers: .command)
+                Button("Bildschirme tauschen") { actions?.swapScreens() }
             } else {
                 Button("Präsentation starten") { actions?.start() }
                     .keyboardShortcut(.return, modifiers: .command)

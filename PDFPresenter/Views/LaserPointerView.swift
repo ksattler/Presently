@@ -5,14 +5,17 @@ import SwiftUI
 /// Transparent layer over a `PDFPageView` with the same page and region. Tracks the mouse
 /// for the laser pointer (in slide coordinates, so presenter and audience views of different
 /// sizes agree) and draws the pointer dot. Hides the system cursor over the slide while the
-/// pointer is on.
+/// pointer is on; otherwise shows a pointing hand over PDF links.
 struct LaserPointerLayer: View {
     @ObservedObject var pointer: LaserPointer
     let page: PDFPage?
     let region: PageRegion
     /// False when this view shows another page than the pointer refers to (frozen audience).
     var showsDot = true
+    /// Click on the slide (normalized point); nil = clicks pass through.
+    var onClick: ((CGPoint) -> Void)? = nil
     @State private var hidesCursor = false
+    @State private var overLink = false
 
     var body: some View {
         GeometryReader { geo in
@@ -31,19 +34,28 @@ struct LaserPointerLayer: View {
                 }
             }
             .background(MouseTracker { location in
-                guard pointer.isEnabled, slide.width > 0, slide.height > 0 else { return }
-                if let location {
-                    pointer.move(to: CGPoint(x: (location.x - slide.minX) / slide.width,
-                                             y: (location.y - slide.minY) / slide.height))
+                guard slide.width > 0, slide.height > 0 else { return }
+                let p = location.map { CGPoint(x: ($0.x - slide.minX) / slide.width, y: ($0.y - slide.minY) / slide.height) }
+                if pointer.isEnabled {
+                    pointer.move(to: p)
                     setCursorHidden(pointer.position != nil)
                 } else {
-                    pointer.move(to: nil)
-                    setCursorHidden(false)
+                    updateLinkCursor(at: p)
                 }
+            })
+            .modifier(ClickHandler(enabled: onClick != nil) { location in
+                guard slide.width > 0, slide.height > 0 else { return }
+                onClick?(CGPoint(x: (location.x - slide.minX) / slide.width, y: (location.y - slide.minY) / slide.height))
             })
         }
         .onChange(of: pointer.isEnabled) { if !pointer.isEnabled { setCursorHidden(false) } }
         .onDisappear { setCursorHidden(false) }
+    }
+
+    private func updateLinkCursor(at p: CGPoint?) {
+        let isLink = p.flatMap { p in page.flatMap { PDFLinks.target(atNormalized: p, page: $0, region: region) } } != nil
+        if isLink { NSCursor.pointingHand.set() } else if overLink { NSCursor.arrow.set() }
+        overLink = isLink
     }
 
     /// NSCursor.hide/unhide are counted; keep them balanced.
@@ -51,6 +63,21 @@ struct LaserPointerLayer: View {
         guard hidden != hidesCursor else { return }
         hidesCursor = hidden
         hidden ? NSCursor.hide() : NSCursor.unhide()
+    }
+}
+
+private struct ClickHandler: ViewModifier {
+    let enabled: Bool
+    let action: (CGPoint) -> Void
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content
+                .contentShape(Rectangle())
+                .onTapGesture(coordinateSpace: .local) { action($0) }
+        } else {
+            content
+        }
     }
 }
 

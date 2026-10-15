@@ -16,6 +16,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
     private var savedOptions: NSApplication.PresentationOptions = []
     private var madePresenterFullScreen = false
     private var activity: NSObjectProtocol?
+    private var fullScreenObserver: NSObjectProtocol?
 
     private final class AudienceWindow: NSWindow {
         override var canBecomeKey: Bool { true }
@@ -50,11 +51,8 @@ final class PresentationController: NSObject, NSWindowDelegate {
             w.setFrame(screen.frame, display: false)
             w.level = .mainMenu + 1   // above menu bar and Dock of that display
             w.collectionBehavior = [.fullScreenAuxiliary, .canJoinAllSpaces]
-            // Menu bar and Dock can still slide in on hover on the display that has them.
-            if screen == NSScreen.screens.first {
-                savedOptions = NSApp.presentationOptions
-                NSApp.presentationOptions = [.autoHideMenuBar, .autoHideDock]
-            }
+            savedOptions = NSApp.presentationOptions
+            hideMenuBar(ifOn: screen)
         }
         w.isReleasedWhenClosed = false
         w.backgroundColor = .black
@@ -90,6 +88,8 @@ final class PresentationController: NSObject, NSWindowDelegate {
 
     private func tearDown() {
         removeMonitor()
+        if let fullScreenObserver { NotificationCenter.default.removeObserver(fullScreenObserver) }
+        fullScreenObserver = nil
         if let activity { ProcessInfo.processInfo.endActivity(activity) }
         activity = nil
         NSApp.presentationOptions = savedOptions
@@ -115,7 +115,103 @@ final class PresentationController: NSObject, NSWindowDelegate {
         w.setFrame(screen.frame, display: true)
     }
 
+    /// Menu bar and Dock can still slide in on hover on the display that has them: auto-hide
+    /// them while the audience window covers that display.
+    private func hideMenuBar(ifOn screen: NSScreen) {
+        NSApp.presentationOptions = screen == NSScreen.screens.first ? [.autoHideMenuBar, .autoHideDock] : savedOptions
+    }
+
+    // MARK: Swapping displays
+
+    /// Only for a full-screen audience window, with more than one display.
+    var canSwapScreens: Bool {
+        audienceWindow?.styleMask == .borderless && presenterWindow != nil && NSScreen.screens.count > 1
+    }
+
+    /// Audience and presenter trade displays (wrong projector detected, cables swapped). The
+    /// new audience display is remembered as the chosen one.
+    func swapScreens() {
+        guard canSwapScreens, let aw = audienceWindow, let pw = presenterWindow,
+              let audienceID = aw.screen?.displayID,
+              let targets = Self.swapTargets(audience: audienceID, presenter: pw.screen?.displayID,
+                                             available: NSScreen.screens.compactMap(\.displayID)),
+              let audienceScreen = NSScreen.screens.first(where: { $0.displayID == targets.audience }),
+              let presenterScreen = NSScreen.screens.first(where: { $0.displayID == targets.presenter })
+        else { return }
+        PresentationScreens.shared.selectedID = targets.audience
+        aw.setFrame(audienceScreen.frame, display: true)
+        hideMenuBar(ifOn: audienceScreen)
+        movePresenter(pw, to: presenterScreen)
+        aw.makeKeyAndOrderFront(nil)
+    }
+
+    /// Displays after a swap. Normally the two trade places; if both are on one display (a
+    /// move that didn't happen, a display reconnected), the audience stays and the presenter
+    /// goes to another display — so the presenter view can always be brought back.
+    nonisolated static func swapTargets(audience: CGDirectDisplayID, presenter: CGDirectDisplayID?,
+                                        available: [CGDirectDisplayID]) -> (audience: CGDirectDisplayID, presenter: CGDirectDisplayID)? {
+        if let presenter, presenter != audience, available.contains(presenter) {
+            return (presenter, audience)
+        }
+        guard let other = available.first(where: { $0 != audience }) else { return nil }
+        return (audience, other)
+    }
+
+    private func movePresenter(_ pw: NSWindow, to screen: NSScreen) {
+        let place = { [weak pw] in
+            guard let pw else { return }
+            let from = pw.screen?.visibleFrame ?? screen.visibleFrame
+            pw.setFrame(Self.frame(pw.frame, movedFrom: from, to: screen.visibleFrame), display: true)
+        }
+        guard pw.styleMask.contains(.fullScreen) else { place(); return }
+        // A full-screen window can't be moved: leave full screen, move, enter it again.
+        if let o = fullScreenObserver { NotificationCenter.default.removeObserver(o) }
+        fullScreenObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.didExitFullScreenNotification, object: pw, queue: .main
+        ) { [weak self, weak pw] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                if let o = self.fullScreenObserver { NotificationCenter.default.removeObserver(o) }
+                self.fullScreenObserver = nil
+                // AppKit restores the pre-full-screen frame right after this notification —
+                // moving now would be undone. Move on the next turn, re-enter full screen only
+                // once the window really is on the target display.
+                DispatchQueue.main.async {
+                    place()
+                    DispatchQueue.main.async {
+                        guard self.audienceWindow != nil, let pw, pw.screen == screen,
+                              !pw.styleMask.contains(.fullScreen) else { return }
+                        pw.toggleFullScreen(nil)
+                    }
+                }
+            }
+        }
+        pw.toggleFullScreen(nil)
+    }
+
+    /// `frame` moved from one display area to another at the same relative position, shrunk
+    /// to fit if the target is smaller.
+    nonisolated static func frame(_ frame: CGRect, movedFrom from: CGRect, to target: CGRect) -> CGRect {
+        let w = min(frame.width, target.width), h = min(frame.height, target.height)
+        let rx = from.width > 0 ? (frame.midX - from.minX) / from.width : 0.5
+        let ry = from.height > 0 ? (frame.midY - from.minY) / from.height : 0.5
+        let x = min(max(target.minX + rx * target.width - w / 2, target.minX), target.maxX - w)
+        let y = min(max(target.minY + ry * target.height - h / 2, target.minY), target.maxY - h)
+        return CGRect(x: x, y: y, width: w, height: h)
+    }
+
     // MARK: Events
+
+    /// Click position on the audience slide, normalized to the slide region (y down).
+    private func audienceSlidePoint(_ event: NSEvent) -> CGPoint? {
+        guard let session, let view = audienceWindow?.contentView,
+              let page = session.deck.page(session.audienceIndex) else { return nil }
+        let area = view.convert(view.bounds, to: nil)   // window coordinates, y up
+        let slide = PageRenderer.fittedRect(for: page, region: session.deck.notesLayout.slideRegion, in: area)
+        guard slide.width > 0, slide.height > 0 else { return nil }
+        let p = event.locationInWindow
+        return CGPoint(x: (p.x - slide.minX) / slide.width, y: (slide.maxY - p.y) / slide.height)
+    }
 
     private func installMonitor() {
         monitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .leftMouseDown, .rightMouseDown]) { [weak self] event in
@@ -124,7 +220,10 @@ final class PresentationController: NSObject, NSWindowDelegate {
             let inPresenter = event.window != nil && event.window === self.presenterWindow
 
             switch event.type {
-            case .leftMouseDown where inAudience && event.clickCount == 1 && !session.showsOverview:
+            case .leftMouseDown where inAudience && event.clickCount == 1:
+                // A link on the slide is followed; anywhere else a click advances.
+                if let p = self.audienceSlidePoint(event),
+                   session.followLink(atNormalized: p, pageIndex: session.audienceIndex, unfreeze: true) { return nil }
                 session.handle(.next)
                 return nil
             case .rightMouseDown where inAudience:
@@ -138,6 +237,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
                                                     modifiers: event.modifierFlags)
                 else { return event }
                 if inAudience, self.audienceWindow?.styleMask == .borderless { NSCursor.setHiddenUntilMouseMoves(true) }
+                if action == .swapScreens { self.swapScreens(); return nil }
                 if !session.handle(action), action == .exit { self.stop() }
                 return nil
             default:

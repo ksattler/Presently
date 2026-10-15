@@ -11,6 +11,8 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
   - **Referentenansicht** im Dokumentfenster (optional im Vollbild): aktuelle und nächste Folie, die folgenden Seiten, Notizen (Markdown, Schriftgröße einstellbar), verstrichene Zeit (anhaltbar), Restzeit bei gesetzter Vortragsdauer, Uhrzeit, Übersicht aller Seiten.
   - **Einfrieren (F):** Das Publikum behält die aktuelle Folie, während du in der Referentenansicht blätterst (z. B. bei Rückfragen). Nochmal F oder Esc zeigt wieder deine Folie.
   - **Laserpointer (L):** Der Mauszeiger über der aktuellen Folie (Referentenansicht oder Publikum) erscheint als roter Punkt beim Publikum – auch mit Klickern, die den Mauszeiger bewegen.
+  - **Bildschirme tauschen (S):** Publikum und Referentenansicht wechseln die Displays (falscher Beamer erkannt, Kabel vertauscht). Die Wahl wird gespeichert.
+  - **Links im PDF** (Inhaltsverzeichnis, Beamer-Navigation, URLs) sind anklickbar – in der Publikumsansicht und auf der aktuellen Folie der Referentenansicht. Interne Links springen zur Seite, URLs öffnen den Browser, „Zurück“-Aktionen gehen zur Seite vor dem letzten Link. Ein Klick außerhalb eines Links blättert beim Publikum weiter.
 - **Automatisch neu laden:** Ändert sich das PDF auf der Platte (z. B. LaTeX neu kompiliert), wird es neu geladen; die aktuelle Seite und die Notizen bleiben. Halb geschriebene Dateien werden ignoriert.
 - **Notizen**
   - werden im pdfpc-Format neben dem PDF gespeichert (`vortrag.pdf` → `vortrag.pdfpc`) – kompatibel mit [pdfpc](https://pdfpc.github.io);
@@ -23,7 +25,7 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
 
 | Taste | Funktion |
 |---|---|
-| → ↓ Bild↓ Leertaste Klick | weiter |
+| → ↓ Bild↓ Leertaste Klick (außerhalb von Links) | weiter |
 | ← ↑ Bild↑ ⌫ Rechtsklick | zurück |
 | ⇧ → / ⇧ ← | nächste / vorige Folie (Overlays überspringen) |
 | Pos1 / Ende | erste / letzte Seite |
@@ -33,6 +35,7 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
 | P / R | Timer anhalten / zurücksetzen |
 | F | Publikumsansicht einfrieren |
 | L | Laserpointer an/aus |
+| S | Bildschirme tauschen |
 | Esc | Notiz-Bearbeitung/Eingabe/Übersicht/Schwarzbild/Einfrieren beenden, sonst Präsentation beenden |
 
 Klicker senden in der Regel Bild↑/Bild↓, B bzw. „.“ und F5/Esc für Start/Stopp – alles abgedeckt.

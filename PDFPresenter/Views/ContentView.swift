@@ -16,7 +16,8 @@ struct ContentView: View {
     var body: some View {
         Group {
             if session.isPresenting {
-                PresenterView(session: session, deck: session.deck, stop: stopPresenting)
+                PresenterView(session: session, deck: session.deck, stop: stopPresenting,
+                              swapScreens: { controller.swapScreens() })
             } else {
                 BrowseView(session: session, deck: session.deck, startPresenting: startPresenting)
             }
@@ -29,7 +30,7 @@ struct ContentView: View {
         .background(BrowseKeyHandler(session: session, window: window, startPresenting: startPresenting))
         .focusedSceneValue(\.presentationActions, PresentationActions(
             isPresenting: session.isPresenting, canPresent: session.deck.pageCount > 0,
-            start: startPresenting, stop: stopPresenting))
+            start: startPresenting, stop: stopPresenting, swapScreens: { controller.swapScreens() }))
         .focusedSceneObject(session.deck)
         .onDisappear {
             controller.stop()

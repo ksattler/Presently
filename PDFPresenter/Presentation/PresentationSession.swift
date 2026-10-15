@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 import PDFKit
 
 /// Laser pointer position, separate from the session so 60 Hz mouse moves only re-render the
@@ -40,6 +40,10 @@ final class PresentationSession: ObservableObject {
     @Published private(set) var reloadError: String?
 
     let pointer = LaserPointer()
+    /// Opens external links (browser); replaceable in tests.
+    var openURL: (URL) -> Void = { NSWorkspace.shared.open($0) }
+    /// Pages left by following internal links, for the PDF's "GoBack" action.
+    private(set) var linkHistory: [Int] = []
     private var watcher: FileWatcher?
 
     /// Page shown in the audience window.
@@ -74,6 +78,7 @@ final class PresentationSession: ObservableObject {
 
     func begin() {
         isPresenting = true
+        linkHistory = []
         blank = nil
         showsOverview = false
         pageInput = ""
@@ -123,6 +128,45 @@ final class PresentationSession: ObservableObject {
         return nil
     }
 
+    // MARK: Links
+
+    /// Follows the link under a point of a shown page (normalized to the slide region, y down).
+    /// `unfreeze`: the click came from the audience view, which should then show the result.
+    /// Returns false if there is no link there.
+    @discardableResult
+    func followLink(atNormalized point: CGPoint, pageIndex: Int, unfreeze: Bool = false) -> Bool {
+        guard let page = deck.page(pageIndex),
+              let target = PDFLinks.target(atNormalized: point, page: page, region: deck.notesLayout.slideRegion)
+        else { return false }
+        let followed = follow(target)
+        if followed, unfreeze { frozenIndex = nil }
+        return followed
+    }
+
+    @discardableResult
+    func follow(_ target: LinkTarget) -> Bool {
+        switch target {
+        case .page(let index):
+            linkHistory.append(currentIndex)
+            blank = nil
+            go(to: index)
+        case .url(let url):
+            openURL(url)
+        case .named(let name):
+            switch name {
+            case .nextPage:     next()
+            case .previousPage: previous()
+            case .firstPage:    go(to: 0)
+            case .lastPage:     go(to: deck.pageCount - 1)
+            case .goBack:
+                guard let back = linkHistory.popLast() else { return false }
+                go(to: back)
+            default: return false
+            }
+        }
+        return true
+    }
+
     // MARK: Keys
 
     /// Returns false if the action isn't meaningful right now (event passes through).
@@ -154,6 +198,7 @@ final class PresentationSession: ObservableObject {
                 showsOverview = false
             }
         case .toggleOverview: showsOverview.toggle()
+        case .swapScreens:    break   // done by the PresentationController
         case .toggleFreeze:   frozenIndex = frozenIndex == nil ? currentIndex : nil
         case .togglePointer:  pointer.isEnabled.toggle()
         case .toggleTimer:    timer.toggle(at: now())

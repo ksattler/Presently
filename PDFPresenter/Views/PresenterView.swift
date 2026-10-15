@@ -6,6 +6,8 @@ struct PresenterView: View {
     @ObservedObject var session: PresentationSession
     @ObservedObject var deck: SlideDeck
     let stop: () -> Void
+    let swapScreens: () -> Void
+    @ObservedObject private var screens = PresentationScreens.shared
     @AppStorage("presenterNotesFontSize") private var notesFontSize: Double = 22
     @AppStorage("presenterUpcomingCount") private var upcomingCount = 4
     @State private var isEditingNotes = false
@@ -78,7 +80,9 @@ struct PresenterView: View {
                             background: .black)
                     .overlay {
                         LaserPointerLayer(pointer: session.pointer, page: deck.page(index),
-                                          region: deck.notesLayout.slideRegion)
+                                          region: deck.notesLayout.slideRegion) { point in
+                            session.followLink(atNormalized: point, pageIndex: index)
+                        }
                     }
                     .overlay(alignment: .center) { blankBadge }
             }
@@ -223,7 +227,10 @@ struct PresenterView: View {
             .toggleStyle(.button)
             .help("Publikum behält die aktuelle Folie, während du blätterst (F)")
             PointerToggle(pointer: session.pointer)
-            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
+            Button(action: swapScreens) { Label("Tauschen", systemImage: "arrow.left.arrow.right") }
+                .help("Publikum und Referentenansicht tauschen die Bildschirme (S)")
+                .disabled(screens.windowed || screens.screens.count < 2)
+            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · S Bildschirme tauschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
