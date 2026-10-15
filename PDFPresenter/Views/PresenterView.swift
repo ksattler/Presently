@@ -46,6 +46,13 @@ struct PresenterView: View {
                     .padding(.horizontal, 8).padding(.vertical, 2)
                     .background(Color.accentColor.opacity(0.35), in: RoundedRectangle(cornerRadius: 6))
             }
+            if session.audienceDisconnected {
+                Label("Beamer getrennt – Publikumsansicht kehrt beim Wiederverbinden zurück", systemImage: "exclamationmark.triangle.fill")
+                    .font(.title3)
+                    .lineLimit(1)
+                    .padding(.horizontal, 8).padding(.vertical, 2)
+                    .background(Color.red.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
+            }
             if deck.isBackup(index) {
                 Label("Backup", systemImage: "archivebox")
                     .font(.title3)

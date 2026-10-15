@@ -16,6 +16,7 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
   - **Laserpointer (L):** Der Mauszeiger über der aktuellen Folie (Referentenansicht oder Publikum) erscheint als roter Punkt beim Publikum – auch mit Klickern, die den Mauszeiger bewegen.
   - **Bildschirme tauschen (S):** Publikum und Referentenansicht wechseln die Displays (falscher Beamer erkannt, Kabel vertauscht). Die Wahl wird gespeichert.
   - **Links im PDF** (Inhaltsverzeichnis, Beamer-Navigation, URLs) sind anklickbar – in der Publikumsansicht und auf der aktuellen Folie der Referentenansicht. Interne Links springen zur Seite, URLs öffnen den Browser, „Zurück“-Aktionen gehen zur Seite vor dem letzten Link. Ein Klick außerhalb eines Links blättert beim Publikum weiter.
+  - **Beamer ab- und anstecken:** Die Präsentation läuft weiter. Fällt der Beamer weg, wird die Publikumsansicht ausgeblendet (oder wandert auf einen freien dritten Bildschirm), die Referentenansicht bleibt sichtbar und zeigt einen Hinweis. Kommt der Beamer zurück, erscheint die Publikumsansicht wieder dort. Wird der Beamer erst während der Präsentation eingesteckt (Start nur am Laptop), wandert die Publikumsansicht auf ihn.
 - **Automatisch neu laden:** Ändert sich das PDF auf der Platte (z. B. LaTeX neu kompiliert), wird es neu geladen; die aktuelle Seite und die Notizen bleiben. Halb geschriebene Dateien werden ignoriert.
 - **Notizen**
   - werden im pdfpc-Format neben dem PDF gespeichert (`vortrag.pdf` → `vortrag.pdfpc`) – kompatibel mit [pdfpc](https://pdfpc.github.io);

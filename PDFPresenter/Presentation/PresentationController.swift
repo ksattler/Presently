@@ -17,6 +17,11 @@ final class PresentationController: NSObject, NSWindowDelegate {
     private var madePresenterFullScreen = false
     private var activity: NSObjectProtocol?
     private var fullScreenObserver: NSObjectProtocol?
+    /// Display the audience should be on (chosen at start or by swapping). Kept while that
+    /// display is disconnected, so the audience view returns when it comes back.
+    private var audienceDisplayID: CGDirectDisplayID?
+    private var screenObserver: NSObjectProtocol?
+    private var placementTask: Task<Void, Never>?
 
     private final class AudienceWindow: NSWindow {
         override var canBecomeKey: Bool { true }
@@ -59,6 +64,14 @@ final class PresentationController: NSObject, NSWindowDelegate {
         w.contentView = NSHostingView(rootView: AudienceView(session: session))
         w.delegate = self
         audienceWindow = w
+        if !screens.windowed {
+            audienceDisplayID = screen.displayID
+            screenObserver = NotificationCenter.default.addObserver(
+                forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main
+            ) { [weak self] _ in
+                MainActor.assumeIsolated { self?.schedulePlacementUpdate() }
+            }
+        }
 
         installMonitor()
         activity = ProcessInfo.processInfo.beginActivity(
@@ -90,6 +103,11 @@ final class PresentationController: NSObject, NSWindowDelegate {
         removeMonitor()
         if let fullScreenObserver { NotificationCenter.default.removeObserver(fullScreenObserver) }
         fullScreenObserver = nil
+        if let screenObserver { NotificationCenter.default.removeObserver(screenObserver) }
+        screenObserver = nil
+        placementTask?.cancel()
+        placementTask = nil
+        audienceDisplayID = nil
         if let activity { ProcessInfo.processInfo.endActivity(activity) }
         activity = nil
         NSApp.presentationOptions = savedOptions
@@ -111,8 +129,71 @@ final class PresentationController: NSObject, NSWindowDelegate {
     }
 
     func windowDidChangeScreen(_ notification: Notification) {
-        guard let w = audienceWindow, let screen = w.screen, w.styleMask == .borderless else { return }
-        w.setFrame(screen.frame, display: true)
+        // Usually the system moving the window off a disconnected display. Don't just cover
+        // whatever display it landed on (that may be the presenter's) — decide again.
+        schedulePlacementUpdate()
+    }
+
+    // MARK: Displays connected / disconnected
+
+    enum AudiencePlacement: Equatable {
+        case show(CGDirectDisplayID)
+        case hide
+    }
+
+    /// Where the audience view goes when the set of displays changes: its own display if
+    /// connected; otherwise another display that isn't the presenter's; otherwise nowhere
+    /// (hidden — the talk goes on from the presenter view until the projector is back).
+    /// Started on the presenter's only display and a projector gets plugged in: onto the projector.
+    nonisolated static func audiencePlacement(intended: CGDirectDisplayID, presenter: CGDirectDisplayID?,
+                                              available: [CGDirectDisplayID]) -> AudiencePlacement {
+        if available.contains(intended) {
+            if intended == presenter, let other = available.first(where: { $0 != intended }) { return .show(other) }
+            return .show(intended)
+        }
+        if let other = available.first(where: { $0 != presenter }), presenter != nil { return .show(other) }
+        if presenter == nil, let first = available.first { return .show(first) }
+        return .hide
+    }
+
+    /// Display changes arrive in bursts, and `NSScreen.screens` settles a moment later.
+    private func schedulePlacementUpdate() {
+        placementTask?.cancel()
+        placementTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            self?.updateAudiencePlacement()
+        }
+    }
+
+    private func updateAudiencePlacement() {
+        guard let aw = audienceWindow, aw.styleMask == .borderless, let intended = audienceDisplayID,
+              let session else { return }
+        let screens = NSScreen.screens
+        let presenterID = presenterWindow?.screen?.displayID
+        switch Self.audiencePlacement(intended: intended, presenter: presenterID, available: screens.compactMap(\.displayID)) {
+        case .hide:
+            if aw.isVisible {
+                aw.orderOut(nil)
+                NSApp.presentationOptions = savedOptions
+                presenterWindow?.makeKeyAndOrderFront(nil)
+            }
+            session.audienceDisconnected = true
+        case .show(let id):
+            guard let screen = screens.first(where: { $0.displayID == id }) else { return }
+            // Moved off the presenter's display (projector plugged in later): that's home now.
+            // Not when standing in for a disconnected display — it should come back there.
+            if intended == presenterID { audienceDisplayID = id }
+            if aw.frame != screen.frame { aw.setFrame(screen.frame, display: true) }
+            hideMenuBar(ifOn: screen)
+            if !aw.isVisible { aw.makeKeyAndOrderFront(nil) }
+            session.audienceDisconnected = false
+            // The presenter view must not stay hidden under the audience window.
+            if let pw = presenterWindow, presenterID == id, fullScreenObserver == nil,
+               let other = screens.first(where: { $0.displayID != id }) {
+                movePresenter(pw, to: other)
+            }
+        }
     }
 
     /// Menu bar and Dock can still slide in on hover on the display that has them: auto-hide
@@ -139,6 +220,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
               let presenterScreen = NSScreen.screens.first(where: { $0.displayID == targets.presenter })
         else { return }
         PresentationScreens.shared.selectedID = targets.audience
+        audienceDisplayID = targets.audience
         aw.setFrame(audienceScreen.frame, display: true)
         hideMenuBar(ifOn: audienceScreen)
         movePresenter(pw, to: presenterScreen)

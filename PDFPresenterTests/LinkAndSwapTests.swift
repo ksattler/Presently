@@ -121,3 +121,37 @@ final class SwapScreensTests: XCTestCase {
         XCTAssertTrue(small.contains(moved))
     }
 }
+
+final class DisplayReconnectTests: XCTestCase {
+    private func place(_ intended: CGDirectDisplayID, _ presenter: CGDirectDisplayID?, _ available: [CGDirectDisplayID])
+        -> PresentationController.AudiencePlacement {
+        PresentationController.audiencePlacement(intended: intended, presenter: presenter, available: available)
+    }
+
+    func testStaysOnItsDisplay() {
+        XCTAssertEqual(place(2, 1, [1, 2]), .show(2))
+        XCTAssertEqual(place(1, 1, [1]), .show(1), "presenting on the only display")
+    }
+
+    func testProjectorUnpluggedHidesAudienceInsteadOfCoveringPresenter() {
+        XCTAssertEqual(place(2, 1, [1]), .hide)
+    }
+
+    func testProjectorUnpluggedWithThirdDisplayUsesThatOne() {
+        XCTAssertEqual(place(2, 1, [1, 3]), .show(3))
+    }
+
+    func testProjectorBackReturnsThere() {
+        XCTAssertEqual(place(2, 1, [1, 3, 2]), .show(2))
+    }
+
+    func testProjectorPluggedInAfterStartingOnLaptop() {
+        // Started on the laptop alone (audience covers it); projector 2 appears.
+        XCTAssertEqual(place(1, 1, [1, 2]), .show(2))
+    }
+
+    func testUnknownPresenterDisplay() {
+        XCTAssertEqual(place(2, nil, [1]), .show(1))
+        XCTAssertEqual(place(2, nil, []), .hide)
+    }
+}

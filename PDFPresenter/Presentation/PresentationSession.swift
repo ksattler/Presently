@@ -49,6 +49,8 @@ final class PresentationSession: ObservableObject {
     static let timerStartsOnFirstTurnKey = "timerStartsOnFirstTurn"
     /// Page the audience keeps seeing while frozen; nil = follows `currentIndex`.
     @Published private(set) var frozenIndex: Int?
+    /// The audience display is disconnected; the audience view is hidden until it's back.
+    @Published var audienceDisconnected = false
     /// Set when reloading the PDF from disk failed (file unreadable or not a PDF).
     @Published private(set) var reloadError: String?
 
@@ -121,6 +123,7 @@ final class PresentationSession: ObservableObject {
         pageInput = ""
         frozenIndex = nil
         timerWaitsForFirstTurn = false
+        audienceDisconnected = false
         pointer.isEnabled = false
         timer.pause(at: now())
     }
