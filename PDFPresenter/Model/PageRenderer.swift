@@ -40,6 +40,11 @@ enum PageRenderer {
 
     /// Bitmap of a page region, for thumbnails and lists.
     static func image(of page: PDFPage, region: PageRegion, maxPixelSize: CGSize) -> NSImage? {
+        cgImage(of: page, region: region, maxPixelSize: maxPixelSize)
+            .map { NSImage(cgImage: $0, size: NSSize(width: $0.width, height: $0.height)) }
+    }
+
+    static func cgImage(of page: PDFPage, region: PageRegion, maxPixelSize: CGSize) -> CGImage? {
         let fitted = fittedRect(for: page, region: region, in: CGRect(origin: .zero, size: maxPixelSize))
         let w = Int(fitted.width.rounded()), h = Int(fitted.height.rounded())
         guard w > 0, h > 0,
@@ -48,7 +53,6 @@ enum PageRenderer {
                                   bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
         else { return nil }
         draw(page, region: region, in: CGRect(x: 0, y: 0, width: w, height: h), context: ctx)
-        guard let cg = ctx.makeImage() else { return nil }
-        return NSImage(cgImage: cg, size: NSSize(width: w, height: h))
+        return ctx.makeImage()
     }
 }

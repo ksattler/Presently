@@ -43,16 +43,23 @@ final class SlideDeck: ObservableObject {
 
     @Published var notesLayout: NotesLayout
     @Published private(set) var notes: [Int: String]
-    @Published var durationMinutes: Int? {
-        didSet { if durationMinutes != oldValue { scheduleSave() } }
+    @Published var talkLimit: TalkLimit {
+        didSet { if talkLimit != oldValue { scheduleSave() } }
+    }
+    /// Last page of the talk; later pages are backup. nil = all pages.
+    @Published var endPage: Int? {
+        didSet { if endPage != oldValue { scheduleSave() } }
     }
     @Published private(set) var saveError: String?
 
     private var sidecar: PdfpcFile
     private var saveTask: Task<Void, Never>?
     private let thumbnails = NSCache<NSString, NSImage>()
+    private var renderer: ThumbnailRenderer
 
-    init(pdf: PDFDocument, fileURL: URL?) {
+    /// `data`: the PDF's bytes for the background thumbnail renderer; taken from `pdf` if nil.
+    init(pdf: PDFDocument, fileURL: URL?, data: Data? = nil) {
+        renderer = ThumbnailRenderer(data: data ?? pdf.dataRepresentation())
         self.pdf = pdf
         self.fileURL = fileURL
         pageCount = pdf.pageCount
@@ -65,23 +72,32 @@ final class SlideDeck: ObservableObject {
         }
         self.sidecar = sidecar
         notes = sidecar.notes
-        durationMinutes = sidecar.durationMinutes
+        if let m = sidecar.durationMinutes {
+            talkLimit = .duration(minutes: m)
+        } else if let t = sidecar.endTime, let h = t.hour, let m = t.minute {
+            talkLimit = .endTime(hour: h, minute: m)
+        } else {
+            talkLimit = .none
+        }
+        endPage = sidecar.endPage.flatMap { $0 < pdf.pageCount ? $0 : nil }
         notesLayout = pdf.page(at: 0).map { NotesLayout.detect(pageSize: PageRenderer.displaySize(of: $0)) } ?? .none
     }
 
     convenience init?(data: Data, fileURL: URL?) {
         guard let pdf = PDFDocument(data: data) else { return nil }
-        self.init(pdf: pdf, fileURL: fileURL)
+        self.init(pdf: pdf, fileURL: fileURL, data: data)
     }
 
     /// Swaps in a new version of the PDF (recompiled slides). Sidecar notes, notes layout and
     /// duration stay; notes are matched by page index, as pdfpc does.
-    func reload(pdf newPDF: PDFDocument) {
+    func reload(pdf newPDF: PDFDocument, data: Data? = nil) {
         thumbnails.removeAllObjects()
+        renderer = ThumbnailRenderer(data: data ?? newPDF.dataRepresentation())
         pdf = newPDF
         pageCount = newPDF.pageCount
         labels = Self.labels(of: newPDF)
         embeddedNotes = Self.extractAnnotationNotes(from: newPDF)
+        if let e = endPage, e >= pageCount { endPage = nil }
         revision += 1
     }
 
@@ -91,6 +107,20 @@ final class SlideDeck: ObservableObject {
 
     func page(_ index: Int) -> PDFPage? {
         (0..<pageCount).contains(index) ? pdf.page(at: index) : nil
+    }
+
+    /// Width / height of the shown slide (first page, without a Beamer notes half).
+    var slideAspectRatio: CGFloat {
+        guard let page = page(0) else { return 4 / 3 }
+        let size = notesLayout.slideRegion.rect(in: CGRect(origin: .zero, size: PageRenderer.displaySize(of: page))).size
+        return size.height > 0 ? size.width / size.height : 4 / 3
+    }
+
+    func isBackup(_ index: Int) -> Bool { endPage.map { index > $0 } ?? false }
+
+    /// Share of the talk done at a page (see `TalkPlan.progress`).
+    func talkProgress(at index: Int) -> Double? {
+        TalkPlan.progress(at: index, labels: labels, endPage: endPage)
     }
 
     func label(_ index: Int) -> String {
@@ -158,10 +188,15 @@ final class SlideDeck: ObservableObject {
         saveTask = nil
         guard let fileURL else { return }
         sidecar.notes = notes
-        sidecar.durationMinutes = durationMinutes
+        switch talkLimit {
+        case .none:                     sidecar.durationMinutes = nil; sidecar.endTime = nil
+        case .duration(let m):          sidecar.durationMinutes = m; sidecar.endTime = nil
+        case .endTime(let h, let m):    sidecar.durationMinutes = nil; sidecar.endTime = DateComponents(hour: h, minute: m)
+        }
+        sidecar.endPage = endPage
         let url = PdfpcFile.url(forPDF: fileURL)
         // Nothing to store and no file yet: don't create an empty sidecar.
-        if notes.isEmpty, durationMinutes == nil, !FileManager.default.fileExists(atPath: url.path) { return }
+        if notes.isEmpty, talkLimit == .none, endPage == nil, !FileManager.default.fileExists(atPath: url.path) { return }
         do {
             try sidecar.serialized(pageLabels: labels).write(to: url, options: .atomic)
             saveError = nil
@@ -172,19 +207,30 @@ final class SlideDeck: ObservableObject {
 
     // MARK: Thumbnails
 
-    func thumbnail(_ index: Int, region: PageRegion, maxPixelSize: CGSize) -> NSImage? {
-        let key = "\(revision)-\(index)-\(region)-\(Int(maxPixelSize.width))x\(Int(maxPixelSize.height))" as NSString
+    func cachedThumbnail(_ index: Int, region: PageRegion, maxPixelSize: CGSize) -> NSImage? {
+        thumbnails.object(forKey: thumbnailKey(index, region, maxPixelSize))
+    }
+
+    /// Rendered in the background; cached. nil if the task was cancelled or the page is gone.
+    func thumbnail(_ index: Int, region: PageRegion, maxPixelSize: CGSize) async -> NSImage? {
+        let key = thumbnailKey(index, region, maxPixelSize)
         if let cached = thumbnails.object(forKey: key) { return cached }
-        guard let page = page(index),
-              let image = PageRenderer.image(of: page, region: region, maxPixelSize: maxPixelSize)
+        let rev = revision
+        guard let cg = await renderer.image(index: index, region: region, maxPixelSize: maxPixelSize),
+              rev == revision   // reloaded meanwhile: stale
         else { return nil }
+        let image = NSImage(cgImage: cg, size: NSSize(width: cg.width, height: cg.height))
         thumbnails.setObject(image, forKey: key)
         return image
     }
 
+    private func thumbnailKey(_ index: Int, _ region: PageRegion, _ size: CGSize) -> NSString {
+        "\(revision)-\(index)-\(region)-\(Int(size.width))x\(Int(size.height))" as NSString
+    }
+
     // MARK: Embedded notes
 
-    static func extractAnnotationNotes(from pdf: PDFDocument) -> [Int: String] {
+    nonisolated static func extractAnnotationNotes(from pdf: PDFDocument) -> [Int: String] {
         var result: [Int: String] = [:]
         for i in 0..<pdf.pageCount {
             guard let page = pdf.page(at: i) else { continue }

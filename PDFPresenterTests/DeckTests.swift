@@ -158,12 +158,12 @@ final class SlideDeckTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: sidecarURL.path), "no notes: no empty sidecar")
 
         deck.setNote("Einleitung", for: 0)
-        deck.durationMinutes = 25
+        deck.talkLimit = .duration(minutes: 25)
         deck.saveNow()
         XCTAssertNil(deck.saveError)
 
         let reopened = try XCTUnwrap(SlideDeck(data: data, fileURL: pdfURL))
         XCTAssertEqual(reopened.note(for: 0), "Einleitung")
-        XCTAssertEqual(reopened.durationMinutes, 25)
+        XCTAssertEqual(reopened.talkLimit, .duration(minutes: 25))
     }
 }

@@ -157,6 +157,8 @@ final class PresentationSessionTests: XCTestCase {
 
     func testBeginStartsTimerAndEndPausesIt() {
         let s = session()
+        s.defaults = UserDefaults(suiteName: "BeginStartsTimer-\(UUID().uuidString)")!
+        s.timerStartsOnFirstTurn = false   // see TalkSessionTests for the default
         var t = Date(timeIntervalSinceReferenceDate: 1000)
         s.now = { t }
         s.begin()

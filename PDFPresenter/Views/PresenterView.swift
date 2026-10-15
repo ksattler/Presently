@@ -46,6 +46,13 @@ struct PresenterView: View {
                     .padding(.horizontal, 8).padding(.vertical, 2)
                     .background(Color.accentColor.opacity(0.35), in: RoundedRectangle(cornerRadius: 6))
             }
+            if deck.isBackup(index) {
+                Label("Backup", systemImage: "archivebox")
+                    .font(.title3)
+                    .padding(.horizontal, 8).padding(.vertical, 2)
+                    .background(Color.purple.opacity(0.45), in: RoundedRectangle(cornerRadius: 6))
+                    .help("Nach dem markierten Vortragsende")
+            }
             if let frozen = session.frozenIndex {
                 Label(frozen == index ? "Eingefroren" : "Eingefroren – Publikum sieht Folie \(deck.label(frozen))",
                       systemImage: "snowflake")
@@ -247,11 +254,7 @@ struct PresenterView: View {
         Text(s).font(.headline).foregroundStyle(.secondary).lineLimit(1)
     }
 
-    private var slideAspect: CGFloat {
-        guard let page = deck.page(0) else { return 4 / 3 }
-        let size = deck.notesLayout.slideRegion.rect(in: CGRect(origin: .zero, size: PageRenderer.displaySize(of: page))).size
-        return size.height > 0 ? size.width / size.height : 4 / 3
-    }
+    private var slideAspect: CGFloat { deck.slideAspectRatio }
 }
 
 private struct PointerToggle: View {
@@ -266,36 +269,50 @@ private struct PointerToggle: View {
     }
 }
 
-/// Elapsed talk time (pausable), remaining time if a duration is set, and wall clock.
+/// Elapsed talk time (pausable), remaining time and pace if a limit is set, and wall clock.
 /// Separate view so the ticking doesn't re-evaluate the rest of the presenter view.
 struct PresentationClock: View {
     @ObservedObject var session: PresentationSession
     @ObservedObject var deck: SlideDeck
-    @State private var editingDuration = false
+    @State private var editingPlan = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             let elapsed = session.timer.elapsed(at: context.date)
+            let remaining = deck.talkLimit.remaining(elapsed: elapsed, now: context.date)
             HStack(spacing: 12) {
-                Label(PresentationTimer.format(elapsed), systemImage: session.timer.isRunning ? "timer" : "pause.circle")
-                    .font(.title2.monospacedDigit())
-                    .foregroundStyle(session.timer.isRunning ? .primary : Color.orange)
+                if session.timerWaitsForFirstTurn {
+                    Label("Start beim Blättern", systemImage: "timer")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Label(PresentationTimer.format(elapsed), systemImage: session.timer.isRunning ? "timer" : "pause.circle")
+                        .font(.title2.monospacedDigit())
+                        .foregroundStyle(session.timer.isRunning ? .primary : Color.orange)
+                }
                 Button { session.handle(.toggleTimer) } label: {
                     Image(systemName: session.timer.isRunning ? "pause.fill" : "play.fill")
                 }
-                .help(session.timer.isRunning ? "Timer anhalten (P)" : "Timer fortsetzen (P)")
+                .help(session.timer.isRunning ? "Timer anhalten (P)" : "Timer starten (P)")
                 Button { session.handle(.resetTimer) } label: { Image(systemName: "arrow.counterclockwise") }
                     .help("Timer zurücksetzen (R)")
 
-                if let minutes = deck.durationMinutes {
-                    let remaining = TimeInterval(minutes * 60) - elapsed
+                if let remaining {
                     Text("Rest \(PresentationTimer.format(remaining))")
                         .font(.title2.monospacedDigit())
                         .foregroundStyle(remaining < 0 ? Color.red : remaining < 120 ? Color.orange : Color.secondary)
+                    // Pace only once the talk runs and while on the talk's own slides.
+                    if !session.timerWaitsForFirstTurn, let progress = deck.talkProgress(at: session.currentIndex) {
+                        let pace = TalkPlan.paceOffset(elapsed: elapsed, remaining: remaining, progress: progress)
+                        Text(TalkPlan.formatPace(pace))
+                            .font(.title3.monospacedDigit())
+                            .foregroundStyle(abs(pace) < 30 ? Color.secondary : pace > 0 ? Color.green : Color.orange)
+                            .help("Folienfortschritt gegenüber verstrichener Zeit")
+                    }
                 }
-                Button { editingDuration.toggle() } label: { Image(systemName: "hourglass") }
-                    .help("Vortragsdauer festlegen")
-                    .popover(isPresented: $editingDuration) { DurationEditor(deck: deck).padding() }
+                Button { editingPlan.toggle() } label: { Image(systemName: "hourglass") }
+                    .help("Vortragsdauer oder Endzeit festlegen")
+                    .popover(isPresented: $editingPlan) { TalkPlanEditor(session: session, deck: deck).padding() }
 
                 Text(context.date, format: .dateTime.hour().minute())
                     .font(.title2.monospacedDigit())
@@ -306,21 +323,64 @@ struct PresentationClock: View {
     }
 }
 
-struct DurationEditor: View {
+/// Talk limit (none / duration / end time) and when the timer starts.
+struct TalkPlanEditor: View {
+    @ObservedObject var session: PresentationSession
     @ObservedObject var deck: SlideDeck
+
+    private enum Kind: Hashable { case none, duration, endTime }
+
+    private var kind: Binding<Kind> {
+        Binding(get: {
+            switch deck.talkLimit {
+            case .none: return .none
+            case .duration: return .duration
+            case .endTime: return .endTime
+            }
+        }, set: { kind in
+            switch kind {
+            case .none: deck.talkLimit = .none
+            case .duration: deck.talkLimit = .duration(minutes: 20)
+            case .endTime:
+                // Default: a round time about 30 minutes from now.
+                let c = Calendar.current.dateComponents([.hour, .minute], from: Date().addingTimeInterval(30 * 60))
+                deck.talkLimit = .endTime(hour: c.hour ?? 12, minute: (c.minute ?? 0) / 5 * 5)
+            }
+        })
+    }
 
     var body: some View {
         Form {
-            Toggle("Vortragsdauer", isOn: Binding(
-                get: { deck.durationMinutes != nil },
-                set: { deck.durationMinutes = $0 ? (deck.durationMinutes ?? 20) : nil }))
-            Stepper(value: Binding(get: { deck.durationMinutes ?? 20 }, set: { deck.durationMinutes = $0 }),
-                    in: 1...600, step: 5) {
-                Text("\(deck.durationMinutes ?? 20) Minuten").monospacedDigit()
+            Picker("Begrenzung", selection: kind) {
+                Text("Keine").tag(Kind.none)
+                Text("Dauer").tag(Kind.duration)
+                Text("Endzeit").tag(Kind.endTime)
             }
-            .disabled(deck.durationMinutes == nil)
+            .pickerStyle(.segmented)
+            switch deck.talkLimit {
+            case .none:
+                EmptyView()
+            case .duration(let minutes):
+                Stepper(value: Binding(get: { minutes }, set: { deck.talkLimit = .duration(minutes: $0) }),
+                        in: 1...600, step: 5) {
+                    Text("\(minutes) Minuten").monospacedDigit()
+                }
+            case .endTime(let hour, let minute):
+                DatePicker("Ende um", selection: Binding(
+                    get: { Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: Date()) ?? Date() },
+                    set: {
+                        let c = Calendar.current.dateComponents([.hour, .minute], from: $0)
+                        deck.talkLimit = .endTime(hour: c.hour ?? hour, minute: c.minute ?? minute)
+                    }), displayedComponents: .hourAndMinute)
+            }
+            Toggle("Timer startet beim ersten Blättern", isOn: Binding(
+                get: { session.timerStartsOnFirstTurn }, set: { session.timerStartsOnFirstTurn = $0 }))
+            if deck.endPage != nil {
+                Text("Vortrag endet nach Folie \(deck.label(deck.endPage!)); danach Backup.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
         }
-        .frame(width: 240)
+        .frame(width: 300)
     }
 }
 
@@ -340,10 +400,10 @@ struct OverviewGrid: View {
                         } label: {
                             VStack(spacing: 4) {
                                 PageThumbnail(deck: deck, index: i, region: deck.notesLayout.slideRegion)
-                                    .aspectRatio(4 / 3, contentMode: .fit)
+                                    .aspectRatio(deck.slideAspectRatio, contentMode: .fit)
                                     .overlay(RoundedRectangle(cornerRadius: 4)
                                         .stroke(i == session.currentIndex ? Color.accentColor : .clear, lineWidth: 3))
-                                Text("\(deck.label(i))  ·  \(i + 1)").font(.caption.monospacedDigit())
+                                Text("\(deck.label(i))  ·  \(i + 1)\(deck.isBackup(i) ? "  · Backup" : "")").font(.caption.monospacedDigit())
                                     .foregroundStyle(.secondary)
                             }
                         }

@@ -16,8 +16,10 @@
 		181EBD3D92730542A33519F2 /* LaserPointerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342ADCA406F1620C0F7ED079 /* LaserPointerView.swift */; };
 		328C872AD6CF52E2253F00A0 /* PDFPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3C3679F907848978E6AD8B /* PDFPageView.swift */; };
 		399EB1FEC7936B88A9883A1F /* PdfpcFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFC1A97A5052F880E1BDE11 /* PdfpcFile.swift */; };
+		5A984D2DC5EBCB59F920AD00 /* TalkPlanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FF41B3006A1CA952394B45 /* TalkPlanTests.swift */; };
 		69D4BA619D41836D6875101C /* PresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7E3BDB4160459F47D8519 /* PresentationTests.swift */; };
 		7E1335F39820F9A07466625A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4F0C425E5166C25A4C9C581 /* Assets.xcassets */; };
+		8201A6A217BDAAEF841CF396 /* ThumbnailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B10F8D90DCAAFD1855B146 /* ThumbnailRenderer.swift */; };
 		83EA6FAA92825E3FA4194200 /* PDFPresenterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D12897126D040BBA2D458B /* PDFPresenterApp.swift */; };
 		88ACA5513EF705AE921235C1 /* PresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2538EB610C2BBB82BB2DC6EB /* PresenterView.swift */; };
 		8BE543D555F0F2E56091E058 /* LinkAndSwapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06233D30F0BE26BE9EC99C1 /* LinkAndSwapTests.swift */; };
@@ -31,6 +33,7 @@
 		D0821AE606B998452D809698 /* PageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06102F11AC5B05D1BB6C6B6D /* PageRenderer.swift */; };
 		EA47884276AF91ECC29297C8 /* AudienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05C3099CE8C1707C20B2F4 /* AudienceView.swift */; };
 		F9447A87340F85A6D0CBE88A /* FreezeReloadPointerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAD3412E13781A51F79C3F3 /* FreezeReloadPointerTests.swift */; };
+		FF4978A92F2F6E8F68A9C481 /* TalkPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8102CCA628372D13A36FEC21 /* TalkPlan.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,11 +57,14 @@
 		55806B8F722E6B2E7AD71A83 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		6657ABBD152554C20A532478 /* NotesTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextView.swift; sourceTree = "<group>"; };
 		6B3D8D1050A5BCAB32110827 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		78FF41B3006A1CA952394B45 /* TalkPlanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkPlanTests.swift; sourceTree = "<group>"; };
 		7AAD3412E13781A51F79C3F3 /* FreezeReloadPointerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreezeReloadPointerTests.swift; sourceTree = "<group>"; };
+		8102CCA628372D13A36FEC21 /* TalkPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkPlan.swift; sourceTree = "<group>"; };
 		99D12897126D040BBA2D458B /* PDFPresenterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPresenterApp.swift; sourceTree = "<group>"; };
 		9CFC1A97A5052F880E1BDE11 /* PdfpcFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfpcFile.swift; sourceTree = "<group>"; };
 		9E318190267B8FDC25ADED51 /* PDFPresenterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDFPresenterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F6F4BDCEF84F676A954F808 /* PDFPresenter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PDFPresenter.entitlements; sourceTree = "<group>"; };
+		A7B10F8D90DCAAFD1855B146 /* ThumbnailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailRenderer.swift; sourceTree = "<group>"; };
 		B15BCC86926F73EEBF750E87 /* DeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTests.swift; sourceTree = "<group>"; };
 		B7CC619396CFDBA96B13DC7A /* SlideDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideDeck.swift; sourceTree = "<group>"; };
 		BB4C7B6A8476FFD70D0D9B69 /* PDFPresenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDFPresenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,6 +146,8 @@
 				2815022FDA32BA690C0979E2 /* PDFLinks.swift */,
 				9CFC1A97A5052F880E1BDE11 /* PdfpcFile.swift */,
 				B7CC619396CFDBA96B13DC7A /* SlideDeck.swift */,
+				8102CCA628372D13A36FEC21 /* TalkPlan.swift */,
+				A7B10F8D90DCAAFD1855B146 /* ThumbnailRenderer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -161,6 +169,7 @@
 				F06233D30F0BE26BE9EC99C1 /* LinkAndSwapTests.swift */,
 				2F9FE19F546D9E6D0A737773 /* PDFFixture.swift */,
 				DDC7E3BDB4160459F47D8519 /* PresentationTests.swift */,
+				78FF41B3006A1CA952394B45 /* TalkPlanTests.swift */,
 			);
 			path = PDFPresenterTests;
 			sourceTree = "<group>";
@@ -264,6 +273,7 @@
 				8BE543D555F0F2E56091E058 /* LinkAndSwapTests.swift in Sources */,
 				0DFC8AB0D69B4E2F26D8036D /* PDFFixture.swift in Sources */,
 				69D4BA619D41836D6875101C /* PresentationTests.swift in Sources */,
+				5A984D2DC5EBCB59F920AD00 /* TalkPlanTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +299,8 @@
 				CB7673C7749DE6D4AA72B49C /* PresentationTimer.swift in Sources */,
 				88ACA5513EF705AE921235C1 /* PresenterView.swift in Sources */,
 				02AF381018ACB9B7758F6F9F /* SlideDeck.swift in Sources */,
+				FF4978A92F2F6E8F68A9C481 /* TalkPlan.swift in Sources */,
+				8201A6A217BDAAEF841CF396 /* ThumbnailRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

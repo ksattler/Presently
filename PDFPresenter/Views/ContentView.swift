@@ -10,7 +10,7 @@ struct ContentView: View {
 
     init(file: PDFFile, fileURL: URL?) {
         let deck = SlideDeck(data: file.data, fileURL: fileURL) ?? SlideDeck(pdf: PDFDocument(), fileURL: nil)
-        _session = StateObject(wrappedValue: PresentationSession(deck: deck, watchesFile: true))
+        _session = StateObject(wrappedValue: PresentationSession(deck: deck, watchesFile: true, remembersPage: LastPageStore()))
     }
 
     var body: some View {
@@ -74,6 +74,22 @@ private struct BrowseView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 4)
+                    .opacity(deck.isBackup(i) ? 0.55 : 1)
+                    .overlay(alignment: .bottom) {
+                        if deck.endPage == i {
+                            Text("Vortragsende").font(.caption2.bold()).foregroundStyle(.white)
+                                .padding(.horizontal, 6).padding(.vertical, 1)
+                                .background(Color.purple, in: Capsule())
+                                .offset(y: 8)
+                        }
+                    }
+                    .contextMenu {
+                        if deck.endPage == i {
+                            Button("Markierung „Vortragsende“ entfernen") { deck.endPage = nil }
+                        } else {
+                            Button("Vortrag endet hier (danach Backup)") { deck.endPage = i }
+                        }
+                    }
                     .tag(i)
                 }
             }

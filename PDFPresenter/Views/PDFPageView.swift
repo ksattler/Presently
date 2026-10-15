@@ -62,7 +62,12 @@ struct PageThumbnail: View {
             }
         }
         .task(id: "\(deck.revision)-\(index)-\(region)") {
-            image = deck.thumbnail(index, region: region, maxPixelSize: pixelSize)
+            if let cached = deck.cachedThumbnail(index, region: region, maxPixelSize: pixelSize) {
+                image = cached
+            } else {
+                image = nil
+                image = await deck.thumbnail(index, region: region, maxPixelSize: pixelSize)
+            }
         }
     }
 }

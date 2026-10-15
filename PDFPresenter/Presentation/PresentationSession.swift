@@ -27,13 +27,26 @@ final class PresentationSession: ObservableObject {
 
     let deck: SlideDeck
 
-    @Published var currentIndex = 0
+    @Published var currentIndex = 0 {
+        didSet {
+            guard currentIndex != oldValue else { return }
+            if isPresenting, timerWaitsForFirstTurn {
+                timerWaitsForFirstTurn = false
+                timer.start(at: now())
+            }
+            if let url = deck.fileURL { lastPages?.set(currentIndex, for: url) }
+        }
+    }
     @Published private(set) var isPresenting = false
     @Published var blank: Blank?
     @Published var showsOverview = false
     /// Digits typed so far for "go to page"; Return jumps, Escape clears.
     @Published private(set) var pageInput = ""
     @Published private(set) var timer = PresentationTimer()
+    /// The timer starts with the first page turn instead of with the presentation (pdfpc's
+    /// behavior: you can open the presentation early and wait on the title slide).
+    @Published private(set) var timerWaitsForFirstTurn = false
+    static let timerStartsOnFirstTurnKey = "timerStartsOnFirstTurn"
     /// Page the audience keeps seeing while frozen; nil = follows `currentIndex`.
     @Published private(set) var frozenIndex: Int?
     /// Set when reloading the PDF from disk failed (file unreadable or not a PDF).
@@ -50,9 +63,22 @@ final class PresentationSession: ObservableObject {
     var audienceIndex: Int { frozenIndex ?? currentIndex }
 
     var now: () -> Date = Date.init
+    var defaults: UserDefaults = .standard
+    /// nil = don't remember the page (tests, windows without a file).
+    private let lastPages: LastPageStore?
 
-    init(deck: SlideDeck, watchesFile: Bool = false) {
+    var timerStartsOnFirstTurn: Bool {
+        get { defaults.object(forKey: Self.timerStartsOnFirstTurnKey) as? Bool ?? true }
+        set { defaults.set(newValue, forKey: Self.timerStartsOnFirstTurnKey); objectWillChange.send() }
+    }
+
+    /// `remembersPage`: open at the page shown last time and keep remembering it.
+    init(deck: SlideDeck, watchesFile: Bool = false, remembersPage: LastPageStore? = nil) {
         self.deck = deck
+        lastPages = remembersPage
+        if let store = remembersPage, let url = deck.fileURL, let page = store.page(for: url), page < deck.pageCount {
+            currentIndex = page
+        }
         if watchesFile, let url = deck.fileURL {
             watcher = FileWatcher(url: url) { [weak self] in self?.reloadFromDisk() }
         }
@@ -69,7 +95,7 @@ final class PresentationSession: ObservableObject {
             return
         }
         reloadError = nil
-        deck.reload(pdf: pdf)
+        deck.reload(pdf: pdf, data: data)
         go(to: currentIndex)
         if let frozenIndex { self.frozenIndex = min(frozenIndex, deck.pageCount - 1) }
     }
@@ -84,7 +110,8 @@ final class PresentationSession: ObservableObject {
         pageInput = ""
         frozenIndex = nil
         timer = PresentationTimer()
-        timer.start(at: now())
+        timerWaitsForFirstTurn = timerStartsOnFirstTurn
+        if !timerWaitsForFirstTurn { timer.start(at: now()) }
     }
 
     func end() {
@@ -93,6 +120,7 @@ final class PresentationSession: ObservableObject {
         showsOverview = false
         pageInput = ""
         frozenIndex = nil
+        timerWaitsForFirstTurn = false
         pointer.isEnabled = false
         timer.pause(at: now())
     }
@@ -185,7 +213,9 @@ final class PresentationSession: ObservableObject {
         case .nextSlide:     nextSlide()
         case .previousSlide: previousSlide()
         case .first:         go(to: 0)
-        case .last:          go(to: deck.pageCount - 1)
+        case .last:
+            // End of the talk first (backup slides follow), then the last page.
+            if let end = deck.endPage, currentIndex < end { go(to: end) } else { go(to: deck.pageCount - 1) }
         case .black:         blank = blank == .black ? nil : .black
         case .white:         blank = blank == .white ? nil : .white
         case .digit(let d):  if pageInput.count < 4 { pageInput += String(d) }
@@ -201,7 +231,7 @@ final class PresentationSession: ObservableObject {
         case .swapScreens:    break   // done by the PresentationController
         case .toggleFreeze:   frozenIndex = frozenIndex == nil ? currentIndex : nil
         case .togglePointer:  pointer.isEnabled.toggle()
-        case .toggleTimer:    timer.toggle(at: now())
+        case .toggleTimer:    timerWaitsForFirstTurn = false; timer.toggle(at: now())
         case .resetTimer:     timer.reset(at: now())
         case .ignore:         break
         case .exit:

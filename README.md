@@ -8,7 +8,10 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
 - **Präsentieren** mit ⌘⏎, F5 oder ▶︎ in der Symbolleiste.
   - **Bildschirm wählen:** Symbolleiste oder Menü *Präsentation → Präsentieren auf*. „Automatisch“ nimmt bei mehreren Bildschirmen den, auf dem das Dokumentfenster *nicht* liegt. Die Wahl bleibt gespeichert.
   - **Probe:** „Publikumsansicht im Fenster“ öffnet die Publikumsansicht als normales Fenster.
-  - **Referentenansicht** im Dokumentfenster (optional im Vollbild): aktuelle und nächste Folie, die folgenden Seiten, Notizen (Markdown, Schriftgröße einstellbar), verstrichene Zeit (anhaltbar), Restzeit bei gesetzter Vortragsdauer, Uhrzeit, Übersicht aller Seiten.
+  - **Referentenansicht** im Dokumentfenster (optional im Vollbild): aktuelle und nächste Folie, die folgenden Seiten, Notizen (Markdown, Schriftgröße einstellbar), verstrichene Zeit (anhaltbar), Uhrzeit, Übersicht aller Seiten.
+  - **Zeitplan** (Sanduhr-Symbol): Vortragsdauer *oder* Endzeit. Angezeigt werden Restzeit und ob du vor oder hinter dem Plan liegst (Folienfortschritt gegenüber Zeit, Overlays zählen nicht extra). Der Timer startet standardmäßig erst beim ersten Blättern – du kannst die Präsentation vorher öffnen und auf der Titelfolie warten.
+  - **Vortragsende / Backup:** Rechtsklick auf eine Seite in der Seitenliste → „Vortrag endet hier“. Spätere Seiten gelten als Backup (blasser, Hinweis in der Referentenansicht), zählen nicht zum Zeitplan, und *Ende* springt zuerst zum Vortragsende.
+- **Letzte Seite merken:** Ein PDF öffnet dort, wo du zuletzt warst.
   - **Einfrieren (F):** Das Publikum behält die aktuelle Folie, während du in der Referentenansicht blätterst (z. B. bei Rückfragen). Nochmal F oder Esc zeigt wieder deine Folie.
   - **Laserpointer (L):** Der Mauszeiger über der aktuellen Folie (Referentenansicht oder Publikum) erscheint als roter Punkt beim Publikum – auch mit Klickern, die den Mauszeiger bewegen.
   - **Bildschirme tauschen (S):** Publikum und Referentenansicht wechseln die Displays (falscher Beamer erkannt, Kabel vertauscht). Die Wahl wird gespeichert.
@@ -28,7 +31,7 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
 | → ↓ Bild↓ Leertaste Klick (außerhalb von Links) | weiter |
 | ← ↑ Bild↑ ⌫ Rechtsklick | zurück |
 | ⇧ → / ⇧ ← | nächste / vorige Folie (Overlays überspringen) |
-| Pos1 / Ende | erste / letzte Seite |
+| Pos1 / Ende | erste Seite / Vortragsende, nochmal Ende: letzte Seite |
 | Nummer + ⏎ | zu Folie (Beschriftung) bzw. Seite springen |
 | B oder . / W oder , | Schwarz- / Weißbild (nochmal: zurück) |
 | Tab oder O | Übersicht |

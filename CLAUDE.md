@@ -29,7 +29,9 @@ PresentationController audience window (borderless on a display, or windowed for
                       NSEvent monitor for keys/clicks, display sleep off, presenter full screen
 PresentationScreens   connected displays + persisted choice (UserDefaults)
 SlideDeck             PDFDocument, page labels, NotesLayout, notes (pdfpc sidecar + PDF annotations)
-PageRenderer          vector drawing of a PageRegion (PDFPageView) and cached thumbnails
+PageRenderer          vector drawing of a PageRegion (PDFPageView) and bitmaps
+ThumbnailRenderer     actor with its own PDFDocument copy: thumbnails off the main thread
+TalkPlan / TalkLimit  remaining time, pace, talk progress; LastPageStore (UserDefaults)
 ```
 
 ## Conventions
@@ -44,4 +46,7 @@ PageRenderer          vector drawing of a PageRegion (PDFPageView) and cached th
 - **Links:** `PDFLinks` maps a normalized slide point to PDF page space (`page.transform(for: .cropBox)` inverted — handles rotation and Beamer half regions) and resolves `LinkTarget`. Audience clicks are resolved in the controller's event monitor (link first, else next); the presenter's current slide uses `LaserPointerLayer(onClick:)`. `PDFPage.document` is weak — tests must keep the `PDFDocument` alive.
 - **Swapping displays:** `PresentationController.swapScreens()`, targets from `swapTargets` (if both windows share a display, the presenter moves away — the way back from a covered presenter view). A full-screen presenter window must leave full screen before it can move; AppKit restores the old frame right after `didExitFullScreenNotification`, so the move happens on the next run-loop turn and full screen is re-entered only once the window is on the target display.
 - **Reload:** `FileWatcher` re-arms after rename/delete (atomic saves) and debounces chunked writes. `SlideDeck.reload(pdf:)` swaps pages/labels and bumps `revision`; anything caching per page must key on `revision`. Unparseable files are ignored (old version stays).
+- **Thumbnails:** never render PDFKit objects of the main-thread `SlideDeck.pdf` off the main thread — the `ThumbnailRenderer` actor owns a separate `PDFDocument` built from the same data (recreated on reload; results from before a reload are dropped via `revision`).
+- **Sidecar keys:** `duration` / `endTime` ("HH:MM") are pdfpc's; the talk's end page is our own `pdfpresenterEndPage` (pdfpc's `endSlide` counts user slides — not mapped). The last shown page lives in UserDefaults (`LastPageStore`), so merely viewing a PDF never creates a sidecar.
+- **Timer start:** `timerStartsOnFirstTurn` (UserDefaults, default true): `begin()` arms the timer, the first change of `currentIndex` starts it.
 - **Tests** build PDFs in code (`PDFFixture`: page labels, text annotations, red/blue halves).
