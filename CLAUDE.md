@@ -16,6 +16,7 @@ xcodegen generate     # regenerate Presently.xcodeproj from project.yml — requ
 xcodebuild -project Presently.xcodeproj -scheme Presently build
 xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
 xcodebuild test ... -only-testing:PresentlyTests/SlideDeckTests    # single test class
+scripts/release.sh 1.0.0   # Developer ID archive → notarize → staple → zip → draft GitHub release (setup: see script header)
 ```
 
 ## Architecture
