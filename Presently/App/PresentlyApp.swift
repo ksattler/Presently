@@ -41,13 +41,13 @@ struct AppCommands: Commands {
     @FocusedObject private var deck: SlideDeck?
 
     var body: some Commands {
-        CommandMenu("Präsentation") {
+        CommandMenu("Presentation") {
             if actions?.isPresenting == true {
-                Button("Präsentation beenden") { actions?.stop() }
+                Button("End Presentation") { actions?.stop() }
                     .keyboardShortcut(.return, modifiers: .command)
-                Button("Bildschirme tauschen") { actions?.swapScreens() }
+                Button("Swap Displays") { actions?.swapScreens() }
             } else {
-                Button("Präsentation starten") { actions?.start() }
+                Button("Start Presentation") { actions?.start() }
                     .keyboardShortcut(.return, modifiers: .command)
                     .disabled(!(actions?.canPresent ?? false))
             }
@@ -58,7 +58,7 @@ struct AppCommands: Commands {
             Divider()
             if let deck {
                 // Only here, not in the toolbar: detected automatically, rarely changed by hand.
-                Picker("Beamer-Notizen", selection: Binding(get: { deck.notesLayout }, set: { deck.notesLayout = $0 })) {
+                Picker("Beamer Notes", selection: Binding(get: { deck.notesLayout }, set: { deck.notesLayout = $0 })) {
                     ForEach(NotesLayout.allCases) { Text($0.title).tag($0) }
                 }
             }
@@ -70,7 +70,7 @@ private struct TransitionsToggle: View {
     @AppStorage(PageTransition.enabledKey) private var enabled = true
 
     var body: some View {
-        Toggle("Übergänge aus dem PDF abspielen", isOn: $enabled)
+        Toggle("Play Transitions from the PDF", isOn: $enabled)
     }
 }
 

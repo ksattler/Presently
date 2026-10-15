@@ -94,7 +94,7 @@ final class PresentationSession: ObservableObject {
     func reloadFromDisk() {
         guard let url = deck.fileURL else { return }
         guard let data = try? Data(contentsOf: url), let pdf = PDFDocument(data: data), pdf.pageCount > 0 else {
-            reloadError = "„\(url.lastPathComponent)“ konnte nicht neu geladen werden."
+            reloadError = String(localized: "“\(url.lastPathComponent)” could not be reloaded.")
             return
         }
         reloadError = nil

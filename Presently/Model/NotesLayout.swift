@@ -27,11 +27,11 @@ enum NotesLayout: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .none:   return "Keine (ganze Seite)"
-        case .right:  return "Notizen rechts"
-        case .left:   return "Notizen links"
-        case .bottom: return "Notizen unten"
-        case .top:    return "Notizen oben"
+        case .none:   return String(localized: "None (Whole Page)")
+        case .right:  return String(localized: "Notes on the Right")
+        case .left:   return String(localized: "Notes on the Left")
+        case .bottom: return String(localized: "Notes Below")
+        case .top:    return String(localized: "Notes Above")
         }
     }
 

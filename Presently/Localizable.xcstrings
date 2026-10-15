@@ -1,0 +1,1096 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ ahead": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ voraus"
+          }
+        }
+      }
+    },
+    "%@ behind": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ zurück"
+          }
+        }
+      }
+    },
+    "%@ left": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rest %@"
+          }
+        }
+      }
+    },
+    "%lld minutes": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minutes"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Minuten"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "After the marked end of the talk": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach dem markierten Vortragsende"
+          }
+        }
+      }
+    },
+    "Audience View in a Window (Rehearsal)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikumsansicht im Fenster (Probe)"
+          }
+        }
+      }
+    },
+    "Audience and presenter view swap displays (S)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikum und Referentenansicht tauschen die Bildschirme (S)"
+          }
+        }
+      }
+    },
+    "Audience sees black": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikum sieht Schwarz"
+          }
+        }
+      }
+    },
+    "Audience sees white": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikum sieht Weiß"
+          }
+        }
+      }
+    },
+    "Audience – %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikum – %@"
+          }
+        }
+      }
+    },
+    "Automatic": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zurück"
+          }
+        }
+      }
+    },
+    "Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup"
+          }
+        }
+      }
+    },
+    "Beamer Notes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beamer-Notizen"
+          }
+        }
+      }
+    },
+    "Beamer notes “%@” are active, but the pages have a normal slide format – only half a page is shown.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beamer-Notizen „%@“ sind aktiv, die Seiten haben aber ein normales Folienformat – gezeigt wird nur eine halbe Seite."
+          }
+        }
+      }
+    },
+    "Black": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schwarz"
+          }
+        }
+      }
+    },
+    "Blue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blau"
+          }
+        }
+      }
+    },
+    "Can’t be saved (no file)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht speicherbar (keine Datei)"
+          }
+        }
+      }
+    },
+    "Clear the drawings on this slide (X)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeichnungen dieser Folie löschen (X)"
+          }
+        }
+      }
+    },
+    "Colors": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Farben"
+          }
+        }
+      }
+    },
+    "Current": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktuell"
+          }
+        }
+      }
+    },
+    "Current Slide on the Right": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktuelle Folie rechts"
+          }
+        }
+      }
+    },
+    "Display": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirm"
+          }
+        }
+      }
+    },
+    "Display for the presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirm für die Präsentation"
+          }
+        }
+      }
+    },
+    "Drag to change the layout": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ziehen, um die Aufteilung zu ändern"
+          }
+        }
+      }
+    },
+    "Duration": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dauer"
+          }
+        }
+      }
+    },
+    "Edit notes (double-click)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen bearbeiten (Doppelklick)"
+          }
+        }
+      }
+    },
+    "End": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beenden"
+          }
+        }
+      }
+    },
+    "End Presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentation beenden"
+          }
+        }
+      }
+    },
+    "End Time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Endzeit"
+          }
+        }
+      }
+    },
+    "End of Talk": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vortragsende"
+          }
+        }
+      }
+    },
+    "End of presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ende der Präsentation"
+          }
+        }
+      }
+    },
+    "Ends at": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ende um"
+          }
+        }
+      }
+    },
+    "Eraser": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Radierer"
+          }
+        }
+      }
+    },
+    "Error": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fehler"
+          }
+        }
+      }
+    },
+    "Freeze": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfrieren"
+          }
+        }
+      }
+    },
+    "Frozen": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eingefroren"
+          }
+        }
+      }
+    },
+    "Frozen – audience sees slide %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eingefroren – Publikum sieht Folie %@"
+          }
+        }
+      }
+    },
+    "Go to %@ ⏎": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gehe zu %@ ⏎"
+          }
+        }
+      }
+    },
+    "Go to page %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zu Seite %lld springen"
+          }
+        }
+      }
+    },
+    "Green": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grün"
+          }
+        }
+      }
+    },
+    "Has notes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hat Notizen"
+          }
+        }
+      }
+    },
+    "Highlighter": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textmarker"
+          }
+        }
+      }
+    },
+    "In the PDF: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im PDF: %@"
+          }
+        }
+      }
+    },
+    "Larger text": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Größere Schrift"
+          }
+        }
+      }
+    },
+    "Laser Pointer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laserpointer"
+          }
+        }
+      }
+    },
+    "Layout of the presenter view": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufbau der Referentenansicht"
+          }
+        }
+      }
+    },
+    "Limit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Begrenzung"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiter"
+          }
+        }
+      }
+    },
+    "Next Slide": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste Folie"
+          }
+        }
+      }
+    },
+    "No notes for this slide.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Notizen für diese Folie."
+          }
+        }
+      }
+    },
+    "None": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine"
+          }
+        }
+      }
+    },
+    "None (Whole Page)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine (ganze Seite)"
+          }
+        }
+      }
+    },
+    "Notes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen"
+          }
+        }
+      }
+    },
+    "Notes Above": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen oben"
+          }
+        }
+      }
+    },
+    "Notes Below": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen unten"
+          }
+        }
+      }
+    },
+    "Notes could not be saved: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen konnten nicht gespeichert werden: %@"
+          }
+        }
+      }
+    },
+    "Notes for this slide (Markdown) …": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen für diese Folie (Markdown) …"
+          }
+        }
+      }
+    },
+    "Notes on the Left": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen links"
+          }
+        }
+      }
+    },
+    "Notes on the Right": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen rechts"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Off": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aus"
+          }
+        }
+      }
+    },
+    "Page %lld / %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seite %lld / %lld"
+          }
+        }
+      }
+    },
+    "Page %lld of %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seite %lld von %lld"
+          }
+        }
+      }
+    },
+    "Pause timer (P)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timer anhalten (P)"
+          }
+        }
+      }
+    },
+    "Pen": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stift"
+          }
+        }
+      }
+    },
+    "Play Transitions from the PDF": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übergänge aus dem PDF abspielen"
+          }
+        }
+      }
+    },
+    "Present": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentieren"
+          }
+        }
+      }
+    },
+    "Present On": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentieren auf"
+          }
+        }
+      }
+    },
+    "Presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentation"
+          }
+        }
+      }
+    },
+    "Presenter View in Full Screen": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Referentenansicht im Vollbild"
+          }
+        }
+      }
+    },
+    "Projector disconnected – the audience view returns when it is reconnected": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beamer getrennt – Publikumsansicht kehrt beim Wiederverbinden zurück"
+          }
+        }
+      }
+    },
+    "Red": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rot"
+          }
+        }
+      }
+    },
+    "Remove the last stroke on this slide (Z)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzten Strich dieser Folie entfernen (Z)"
+          }
+        }
+      }
+    },
+    "Remove “End of Talk” Mark": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Markierung „Vortragsende“ entfernen"
+          }
+        }
+      }
+    },
+    "Reset Layout": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufteilung zurücksetzen"
+          }
+        }
+      }
+    },
+    "Reset timer (R)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timer zurücksetzen (R)"
+          }
+        }
+      }
+    },
+    "Set talk duration or end time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vortragsdauer oder Endzeit festlegen"
+          }
+        }
+      }
+    },
+    "Show Whole Page": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ganze Seite zeigen"
+          }
+        }
+      }
+    },
+    "Slide %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folie %@"
+          }
+        }
+      }
+    },
+    "Slide progress compared to elapsed time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folienfortschritt gegenüber verstrichener Zeit"
+          }
+        }
+      }
+    },
+    "Smaller text": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kleinere Schrift"
+          }
+        }
+      }
+    },
+    "Start Presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentation starten"
+          }
+        }
+      }
+    },
+    "Start presentation (⌘⏎ or F5)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentation starten (⌘⏎ oder F5)"
+          }
+        }
+      }
+    },
+    "Start timer (P)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timer starten (P)"
+          }
+        }
+      }
+    },
+    "Starts on page turn": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start beim Blättern"
+          }
+        }
+      }
+    },
+    "Stop editing (Esc)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeiten beenden (Esc)"
+          }
+        }
+      }
+    },
+    "Swap": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tauschen"
+          }
+        }
+      }
+    },
+    "Swap Displays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildschirme tauschen"
+          }
+        }
+      }
+    },
+    "Talk Ends Here (Backup After)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vortrag endet hier (danach Backup)"
+          }
+        }
+      }
+    },
+    "The audience keeps the current slide while you browse (F)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Publikum behält die aktuelle Folie, während du blätterst (F)"
+          }
+        }
+      }
+    },
+    "The mouse pointer over the current slide appears as a red dot for the audience (L)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mauszeiger über der aktuellen Folie erscheint als roter Punkt beim Publikum (L)"
+          }
+        }
+      }
+    },
+    "The talk ends after slide %@; backup after that.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vortrag endet nach Folie %@; danach Backup."
+          }
+        }
+      }
+    },
+    "Timer starts on the first page turn": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timer startet beim ersten Blättern"
+          }
+        }
+      }
+    },
+    "Up Next": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste"
+          }
+        }
+      }
+    },
+    "Up Next (Overlay)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste (Overlay)"
+          }
+        }
+      }
+    },
+    "Up Next: Slide %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste: Folie %@"
+          }
+        }
+      }
+    },
+    "Upcoming Pages": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folgende Seiten"
+          }
+        }
+      }
+    },
+    "View": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ansicht"
+          }
+        }
+      }
+    },
+    "White": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiß"
+          }
+        }
+      }
+    },
+    "Yellow": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gelb"
+          }
+        }
+      }
+    },
+    "all overlays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "alle Overlays"
+          }
+        }
+      }
+    },
+    "applies to all overlays of slide %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "gilt für alle Overlays von Folie %@"
+          }
+        }
+      }
+    },
+    "on schedule": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "im Plan"
+          }
+        }
+      }
+    },
+    "“%@” could not be reloaded.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ konnte nicht neu geladen werden."
+          }
+        }
+      }
+    },
+    "← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

@@ -34,12 +34,12 @@ final class Drawings: ObservableObject {
 
         var title: String {
             switch self {
-            case .red: return "Rot"
-            case .blue: return "Blau"
-            case .green: return "Grün"
-            case .black: return "Schwarz"
-            case .white: return "Weiß"
-            case .yellow: return "Gelb"
+            case .red: return String(localized: "Red")
+            case .blue: return String(localized: "Blue")
+            case .green: return String(localized: "Green")
+            case .black: return String(localized: "Black")
+            case .white: return String(localized: "White")
+            case .yellow: return String(localized: "Yellow")
             }
         }
     }

@@ -66,11 +66,11 @@ struct SplitHandle: View {
         .gesture(DragGesture(minimumDistance: 1, coordinateSpace: .global)
             .onChanged { onChanged(axis == .horizontal ? $0.translation.width : $0.translation.height) }
             .onEnded { _ in onEnded() })
-        .help("Ziehen, um die Aufteilung zu ändern")
+        .help("Drag to change the layout")
     }
 }
 
-/// "Ansicht" menu of the presenter view.
+/// "View" menu of the presenter view.
 struct PresenterLayoutMenu: View {
     @AppStorage(PresenterLayout.Key.currentOnRight) private var currentOnRight = false
     @AppStorage(PresenterLayout.Key.showsNext) private var showsNext = true
@@ -79,21 +79,21 @@ struct PresenterLayoutMenu: View {
 
     var body: some View {
         Menu {
-            Toggle("Aktuelle Folie rechts", isOn: $currentOnRight)
+            Toggle("Current Slide on the Right", isOn: $currentOnRight)
             Divider()
-            Toggle("Nächste Folie", isOn: $showsNext)
-            Toggle("Notizen", isOn: $showsNotes)
-            Picker("Folgende Seiten", selection: $upcomingCount) {
-                Text("Aus").tag(0)
-                ForEach(1...PresenterLayout.upcomingRange.upperBound, id: \.self) { Text("\($0)").tag($0) }
+            Toggle("Next Slide", isOn: $showsNext)
+            Toggle("Notes", isOn: $showsNotes)
+            Picker("Upcoming Pages", selection: $upcomingCount) {
+                Text("Off").tag(0)
+                ForEach(1...PresenterLayout.upcomingRange.upperBound, id: \.self) { Text($0, format: .number).tag($0) }
             }
             Divider()
-            Button("Aufteilung zurücksetzen") { PresenterLayout.reset() }
+            Button("Reset Layout") { PresenterLayout.reset() }
         } label: {
-            Label("Ansicht", systemImage: "rectangle.split.3x1")
+            Label("View", systemImage: "rectangle.split.3x1")
         }
         .menuStyle(.borderlessButton)
         .fixedSize()
-        .help("Aufbau der Referentenansicht")
+        .help("Layout of the presenter view")
     }
 }

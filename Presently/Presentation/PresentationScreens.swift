@@ -76,20 +76,20 @@ extension NSScreen {
     }
 }
 
-/// Menu content: "Präsentieren auf" automatic / one of the connected displays, plus options.
+/// Menu content: "Present On" automatic / one of the connected displays, plus options.
 struct PresentationScreenMenu: View {
     @ObservedObject private var screens = PresentationScreens.shared
 
     var body: some View {
-        Picker("Präsentieren auf", selection: $screens.selectedID) {
-            Text("Automatisch").tag(CGDirectDisplayID?.none)
+        Picker("Present On", selection: $screens.selectedID) {
+            Text("Automatic").tag(CGDirectDisplayID?.none)
             ForEach(screens.screens) { screen in
                 Text(screen.name).tag(CGDirectDisplayID?.some(screen.id))
             }
         }
         .pickerStyle(.inline)
         Divider()
-        Toggle("Publikumsansicht im Fenster (Probe)", isOn: $screens.windowed)
-        Toggle("Referentenansicht im Vollbild", isOn: $screens.presenterFullScreen)
+        Toggle("Audience View in a Window (Rehearsal)", isOn: $screens.windowed)
+        Toggle("Presenter View in Full Screen", isOn: $screens.presenterFullScreen)
     }
 }

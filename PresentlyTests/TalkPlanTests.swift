@@ -38,9 +38,9 @@ final class TalkPlanTests: XCTestCase {
         // 5 min used, half done: 5 min ahead.
         XCTAssertEqual(TalkPlan.paceOffset(elapsed: 300, remaining: 900, progress: 0.5), 300)
         XCTAssertEqual(TalkPlan.paceOffset(elapsed: 900, remaining: 300, progress: 0.25), -600)
-        XCTAssertEqual(TalkPlan.formatPace(10), "im Plan")
-        XCTAssertEqual(TalkPlan.formatPace(300), "05:00 voraus")
-        XCTAssertEqual(TalkPlan.formatPace(-90), "01:30 zurück")
+        XCTAssertEqual(TalkPlan.formatPace(10), String(localized: "on schedule"))
+        XCTAssertEqual(TalkPlan.formatPace(300), String(localized: "\("05:00") ahead"))
+        XCTAssertEqual(TalkPlan.formatPace(-90), String(localized: "\("01:30") behind"))
     }
 
     func testPdfpcEndTimeAndEndPage() throws {

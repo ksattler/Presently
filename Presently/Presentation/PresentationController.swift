@@ -49,7 +49,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
                                width: size.width, height: size.height)
             w = AudienceWindow(contentRect: frame, styleMask: [.titled, .closable, .resizable, .miniaturizable],
                                backing: .buffered, defer: false)
-            w.title = "Publikum – \(presenterWindow?.title ?? "Präsentation")"
+            w.title = String(localized: "Audience – \(presenterWindow?.title ?? String(localized: "Presentation"))")
         } else {
             w = AudienceWindow(contentRect: screen.frame, styleMask: [.borderless],
                                backing: .buffered, defer: false, screen: screen)
@@ -75,7 +75,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
 
         installMonitor()
         activity = ProcessInfo.processInfo.beginActivity(
-            options: [.idleDisplaySleepDisabled, .userInitiated], reason: "Präsentation läuft")
+            options: [.idleDisplaySleepDisabled, .userInitiated], reason: "Presentation running")
 
         if !screens.windowed, screens.presenterFullScreen, let pw = presenterWindow,
            pw.screen != screen, !pw.styleMask.contains(.fullScreen) {

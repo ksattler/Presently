@@ -224,7 +224,7 @@ final class SlideDeck: ObservableObject {
             try sidecar.serialized(pageLabels: labels).write(to: url, options: .atomic)
             saveError = nil
         } catch {
-            saveError = "Notizen konnten nicht gespeichert werden: \(error.localizedDescription)"
+            saveError = String(localized: "Notes could not be saved: \(error.localizedDescription)")
         }
     }
 

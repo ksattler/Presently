@@ -44,9 +44,9 @@ enum TalkPlan {
     }
 
     static func formatPace(_ offset: TimeInterval) -> String {
-        if abs(offset) < 30 { return "im Plan" }
+        if abs(offset) < 30 { return String(localized: "on schedule") }
         let text = PresentationTimer.format(abs(offset))
-        return offset > 0 ? "\(text) voraus" : "\(text) zurück"
+        return offset > 0 ? String(localized: "\(text) ahead") : String(localized: "\(text) behind")
     }
 }
 

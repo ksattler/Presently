@@ -69,7 +69,7 @@ private struct BrowseView: View {
                         HStack(spacing: 4) {
                             Text(deck.label(i)).monospacedDigit()
                             if !deck.note(for: i).isEmpty {
-                                Image(systemName: "note.text").help("Hat Notizen")
+                                Image(systemName: "note.text").help("Has notes")
                             }
                         }
                         .font(.caption)
@@ -80,7 +80,7 @@ private struct BrowseView: View {
                     .opacity(deck.isBackup(i) ? 0.55 : 1)
                     .overlay(alignment: .bottom) {
                         if deck.endPage == i {
-                            Text("Vortragsende").font(.caption2.bold()).foregroundStyle(.white)
+                            Text("End of Talk").font(.caption2.bold()).foregroundStyle(.white)
                                 .padding(.horizontal, 6).padding(.vertical, 1)
                                 .background(Color.purple, in: Capsule())
                                 .offset(y: 8)
@@ -88,9 +88,9 @@ private struct BrowseView: View {
                     }
                     .contextMenu {
                         if deck.endPage == i {
-                            Button("Markierung „Vortragsende“ entfernen") { deck.endPage = nil }
+                            Button("Remove “End of Talk” Mark") { deck.endPage = nil }
                         } else {
-                            Button("Vortrag endet hier (danach Backup)") { deck.endPage = i }
+                            Button("Talk Ends Here (Backup After)") { deck.endPage = i }
                         }
                     }
                     .tag(i)
@@ -113,23 +113,23 @@ private struct BrowseView: View {
             }
             }
         }
-        .navigationSubtitle(session.reloadError ?? (deck.pageCount == 0 ? "" : "Seite \(session.currentIndex + 1) von \(deck.pageCount)"))
+        .navigationSubtitle(session.reloadError ?? (deck.pageCount == 0 ? "" : String(localized: "Page \(session.currentIndex + 1) of \(deck.pageCount)")))
         .toolbar {
             ToolbarItemGroup {
                 Menu {
                     PresentationScreenMenu()
                 } label: {
-                    Label("Bildschirm", systemImage: "display.2")
+                    Label("Display", systemImage: "display.2")
                 }
-                .help("Bildschirm für die Präsentation")
+                .help("Display for the presentation")
                 Button(action: startPresenting) {
-                    Label("Präsentieren", systemImage: "play.fill")
+                    Label("Present", systemImage: "play.fill")
                 }
-                .help("Präsentation starten (⌘⏎ oder F5)")
+                .help("Start presentation (⌘⏎ or F5)")
                 .disabled(deck.pageCount == 0)
             }
         }
-        .alert("Fehler", isPresented: .constant(deck.saveError != nil)) {
+        .alert("Error", isPresented: .constant(deck.saveError != nil)) {
             Button("OK") {}
         } message: {
             Text(deck.saveError ?? "")
@@ -146,10 +146,10 @@ struct NotesLayoutWarning: View {
         if deck.notesLayoutLooksWrong {
             HStack(spacing: 10) {
                 Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
-                Text("Beamer-Notizen „\(deck.notesLayout.title)“ sind aktiv, die Seiten haben aber ein normales Folienformat – gezeigt wird nur eine halbe Seite.")
+                Text("Beamer notes “\(deck.notesLayout.title)” are active, but the pages have a normal slide format – only half a page is shown.")
                     .lineLimit(2)
                 Spacer()
-                Button("Ganze Seite zeigen") { deck.notesLayout = .none }
+                Button("Show Whole Page") { deck.notesLayout = .none }
             }
             .font(.callout)
             .padding(.horizontal, 12).padding(.vertical, 8)
@@ -166,14 +166,14 @@ private struct NotesEditor: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Notizen").font(.headline)
+                Text("Notes").font(.headline)
                 if deck.overlayGroup(of: index).count > 1 {
-                    Text("gilt für alle Overlays von Folie \(deck.label(index))")
+                    Text("applies to all overlays of slide \(deck.label(index))")
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 if deck.fileURL == nil {
-                    Text("Nicht speicherbar (keine Datei)").font(.caption).foregroundStyle(.secondary)
+                    Text("Can’t be saved (no file)").font(.caption).foregroundStyle(.secondary)
                 }
             }
             NotesTextView(text: Binding(get: { deck.editableNote(for: index) },
@@ -182,12 +182,12 @@ private struct NotesEditor: View {
                 .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
                 .overlay(alignment: .topLeading) {
                     if deck.editableNote(for: index).isEmpty {
-                        Text("Notizen für diese Folie (Markdown) …")
+                        Text("Notes for this slide (Markdown) …")
                             .foregroundStyle(.tertiary).padding(9).allowsHitTesting(false)
                     }
                 }
             if let embedded = deck.embeddedNotes[index], !embedded.isEmpty {
-                Text("Im PDF: \(embedded)")
+                Text("In the PDF: \(embedded)")
                     .font(.callout).foregroundStyle(.secondary).lineLimit(3)
                     .help(embedded)
             }

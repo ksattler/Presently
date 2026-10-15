@@ -6,12 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Presently (formerly "PDF Presenter", renamed because the name was taken) is a small native macOS app (SwiftUI + PDFKit) that presents PDF slides: audience view full screen on a chosen display, presenter view with current/next slide, upcoming pages, speaker notes and timer. Clickers work (they emulate keyboard keys). Display selection and the presentation window are derived from `../Slidescape` (`Views/Present/`).
 
-UI strings and docs are German; code, comments and commit messages are English.
+The app is localized for English (source language) and German; docs are German; code, comments and commit messages are English.
 
 ## Commands
 
 ```bash
-xcodegen generate     # regenerate Presently.xcodeproj from project.yml — required after adding/removing files
+xcodegen generate     # regenerate Presently.xcodeproj from project.yml — required after adding/removing files;
+                      # settings made only in Xcode get lost, so they belong in project.yml
 xcodebuild -project Presently.xcodeproj -scheme Presently build
 xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
 xcodebuild test ... -only-testing:PresentlyTests/SlideDeckTests    # single test class
@@ -53,5 +54,6 @@ TalkPlan / TalkLimit  remaining time, pace, talk progress; LastPageStore (UserDe
 - **Thumbnails:** never render PDFKit objects of the main-thread `SlideDeck.pdf` off the main thread — the `ThumbnailRenderer` actor owns a separate `PDFDocument` built from the same data (recreated on reload; results from before a reload are dropped via `revision`).
 - **Sidecar keys:** `duration` / `endTime` ("HH:MM") are pdfpc's; the talk's end page is our own `presentlyEndPage` (older files: `pdfpresenterEndPage`, still read) (pdfpc's `endSlide` counts user slides — not mapped). The last shown page lives in UserDefaults (`LastPageStore`), so merely viewing a PDF never creates a sidecar.
 - **Timer start:** `timerStartsOnFirstTurn` (UserDefaults, default true): `begin()` arms the timer, the first change of `currentIndex` starts it.
-- **Rename:** settings from the old bundle ID `com.pdfpresenter.app` are copied once at launch (`LegacySettings`). The bundle ID `com.presently.app` is a placeholder until a real one (own domain) is chosen.
+- **Rename:** settings from the old bundle ID `com.pdfpresenter.app` are copied once at launch (`LegacySettings`). The bundle ID is `kus.presently.app` (team in `project.yml`).
+- **Localization:** UI strings are English keys in `Presently/Localizable.xcstrings` with German translations. SwiftUI literals (`Text("…")`, `.help("…")`) are localized automatically; strings held as `String` (titles, errors, ternaries, `caption(_:)`) need `String(localized:)`. Keys must be unique per meaning — e.g. "Up Next" (Nächste) vs. "Next" (Weiter). Tests compare against `String(localized:)`, not literal German. The build extracts keys into `*.stringsdata`; every one must have a `de` entry.
 - **Tests** build PDFs in code (`PDFFixture`: page labels, text annotations, red/blue halves).
