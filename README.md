@@ -9,6 +9,7 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
   - **Bildschirm wählen:** Symbolleiste oder Menü *Präsentation → Präsentieren auf*. „Automatisch“ nimmt bei mehreren Bildschirmen den, auf dem das Dokumentfenster *nicht* liegt. Die Wahl bleibt gespeichert.
   - **Probe:** „Publikumsansicht im Fenster“ öffnet die Publikumsansicht als normales Fenster.
   - **Referentenansicht** im Dokumentfenster (optional im Vollbild): aktuelle und nächste Folie, die folgenden Seiten, Notizen (Markdown, Schriftgröße einstellbar), verstrichene Zeit (anhaltbar), Uhrzeit, Übersicht aller Seiten.
+  - **Aufbau anpassen:** Die Trenner zwischen aktueller Folie und Seitenspalte sowie zwischen nächster Folie und Notizen lassen sich ziehen. Im Menü *Ansicht* (oben): aktuelle Folie links/rechts, nächste Folie und Notizen ein-/ausblenden, Anzahl der folgenden Seiten (0–8), Zurücksetzen. Gilt für alle Dokumente.
   - **Zeitplan** (Sanduhr-Symbol): Vortragsdauer *oder* Endzeit. Angezeigt werden Restzeit und ob du vor oder hinter dem Plan liegst (Folienfortschritt gegenüber Zeit, Overlays zählen nicht extra). Der Timer startet standardmäßig erst beim ersten Blättern – du kannst die Präsentation vorher öffnen und auf der Titelfolie warten.
   - **Vortragsende / Backup:** Rechtsklick auf eine Seite in der Seitenliste → „Vortrag endet hier“. Spätere Seiten gelten als Backup (blasser, Hinweis in der Referentenansicht), zählen nicht zum Zeitplan, und *Ende* springt zuerst zum Vortragsende.
 - **Letzte Seite merken:** Ein PDF öffnet dort, wo du zuletzt warst.

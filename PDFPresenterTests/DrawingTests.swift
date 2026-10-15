@@ -118,3 +118,29 @@ final class DrawingTests: XCTestCase {
         XCTAssertEqual(s.drawings.strokes(on: 0).count, 1)
     }
 }
+
+final class PresenterLayoutTests: XCTestCase {
+    func testDividerDrag() {
+        // 1000 pt wide, current slide at 65 %: dragging 100 pt right → 75 %.
+        XCTAssertEqual(PresenterLayout.draggedFraction(start: 0.65, translation: 100, total: 1000), 0.75, accuracy: 1e-9)
+        // Current slide on the right: the same drag shrinks it.
+        XCTAssertEqual(PresenterLayout.draggedFraction(start: 0.65, translation: 100, total: 1000, inverted: true), 0.55, accuracy: 1e-9)
+    }
+
+    func testDividerDragIsClamped() {
+        XCTAssertEqual(PresenterLayout.draggedFraction(start: 0.8, translation: 500, total: 1000), PresenterLayout.fractionRange.upperBound)
+        XCTAssertEqual(PresenterLayout.draggedFraction(start: 0.3, translation: -500, total: 1000), PresenterLayout.fractionRange.lowerBound)
+        XCTAssertEqual(PresenterLayout.draggedFraction(start: 0.5, translation: 10, total: 0), 0.5)
+    }
+
+    func testReset() {
+        let defaults = UserDefaults(suiteName: "PresenterLayout-\(UUID().uuidString)")!
+        defaults.set(0.3, forKey: PresenterLayout.Key.currentFraction)
+        defaults.set(true, forKey: PresenterLayout.Key.currentOnRight)
+        defaults.set("x", forKey: "unrelated")
+        PresenterLayout.reset(defaults)
+        XCTAssertNil(defaults.object(forKey: PresenterLayout.Key.currentFraction))
+        XCTAssertNil(defaults.object(forKey: PresenterLayout.Key.currentOnRight))
+        XCTAssertEqual(defaults.string(forKey: "unrelated"), "x")
+    }
+}

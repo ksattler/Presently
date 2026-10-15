@@ -29,6 +29,7 @@
 		9ED5179C908D090805910399 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2203002581754FF90841011 /* ContentView.swift */; };
 		ACADD537AEA78AE8D56EF7D2 /* DeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15BCC86926F73EEBF750E87 /* DeckTests.swift */; };
 		B4F3159972A2637EC51D39A2 /* NotesTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657ABBD152554C20A532478 /* NotesTextView.swift */; };
+		C2D1BFAF111DD6B8B8DAE763 /* PresenterLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3B242AD1150BBC6242AA45 /* PresenterLayout.swift */; };
 		CB7673C7749DE6D4AA72B49C /* PresentationTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1DE58C154D900D430E83A3 /* PresentationTimer.swift */; };
 		CBECE0B7064AFA13B3A95CCB /* PresentationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9620B1B6A835EA6E8402C9C /* PresentationSession.swift */; };
 		CFC8B1D1ABD70D03A8C13586 /* NotesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5B13D31BD6BB03EED57517 /* NotesLayout.swift */; };
@@ -70,6 +71,7 @@
 		9E318190267B8FDC25ADED51 /* PDFPresenterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDFPresenterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F6F4BDCEF84F676A954F808 /* PDFPresenter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PDFPresenter.entitlements; sourceTree = "<group>"; };
 		A7B10F8D90DCAAFD1855B146 /* ThumbnailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailRenderer.swift; sourceTree = "<group>"; };
+		AB3B242AD1150BBC6242AA45 /* PresenterLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterLayout.swift; sourceTree = "<group>"; };
 		B15BCC86926F73EEBF750E87 /* DeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTests.swift; sourceTree = "<group>"; };
 		B7CC619396CFDBA96B13DC7A /* SlideDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideDeck.swift; sourceTree = "<group>"; };
 		BB4C7B6A8476FFD70D0D9B69 /* PDFPresenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDFPresenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +98,7 @@
 				342ADCA406F1620C0F7ED079 /* LaserPointerView.swift */,
 				6657ABBD152554C20A532478 /* NotesTextView.swift */,
 				FD3C3679F907848978E6AD8B /* PDFPageView.swift */,
+				AB3B242AD1150BBC6242AA45 /* PresenterLayout.swift */,
 				2538EB610C2BBB82BB2DC6EB /* PresenterView.swift */,
 			);
 			path = Views;
@@ -309,6 +312,7 @@
 				105DE736EF4531D7533F81D3 /* PresentationScreens.swift in Sources */,
 				CBECE0B7064AFA13B3A95CCB /* PresentationSession.swift in Sources */,
 				CB7673C7749DE6D4AA72B49C /* PresentationTimer.swift in Sources */,
+				C2D1BFAF111DD6B8B8DAE763 /* PresenterLayout.swift in Sources */,
 				88ACA5513EF705AE921235C1 /* PresenterView.swift in Sources */,
 				02AF381018ACB9B7758F6F9F /* SlideDeck.swift in Sources */,
 				FF4978A92F2F6E8F68A9C481 /* TalkPlan.swift in Sources */,

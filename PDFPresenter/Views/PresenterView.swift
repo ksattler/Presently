@@ -9,7 +9,15 @@ struct PresenterView: View {
     let swapScreens: () -> Void
     @ObservedObject private var screens = PresentationScreens.shared
     @AppStorage("presenterNotesFontSize") private var notesFontSize: Double = 22
-    @AppStorage("presenterUpcomingCount") private var upcomingCount = 4
+    @AppStorage(PresenterLayout.Key.upcomingCount) private var upcomingCount = PresenterLayout.Default.upcomingCount
+    @AppStorage(PresenterLayout.Key.currentFraction) private var currentFraction = PresenterLayout.Default.currentFraction
+    @AppStorage(PresenterLayout.Key.nextFraction) private var nextFraction = PresenterLayout.Default.nextFraction
+    @AppStorage(PresenterLayout.Key.currentOnRight) private var currentOnRight = false
+    @AppStorage(PresenterLayout.Key.showsNext) private var showsNext = true
+    @AppStorage(PresenterLayout.Key.showsNotes) private var showsNotes = true
+    /// Fractions at the start of a divider drag.
+    @State private var dragStartCurrent: Double?
+    @State private var dragStartNext: Double?
     @State private var isEditingNotes = false
 
     private var index: Int { session.currentIndex }
@@ -78,6 +86,7 @@ struct PresenterView: View {
                     .background(Color.orange.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
             }
             Spacer()
+            PresenterLayoutMenu()
             PresentationClock(session: session, deck: deck)
             Button("Beenden", action: stop)
         }
@@ -88,44 +97,87 @@ struct PresenterView: View {
     // MARK: Main area
 
     private var main: some View {
-        HStack(alignment: .top, spacing: 16) {
-            VStack(alignment: .leading, spacing: 6) {
-                caption("Aktuell")
-                PDFPageView(page: deck.page(index), region: deck.notesLayout.slideRegion,
-                            background: .black)
-                    .overlay {
-                        LaserPointerLayer(pointer: session.pointer, page: deck.page(index),
-                                          region: deck.notesLayout.slideRegion) { point in
-                            session.followLink(atNormalized: point, pageIndex: index)
-                        }
-                    }
-                    // Above the pointer layer, whose click handler would take the drags.
-                    .overlay {
-                        DrawingLayer(drawings: session.drawings, page: deck.page(index), pageIndex: index,
-                                     region: deck.notesLayout.slideRegion)
-                    }
-                    .overlay(alignment: .center) { blankBadge.allowsHitTesting(false) }
+        GeometryReader { geo in
+            let hasSide = showsNext || showsNotes
+            let handle: CGFloat = 14
+            let currentWidth = hasSide ? max(0, geo.size.width - handle) * currentFraction : geo.size.width
+            HStack(alignment: .top, spacing: 0) {
+                if currentOnRight, hasSide { sideColumn.frame(maxWidth: .infinity, maxHeight: .infinity) }
+                if currentOnRight, hasSide { columnHandle(total: geo.size.width) }
+                currentSlide.frame(width: currentWidth)
+                if !currentOnRight, hasSide { columnHandle(total: geo.size.width) }
+                if !currentOnRight, hasSide { sideColumn.frame(maxWidth: .infinity, maxHeight: .infinity) }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .layoutPriority(1)
-
-            VStack(alignment: .leading, spacing: 6) {
-                caption(nextCaption)
-                Group {
-                    if let nextIndex {
-                        PDFPageView(page: deck.page(nextIndex), region: deck.notesLayout.slideRegion, background: .black)
-                    } else {
-                        Color.black.overlay(Text("Ende der Präsentation").foregroundStyle(.secondary))
-                    }
-                }
-                .aspectRatio(slideAspect, contentMode: .fit)
-                notes
-            }
-            .frame(minWidth: 260, idealWidth: 420, maxWidth: 520)
         }
         .padding(16)
         .frame(maxHeight: .infinity)
         .safeAreaInset(edge: .bottom) { upcoming }
+    }
+
+    private var currentSlide: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            caption("Aktuell")
+            PDFPageView(page: deck.page(index), region: deck.notesLayout.slideRegion,
+                        background: .black)
+                .overlay {
+                    LaserPointerLayer(pointer: session.pointer, page: deck.page(index),
+                                      region: deck.notesLayout.slideRegion) { point in
+                        session.followLink(atNormalized: point, pageIndex: index)
+                    }
+                }
+                // Above the pointer layer, whose click handler would take the drags.
+                .overlay {
+                    DrawingLayer(drawings: session.drawings, page: deck.page(index), pageIndex: index,
+                                 region: deck.notesLayout.slideRegion)
+                }
+                .overlay(alignment: .center) { blankBadge.allowsHitTesting(false) }
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    /// Next slide above the notes, with a divider between them when both are shown.
+    private var sideColumn: some View {
+        GeometryReader { geo in
+            VStack(alignment: .leading, spacing: 0) {
+                if showsNext {
+                    nextSlide
+                        .frame(height: showsNotes ? max(0, geo.size.height - 14) * nextFraction : geo.size.height,
+                               alignment: .top)
+                }
+                if showsNext, showsNotes {
+                    SplitHandle(axis: .vertical, onChanged: { t in
+                        let start = dragStartNext ?? nextFraction
+                        dragStartNext = start
+                        nextFraction = PresenterLayout.draggedFraction(start: start, translation: t, total: geo.size.height)
+                    }, onEnded: { dragStartNext = nil })
+                }
+                if showsNotes { notes }
+            }
+        }
+    }
+
+    private var nextSlide: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            caption(nextCaption)
+            Group {
+                if let nextIndex {
+                    PDFPageView(page: deck.page(nextIndex), region: deck.notesLayout.slideRegion, background: .black)
+                } else {
+                    Color.black.overlay(Text("Ende der Präsentation").foregroundStyle(.secondary))
+                }
+            }
+            .aspectRatio(slideAspect, contentMode: .fit)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func columnHandle(total: CGFloat) -> some View {
+        SplitHandle(axis: .horizontal, onChanged: { t in
+            let start = dragStartCurrent ?? currentFraction
+            dragStartCurrent = start
+            currentFraction = PresenterLayout.draggedFraction(start: start, translation: t, total: total,
+                                                              inverted: currentOnRight)
+        }, onEnded: { dragStartCurrent = nil })
     }
 
     private var nextCaption: String {
@@ -213,7 +265,7 @@ struct PresenterView: View {
 
     /// Strip of the pages after the next one.
     @ViewBuilder private var upcoming: some View {
-        let start = index + 2
+        let start = index + (showsNext ? 2 : 1)   // after the next slide, if that is shown
         let pages = Array(start..<min(start + upcomingCount, deck.pageCount))
         if upcomingCount > 0 {
             HStack(spacing: 10) {
