@@ -302,6 +302,8 @@ final class PresentationController: NSObject, NSWindowDelegate {
             let inPresenter = event.window != nil && event.window === self.presenterWindow
 
             switch event.type {
+            case .leftMouseDown where inAudience && session.drawings.tool != nil:
+                return event   // drawing on the audience view
             case .leftMouseDown where inAudience && event.clickCount == 1:
                 // A link on the slide is followed; anywhere else a click advances.
                 if let p = self.audienceSlidePoint(event),

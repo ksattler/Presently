@@ -65,6 +65,15 @@ final class NotesLayoutTests: XCTestCase {
         XCTAssertNil(NotesLayout.none.notesRegion)
     }
 
+    func testLayoutMustFitPageFormat() {
+        let slide169 = CGSize(width: 842, height: 474)
+        XCTAssertTrue(NotesLayout.none.fits(pageSize: slide169))
+        XCTAssertFalse(NotesLayout.right.fits(pageSize: slide169), "half a slide for the audience")
+        XCTAssertFalse(NotesLayout.bottom.fits(pageSize: slide169))
+        XCTAssertTrue(NotesLayout.right.fits(pageSize: CGSize(width: 32, height: 9)))
+        XCTAssertTrue(NotesLayout.bottom.fits(pageSize: CGSize(width: 16, height: 18)))
+    }
+
     func testDetectsBeamerSideBySidePages() {
         XCTAssertEqual(NotesLayout.detect(pageSize: CGSize(width: 800, height: 300)), .right)       // 2 × 4:3
         XCTAssertEqual(NotesLayout.detect(pageSize: CGSize(width: 32, height: 9)), .right)          // 2 × 16:9
@@ -165,5 +174,17 @@ final class SlideDeckTests: XCTestCase {
         let reopened = try XCTUnwrap(SlideDeck(data: data, fileURL: pdfURL))
         XCTAssertEqual(reopened.note(for: 0), "Einleitung")
         XCTAssertEqual(reopened.talkLimit, .duration(minutes: 25))
+    }
+}
+
+@MainActor
+final class NotesLayoutWarningTests: XCTestCase {
+    func testWrongLayoutIsFlagged() {
+        let deck = SlideDeck(pdf: PDFFixture.document(pages: [.init()], size: CGSize(width: 842, height: 474)), fileURL: nil)
+        XCTAssertEqual(deck.notesLayout, .none)
+        XCTAssertFalse(deck.notesLayoutLooksWrong)
+        deck.notesLayout = .right
+        XCTAssertTrue(deck.notesLayoutLooksWrong)
+        XCTAssertEqual(deck.slideAspectRatio, 421.0 / 474, accuracy: 0.001, "portrait — what the user saw")
     }
 }

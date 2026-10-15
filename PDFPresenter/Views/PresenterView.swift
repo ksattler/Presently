@@ -18,6 +18,7 @@ struct PresenterView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            NotesLayoutWarning(deck: deck)
             Divider()
             if session.showsOverview {
                 OverviewGrid(session: session, deck: deck)
@@ -98,7 +99,12 @@ struct PresenterView: View {
                             session.followLink(atNormalized: point, pageIndex: index)
                         }
                     }
-                    .overlay(alignment: .center) { blankBadge }
+                    // Above the pointer layer, whose click handler would take the drags.
+                    .overlay {
+                        DrawingLayer(drawings: session.drawings, page: deck.page(index), pageIndex: index,
+                                     region: deck.notesLayout.slideRegion)
+                    }
+                    .overlay(alignment: .center) { blankBadge.allowsHitTesting(false) }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .layoutPriority(1)
@@ -240,11 +246,12 @@ struct PresenterView: View {
             }
             .toggleStyle(.button)
             .help("Publikum behält die aktuelle Folie, während du blätterst (F)")
-            PointerToggle(pointer: session.pointer)
+            PointerToggle(pointer: session.pointer) { session.handle(.togglePointer) }
+            DrawingTools(session: session, drawings: session.drawings)
             Button(action: swapScreens) { Label("Tauschen", systemImage: "arrow.left.arrow.right") }
                 .help("Publikum und Referentenansicht tauschen die Bildschirme (S)")
                 .disabled(screens.windowed || screens.screens.count < 2)
-            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · S Bildschirme tauschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
+            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -264,11 +271,54 @@ struct PresenterView: View {
     private var slideAspect: CGFloat { deck.slideAspectRatio }
 }
 
-private struct PointerToggle: View {
-    @ObservedObject var pointer: LaserPointer
+/// Pen, highlighter, eraser, colors, undo and clear for the current page.
+private struct DrawingTools: View {
+    @ObservedObject var session: PresentationSession
+    @ObservedObject var drawings: Drawings
 
     var body: some View {
-        Toggle(isOn: $pointer.isEnabled) {
+        HStack(spacing: 6) {
+            toolToggle(.pen, "Stift", "pencil.tip", key: "D")
+            toolToggle(.highlighter, "Textmarker", "highlighter", key: "H")
+            toolToggle(.eraser, "Radierer", "eraser", key: "E")
+            Menu {
+                Picker("Stift", selection: $drawings.penColor) {
+                    ForEach(Drawings.PenColor.allCases) { Text($0.title).tag($0) }
+                }
+                Picker("Textmarker", selection: $drawings.highlighterColor) {
+                    ForEach(Drawings.PenColor.allCases) { Text($0.title).tag($0) }
+                }
+            } label: {
+                Circle().fill(drawings.penColor.color).frame(width: 14, height: 14)
+                    .overlay(Circle().stroke(Color.white.opacity(0.6)))
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+            .help("Farben")
+            Button { session.handle(.undoDrawing) } label: { Image(systemName: "arrow.uturn.backward") }
+                .help("Letzten Strich dieser Folie entfernen (Z)")
+                .disabled(drawings.strokes[session.currentIndex]?.isEmpty ?? true)
+            Button { session.handle(.clearDrawing) } label: { Image(systemName: "trash") }
+                .help("Zeichnungen dieser Folie löschen (X)")
+                .disabled(drawings.strokes[session.currentIndex]?.isEmpty ?? true)
+        }
+    }
+
+    private func toolToggle(_ tool: Drawings.Tool, _ title: String, _ icon: String, key: String) -> some View {
+        Toggle(isOn: Binding(get: { drawings.tool == tool }, set: { _ in session.selectTool(tool) })) {
+            Image(systemName: icon)
+        }
+        .toggleStyle(.button)
+        .help("\(title) (\(key))")
+    }
+}
+
+private struct PointerToggle: View {
+    @ObservedObject var pointer: LaserPointer
+    let toggle: () -> Void
+
+    var body: some View {
+        Toggle(isOn: Binding(get: { pointer.isEnabled }, set: { _ in toggle() })) {
             Label("Laserpointer", systemImage: "circle.circle.fill")
         }
         .toggleStyle(.button)

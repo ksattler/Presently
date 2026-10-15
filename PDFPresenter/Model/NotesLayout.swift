@@ -55,6 +55,18 @@ enum NotesLayout: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Whether pages of this size can hold slide + notes in this layout. False e.g. for
+    /// "notes right" on ordinary 16:9 slides: the audience would see half a slide.
+    func fits(pageSize: CGSize) -> Bool {
+        guard pageSize.height > 0 else { return true }
+        let aspect = pageSize.width / pageSize.height
+        switch self {
+        case .none:          return true
+        case .right, .left:  return aspect >= 2.3
+        case .bottom, .top:  return aspect <= 1.0
+        }
+    }
+
     /// Guess from the page size: two 4:3 (8:3) or 16:9 (32:9) slides side by side are far wider
     /// than any normal slide format. Stacked layouts aren't guessed — a 4:6 page is ambiguous.
     static func detect(pageSize: CGSize) -> NotesLayout {

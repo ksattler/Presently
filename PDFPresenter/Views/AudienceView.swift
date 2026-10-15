@@ -16,6 +16,8 @@ struct AudienceView: View {
             LaserPointerLayer(pointer: session.pointer, page: deck.page(session.audienceIndex),
                               region: deck.notesLayout.slideRegion,
                               showsDot: session.audienceIndex == session.currentIndex)
+            DrawingLayer(drawings: session.drawings, page: deck.page(session.audienceIndex),
+                         pageIndex: session.audienceIndex, region: deck.notesLayout.slideRegion)
             if let blank = session.blank {
                 (blank == .black ? Color.black : Color.white)
                     .transition(.opacity)

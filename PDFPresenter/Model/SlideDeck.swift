@@ -116,6 +116,12 @@ final class SlideDeck: ObservableObject {
         return size.height > 0 ? size.width / size.height : 4 / 3
     }
 
+    /// The chosen notes layout doesn't match the page format (set by mistake).
+    var notesLayoutLooksWrong: Bool {
+        guard let page = page(0) else { return false }
+        return !notesLayout.fits(pageSize: PageRenderer.displaySize(of: page))
+    }
+
     func isBackup(_ index: Int) -> Bool { endPage.map { index > $0 } ?? false }
 
     /// Share of the talk done at a page (see `TalkPlan.progress`).

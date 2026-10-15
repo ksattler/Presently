@@ -55,6 +55,7 @@ final class PresentationSession: ObservableObject {
     @Published private(set) var reloadError: String?
 
     let pointer = LaserPointer()
+    let drawings = Drawings()
     /// Opens external links (browser); replaceable in tests.
     var openURL: (URL) -> Void = { NSWorkspace.shared.open($0) }
     /// Pages left by following internal links, for the PDF's "GoBack" action.
@@ -125,6 +126,8 @@ final class PresentationSession: ObservableObject {
         timerWaitsForFirstTurn = false
         audienceDisconnected = false
         pointer.isEnabled = false
+        drawings.end()
+        drawings.tool = nil   // the strokes stay
         timer.pause(at: now())
     }
 
@@ -198,6 +201,13 @@ final class PresentationSession: ObservableObject {
         return true
     }
 
+    /// Toggles a drawing tool; drawing and the laser pointer exclude each other.
+    func selectTool(_ tool: Drawings.Tool) {
+        drawings.end()
+        drawings.tool = drawings.tool == tool ? nil : tool
+        if drawings.tool != nil { pointer.isEnabled = false }
+    }
+
     // MARK: Keys
 
     /// Returns false if the action isn't meaningful right now (event passes through).
@@ -233,13 +243,21 @@ final class PresentationSession: ObservableObject {
         case .toggleOverview: showsOverview.toggle()
         case .swapScreens:    break   // done by the PresentationController
         case .toggleFreeze:   frozenIndex = frozenIndex == nil ? currentIndex : nil
-        case .togglePointer:  pointer.isEnabled.toggle()
+        case .togglePointer:
+            pointer.isEnabled.toggle()
+            if pointer.isEnabled { drawings.tool = nil }
+        case .pen:            selectTool(.pen)
+        case .highlighter:    selectTool(.highlighter)
+        case .eraser:         selectTool(.eraser)
+        case .undoDrawing:    drawings.undo(page: currentIndex)
+        case .clearDrawing:   drawings.clear(page: currentIndex)
         case .toggleTimer:    timerWaitsForFirstTurn = false; timer.toggle(at: now())
         case .resetTimer:     timer.reset(at: now())
         case .ignore:         break
         case .exit:
             if !pageInput.isEmpty { pageInput = "" }
             else if showsOverview { showsOverview = false }
+            else if drawings.tool != nil { drawings.end(); drawings.tool = nil }
             else if blank != nil { blank = nil }
             else if frozenIndex != nil { frozenIndex = nil }
             else { return false }   // caller ends the presentation

@@ -51,6 +51,7 @@ struct AppCommands: Commands {
             PresentationScreenMenu()
             Divider()
             if let deck {
+                // Only here, not in the toolbar: detected automatically, rarely changed by hand.
                 Picker("Beamer-Notizen", selection: Binding(get: { deck.notesLayout }, set: { deck.notesLayout = $0 })) {
                     ForEach(NotesLayout.allCases) { Text($0.title).tag($0) }
                 }

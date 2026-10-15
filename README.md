@@ -17,11 +17,12 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
   - **Bildschirme tauschen (S):** Publikum und Referentenansicht wechseln die Displays (falscher Beamer erkannt, Kabel vertauscht). Die Wahl wird gespeichert.
   - **Links im PDF** (Inhaltsverzeichnis, Beamer-Navigation, URLs) sind anklickbar – in der Publikumsansicht und auf der aktuellen Folie der Referentenansicht. Interne Links springen zur Seite, URLs öffnen den Browser, „Zurück“-Aktionen gehen zur Seite vor dem letzten Link. Ein Klick außerhalb eines Links blättert beim Publikum weiter.
   - **Beamer ab- und anstecken:** Die Präsentation läuft weiter. Fällt der Beamer weg, wird die Publikumsansicht ausgeblendet (oder wandert auf einen freien dritten Bildschirm), die Referentenansicht bleibt sichtbar und zeigt einen Hinweis. Kommt der Beamer zurück, erscheint die Publikumsansicht wieder dort. Wird der Beamer erst während der Präsentation eingesteckt (Start nur am Laptop), wandert die Publikumsansicht auf ihn.
+  - **Zeichnen:** Stift (D), Textmarker (H), Radierer (E) – auf der aktuellen Folie der Referentenansicht oder direkt auf der Publikumsansicht. Farben über den Farbknopf, Z entfernt den letzten Strich der Folie, X alle. Esc beendet den Zeichenmodus. Zeichnungen bleiben pro Folie erhalten, solange das Dokument offen ist, werden aber nicht gespeichert.
 - **Automatisch neu laden:** Ändert sich das PDF auf der Platte (z. B. LaTeX neu kompiliert), wird es neu geladen; die aktuelle Seite und die Notizen bleiben. Halb geschriebene Dateien werden ignoriert.
 - **Notizen**
   - werden im pdfpc-Format neben dem PDF gespeichert (`vortrag.pdf` → `vortrag.pdfpc`) – kompatibel mit [pdfpc](https://pdfpc.github.io);
   - Text-Annotationen im PDF (Kommentare, `\pdfpcnote`) werden als Notizen angezeigt und für das Publikum ausgeblendet;
-  - LaTeX-Beamer mit `show notes on second screen=right` (bzw. left/top/bottom): das Publikum sieht nur die Folienhälfte, die Notizhälfte erscheint in der Referentenansicht. Breite Seiten werden automatisch erkannt.
+  - LaTeX-Beamer mit `show notes on second screen=right` (bzw. left/top/bottom): das Publikum sieht nur die Folienhälfte, die Notizhälfte erscheint in der Referentenansicht. Breite Seiten werden automatisch erkannt; von Hand im Menü *Präsentation → Beamer-Notizen*. Passt die Einstellung nicht zum Seitenformat, erscheint ein Hinweis mit „Ganze Seite zeigen“.
   - Beamer-Overlays (gleiche Seitenbeschriftung) teilen sich eine Notiz;
   - auch während der Präsentation bearbeitbar: Stift-Symbol oder Doppelklick auf die Notizen, Esc beendet das Bearbeiten. Bild↑/Bild↓ (Klicker) blättern dabei weiter.
 
@@ -40,7 +41,9 @@ Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
 | F | Publikumsansicht einfrieren |
 | L | Laserpointer an/aus |
 | S | Bildschirme tauschen |
-| Esc | Notiz-Bearbeitung/Eingabe/Übersicht/Schwarzbild/Einfrieren beenden, sonst Präsentation beenden |
+| D / H / E | Stift / Textmarker / Radierer (nochmal: aus) |
+| Z / X | letzten Strich / alle Zeichnungen der Folie entfernen |
+| Esc | Notiz-Bearbeitung/Eingabe/Übersicht/Zeichenmodus/Schwarzbild/Einfrieren beenden, sonst Präsentation beenden |
 
 Klicker senden in der Regel Bild↑/Bild↓, B bzw. „.“ und F5/Esc für Start/Stopp – alles abgedeckt.
 

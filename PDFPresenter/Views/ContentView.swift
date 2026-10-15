@@ -95,6 +95,8 @@ private struct BrowseView: View {
             }
             .navigationSplitViewColumnWidth(min: 160, ideal: 200, max: 320)
         } detail: {
+            VStack(spacing: 0) {
+            NotesLayoutWarning(deck: deck)
             VSplitView {
                 PDFPageView(page: deck.page(session.currentIndex), region: deck.notesLayout.slideRegion,
                             background: .windowBackgroundColor)
@@ -103,14 +105,11 @@ private struct BrowseView: View {
                 NotesEditor(deck: deck, index: session.currentIndex)
                     .frame(minHeight: 100, idealHeight: 170, maxHeight: 420)
             }
+            }
         }
         .navigationSubtitle(session.reloadError ?? (deck.pageCount == 0 ? "" : "Seite \(session.currentIndex + 1) von \(deck.pageCount)"))
         .toolbar {
             ToolbarItemGroup {
-                Picker("Beamer-Notizen", selection: $deck.notesLayout) {
-                    ForEach(NotesLayout.allCases) { Text($0.title).tag($0) }
-                }
-                .help("Notizen, die im PDF neben der Folie stehen (LaTeX Beamer)")
                 Menu {
                     PresentationScreenMenu()
                 } label: {
@@ -128,6 +127,27 @@ private struct BrowseView: View {
             Button("OK") {}
         } message: {
             Text(deck.saveError ?? "")
+        }
+    }
+}
+
+/// Shown when a Beamer notes layout is active although the pages have an ordinary slide format
+/// — the audience would see only half a slide.
+struct NotesLayoutWarning: View {
+    @ObservedObject var deck: SlideDeck
+
+    var body: some View {
+        if deck.notesLayoutLooksWrong {
+            HStack(spacing: 10) {
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                Text("Beamer-Notizen „\(deck.notesLayout.title)“ sind aktiv, die Seiten haben aber ein normales Folienformat – gezeigt wird nur eine halbe Seite.")
+                    .lineLimit(2)
+                Spacer()
+                Button("Ganze Seite zeigen") { deck.notesLayout = .none }
+            }
+            .font(.callout)
+            .padding(.horizontal, 12).padding(.vertical, 8)
+            .background(Color.orange.opacity(0.15))
         }
     }
 }

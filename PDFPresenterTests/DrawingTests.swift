@@ -1,0 +1,120 @@
+import XCTest
+@testable import PDFPresenter
+
+@MainActor
+final class DrawingTests: XCTestCase {
+    private func session() -> PresentationSession {
+        PresentationSession(deck: SlideDeck(pdf: PDFFixture.document(pages: [.init(), .init(), .init()]), fileURL: nil))
+    }
+
+    func testKeys() {
+        XCTAssertEqual(PresentKeyAction(keyCode: 2, characters: "d"), .pen)
+        XCTAssertEqual(PresentKeyAction(keyCode: 4, characters: "h"), .highlighter)
+        XCTAssertEqual(PresentKeyAction(keyCode: 14, characters: "e"), .eraser)
+        XCTAssertEqual(PresentKeyAction(keyCode: 6, characters: "z"), .undoDrawing)
+        XCTAssertEqual(PresentKeyAction(keyCode: 7, characters: "x"), .clearDrawing)
+        XCTAssertNil(PresentKeyAction(keyCode: 6, characters: "z", modifiers: .command), "⌘Z stays the menu's")
+    }
+
+    func testStrokesArePerPage() {
+        let d = Drawings()
+        d.tool = .pen
+        d.begin(at: CGPoint(x: 0.1, y: 0.1), page: 0)
+        d.move(to: CGPoint(x: 0.5, y: 0.5), page: 0)
+        d.move(to: CGPoint(x: 0.5004, y: 0.5), page: 0)   // < 1 px: dropped
+        XCTAssertEqual(d.strokes(on: 0).count, 1, "stroke in progress is shown")
+        d.end()
+        XCTAssertEqual(d.strokes[0]?.first?.points.count, 2)
+        XCTAssertEqual(d.strokes[0]?.first?.color, .red)
+        XCTAssertTrue(d.strokes(on: 1).isEmpty)
+
+        d.tool = .highlighter
+        d.begin(at: CGPoint(x: 0.2, y: 0.8), page: 0)
+        d.end()
+        XCTAssertEqual(d.strokes[0]?.last?.isHighlighter, true)
+        XCTAssertEqual(d.strokes[0]?.last?.color, .yellow)
+    }
+
+    func testNoToolDrawsNothing() {
+        let d = Drawings()
+        d.begin(at: CGPoint(x: 0.5, y: 0.5), page: 0)
+        d.end()
+        XCTAssertFalse(d.hasStrokes)
+    }
+
+    func testEraserRemovesTouchedStrokes() {
+        let d = Drawings()
+        d.tool = .pen
+        d.begin(at: CGPoint(x: 0.1, y: 0.5), page: 0); d.move(to: CGPoint(x: 0.9, y: 0.5), page: 0); d.end()
+        d.begin(at: CGPoint(x: 0.1, y: 0.9), page: 0); d.move(to: CGPoint(x: 0.9, y: 0.9), page: 0); d.end()
+        d.tool = .eraser
+        d.begin(at: CGPoint(x: 0.5, y: 0.2), page: 0)   // far from both
+        XCTAssertEqual(d.strokes[0]?.count, 2)
+        d.move(to: CGPoint(x: 0.5, y: 0.51), page: 0)    // across the middle of the first line
+        XCTAssertEqual(d.strokes[0]?.count, 1)
+        XCTAssertEqual(d.strokes[0]?.first?.points.first?.y, 0.9)
+    }
+
+    func testSegmentDistance() {
+        let a = CGPoint(x: 0, y: 0), b = CGPoint(x: 1, y: 0)
+        XCTAssertEqual(Drawings.segmentDistance(CGPoint(x: 0.5, y: 0.2), a, b), 0.2, accuracy: 1e-9)
+        XCTAssertEqual(Drawings.segmentDistance(CGPoint(x: 2, y: 0), a, b), 1, accuracy: 1e-9, "beyond the end")
+    }
+
+    func testUndoAndClearViaKeys() {
+        let s = session()
+        s.handle(.pen)
+        for y in [0.2, 0.4] {
+            s.drawings.begin(at: CGPoint(x: 0.1, y: y), page: 0)
+            s.drawings.move(to: CGPoint(x: 0.9, y: y), page: 0)
+            s.drawings.end()
+        }
+        s.handle(.undoDrawing)
+        XCTAssertEqual(s.drawings.strokes[0]?.count, 1)
+        s.handle(.clearDrawing)
+        XCTAssertFalse(s.drawings.hasStrokes)
+    }
+
+    func testToolsAndPointerExcludeEachOther() {
+        let s = session()
+        s.handle(.togglePointer)
+        s.handle(.pen)
+        XCTAssertEqual(s.drawings.tool, .pen)
+        XCTAssertFalse(s.pointer.isEnabled)
+        s.handle(.highlighter)
+        XCTAssertEqual(s.drawings.tool, .highlighter)
+        s.handle(.highlighter)
+        XCTAssertNil(s.drawings.tool, "same key again: off")
+        s.handle(.eraser)
+        s.handle(.togglePointer)
+        XCTAssertNil(s.drawings.tool)
+        XCTAssertTrue(s.pointer.isEnabled)
+    }
+
+    func testEscapeStopsDrawingFirstAndEndKeepsStrokes() {
+        let s = session()
+        s.handle(.black)
+        s.handle(.pen)
+        s.drawings.begin(at: CGPoint(x: 0.1, y: 0.1), page: 0)
+        s.drawings.move(to: CGPoint(x: 0.3, y: 0.3), page: 0)
+        XCTAssertTrue(s.handle(.exit))
+        XCTAssertNil(s.drawings.tool)
+        XCTAssertNotNil(s.blank, "blank screen still on")
+        XCTAssertEqual(s.drawings.strokes[0]?.count, 1, "unfinished stroke kept")
+        s.handle(.pen)
+        s.end()
+        XCTAssertNil(s.drawings.tool)
+        XCTAssertTrue(s.drawings.hasStrokes)
+    }
+
+    func testNavigationDoesNotTouchDrawings() {
+        let s = session()
+        s.handle(.pen)
+        s.drawings.begin(at: CGPoint(x: 0.5, y: 0.5), page: 0)
+        s.drawings.end()
+        s.handle(.next)
+        XCTAssertEqual(s.drawings.tool, .pen)
+        XCTAssertTrue(s.drawings.strokes(on: 1).isEmpty)
+        XCTAssertEqual(s.drawings.strokes(on: 0).count, 1)
+    }
+}
