@@ -32,11 +32,14 @@ struct PDFFile: FileDocument {
 /// The sidecar wins. Beamer overlays (consecutive pages with the same label) share a note.
 @MainActor
 final class SlideDeck: ObservableObject {
-    let pdf: PDFDocument
     let fileURL: URL?
-    let pageCount: Int
-    let labels: [String]
-    let embeddedNotes: [Int: String]
+    // Replaced together by `reload(pdf:)` when the file changes on disk.
+    @Published private(set) var pdf: PDFDocument
+    @Published private(set) var pageCount: Int
+    @Published private(set) var labels: [String]
+    @Published private(set) var embeddedNotes: [Int: String]
+    /// Counts reloads; views that cache per page (thumbnails) key on it.
+    @Published private(set) var revision = 0
 
     @Published var notesLayout: NotesLayout
     @Published private(set) var notes: [Int: String]
@@ -53,7 +56,7 @@ final class SlideDeck: ObservableObject {
         self.pdf = pdf
         self.fileURL = fileURL
         pageCount = pdf.pageCount
-        labels = (0..<pdf.pageCount).map { pdf.page(at: $0)?.label ?? "\($0 + 1)" }
+        labels = Self.labels(of: pdf)
         embeddedNotes = Self.extractAnnotationNotes(from: pdf)
 
         var sidecar = PdfpcFile()
@@ -69,6 +72,21 @@ final class SlideDeck: ObservableObject {
     convenience init?(data: Data, fileURL: URL?) {
         guard let pdf = PDFDocument(data: data) else { return nil }
         self.init(pdf: pdf, fileURL: fileURL)
+    }
+
+    /// Swaps in a new version of the PDF (recompiled slides). Sidecar notes, notes layout and
+    /// duration stay; notes are matched by page index, as pdfpc does.
+    func reload(pdf newPDF: PDFDocument) {
+        thumbnails.removeAllObjects()
+        pdf = newPDF
+        pageCount = newPDF.pageCount
+        labels = Self.labels(of: newPDF)
+        embeddedNotes = Self.extractAnnotationNotes(from: newPDF)
+        revision += 1
+    }
+
+    private static func labels(of pdf: PDFDocument) -> [String] {
+        (0..<pdf.pageCount).map { pdf.page(at: $0)?.label ?? "\($0 + 1)" }
     }
 
     func page(_ index: Int) -> PDFPage? {
@@ -155,7 +173,7 @@ final class SlideDeck: ObservableObject {
     // MARK: Thumbnails
 
     func thumbnail(_ index: Int, region: PageRegion, maxPixelSize: CGSize) -> NSImage? {
-        let key = "\(index)-\(region)-\(Int(maxPixelSize.width))x\(Int(maxPixelSize.height))" as NSString
+        let key = "\(revision)-\(index)-\(region)-\(Int(maxPixelSize.width))x\(Int(maxPixelSize.height))" as NSString
         if let cached = thumbnails.object(forKey: key) { return cached }
         guard let page = page(index),
               let image = PageRenderer.image(of: page, region: region, maxPixelSize: maxPixelSize)

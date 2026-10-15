@@ -61,7 +61,7 @@ struct PageThumbnail: View {
                 Color.secondary.opacity(0.15)
             }
         }
-        .task(id: "\(index)-\(region)") {
+        .task(id: "\(deck.revision)-\(index)-\(region)") {
             image = deck.thumbnail(index, region: region, maxPixelSize: pixelSize)
         }
     }

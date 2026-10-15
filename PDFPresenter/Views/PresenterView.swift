@@ -44,6 +44,16 @@ struct PresenterView: View {
                     .padding(.horizontal, 8).padding(.vertical, 2)
                     .background(Color.accentColor.opacity(0.35), in: RoundedRectangle(cornerRadius: 6))
             }
+            if let frozen = session.frozenIndex {
+                Label(frozen == index ? "Eingefroren" : "Eingefroren – Publikum sieht Folie \(deck.label(frozen))",
+                      systemImage: "snowflake")
+                    .font(.title3)
+                    .padding(.horizontal, 8).padding(.vertical, 2)
+                    .background(Color.cyan.opacity(0.4), in: RoundedRectangle(cornerRadius: 6))
+            }
+            if let error = session.reloadError {
+                Label(error, systemImage: "exclamationmark.triangle").foregroundStyle(.orange).lineLimit(1)
+            }
             if let blank = session.blank {
                 Label(blank == .black ? "Schwarz" : "Weiß", systemImage: "rectangle.fill")
                     .font(.title3)
@@ -66,6 +76,10 @@ struct PresenterView: View {
                 caption("Aktuell")
                 PDFPageView(page: deck.page(index), region: deck.notesLayout.slideRegion,
                             background: .black)
+                    .overlay {
+                        LaserPointerLayer(pointer: session.pointer, page: deck.page(index),
+                                          region: deck.notesLayout.slideRegion)
+                    }
                     .overlay(alignment: .center) { blankBadge }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -203,7 +217,13 @@ struct PresenterView: View {
         HStack(spacing: 18) {
             Button { session.handle(.previous) } label: { Label("Zurück", systemImage: "chevron.left") }
                 .disabled(index == 0)
-            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
+            Toggle(isOn: Binding(get: { session.frozenIndex != nil }, set: { _ in session.handle(.toggleFreeze) })) {
+                Label("Einfrieren", systemImage: "snowflake")
+            }
+            .toggleStyle(.button)
+            .help("Publikum behält die aktuelle Folie, während du blätterst (F)")
+            PointerToggle(pointer: session.pointer)
+            Text("← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -224,6 +244,18 @@ struct PresenterView: View {
         guard let page = deck.page(0) else { return 4 / 3 }
         let size = deck.notesLayout.slideRegion.rect(in: CGRect(origin: .zero, size: PageRenderer.displaySize(of: page))).size
         return size.height > 0 ? size.width / size.height : 4 / 3
+    }
+}
+
+private struct PointerToggle: View {
+    @ObservedObject var pointer: LaserPointer
+
+    var body: some View {
+        Toggle(isOn: $pointer.isEnabled) {
+            Label("Laserpointer", systemImage: "circle.circle.fill")
+        }
+        .toggleStyle(.button)
+        .help("Mauszeiger über der aktuellen Folie erscheint als roter Punkt beim Publikum (L)")
     }
 }
 

@@ -6,12 +6,14 @@ import AppKit
 enum PresentKeyAction: Equatable {
     case next, previous, first, last
     case nextSlide, previousSlide   // skip overlays
-    case exit                       // Escape: close overview / unblank / clear input first
+    case exit                       // Escape: clear input / close overview / unblank / unfreeze first
     case black, white
     case digit(Int)                 // typed page number, confirmed with Return
     case confirm                    // Return
     case toggleOverview
     case toggleTimer, resetTimer
+    case toggleFreeze               // audience keeps the current page while the presenter browses
+    case togglePointer              // laser pointer
     case ignore                     // consumed without effect (F5 from a clicker's start button)
 
     enum KeyCode {
@@ -49,6 +51,8 @@ enum PresentKeyAction: Equatable {
         case "p":      self = .toggleTimer
         case "r":      self = .resetTimer
         case "o":      self = .toggleOverview
+        case "f":      self = .toggleFreeze
+        case "l":      self = .togglePointer
         case let c? where c.count == 1 && c.first!.isASCII && c.first!.isNumber:
             self = .digit(Int(c)!)
         default: return nil

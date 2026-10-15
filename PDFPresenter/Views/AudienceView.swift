@@ -12,7 +12,10 @@ struct AudienceView: View {
 
     var body: some View {
         ZStack {
-            PDFPageView(page: deck.page(session.currentIndex), region: deck.notesLayout.slideRegion)
+            PDFPageView(page: deck.page(session.audienceIndex), region: deck.notesLayout.slideRegion)
+            LaserPointerLayer(pointer: session.pointer, page: deck.page(session.audienceIndex),
+                              region: deck.notesLayout.slideRegion,
+                              showsDot: session.audienceIndex == session.currentIndex)
             if let blank = session.blank {
                 (blank == .black ? Color.black : Color.white)
                     .transition(.opacity)

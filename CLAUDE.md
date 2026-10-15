@@ -22,8 +22,9 @@ xcodebuild test ... -only-testing:PDFPresenterTests/SlideDeckTests    # single t
 ```
 PDFPresenterApp       DocumentGroup(viewing: PDFFile) — read-only, the PDF is never written
 ContentView           per window: BrowseView (page list, preview, notes editor) or PresenterView
-PresentationSession   @MainActor ObservableObject: current page, black/white screen, typed page
-                      number, overview, PresentationTimer; handle(PresentKeyAction)
+PresentationSession   @MainActor ObservableObject: current page, frozen audience page, black/white
+                      screen, typed page number, overview, PresentationTimer, LaserPointer,
+                      FileWatcher → reloadFromDisk(); handle(PresentKeyAction)
 PresentationController audience window (borderless on a display, or windowed for rehearsal),
                       NSEvent monitor for keys/clicks, display sleep off, presenter full screen
 PresentationScreens   connected displays + persisted choice (UserDefaults)
@@ -38,4 +39,7 @@ PageRenderer          vector drawing of a PageRegion (PDFPageView) and cached th
 - **No document undo:** text input must not use the window's/document's `UndoManager` (marks the read-only PDF as edited, autosave fails). Use `NotesTextView` (own undo manager), not `TextEditor`.
 - **Beamer notes on page:** `NotesLayout` picks the slide half (`slideRegion`) for the audience and the notes half for the presenter. Regions are in y-up page display space (rotation applied).
 - **Rendering:** large views draw vectors via `PDFPageView` (`PageRenderer.draw`); lists use `SlideDeck.thumbnail` (NSCache). `PDFPage.draw(with:to:)` already applies rotation and moves the crop box to the origin.
+- **Audience page:** the audience shows `session.audienceIndex` (frozen page or current), never `currentIndex` directly.
+- **Laser pointer:** `LaserPointer` is a separate ObservableObject so mouse moves don't re-render the presenter view. Positions are normalized to the shown slide region (0…1, y down) so views of different sizes agree. Mouse tracking uses an AppKit tracking area with `.activeAlways` (`LaserPointerLayer`) — SwiftUI hover doesn't fire in the presenter window while the audience window is key.
+- **Reload:** `FileWatcher` re-arms after rename/delete (atomic saves) and debounces chunked writes. `SlideDeck.reload(pdf:)` swaps pages/labels and bumps `revision`; anything caching per page must key on `revision`. Unparseable files are ignored (old version stays).
 - **Tests** build PDFs in code (`PDFFixture`: page labels, text annotations, red/blue halves).

@@ -10,7 +10,7 @@ struct ContentView: View {
 
     init(file: PDFFile, fileURL: URL?) {
         let deck = SlideDeck(data: file.data, fileURL: fileURL) ?? SlideDeck(pdf: PDFDocument(), fileURL: nil)
-        _session = StateObject(wrappedValue: PresentationSession(deck: deck))
+        _session = StateObject(wrappedValue: PresentationSession(deck: deck, watchesFile: true))
     }
 
     var body: some View {
@@ -87,7 +87,7 @@ private struct BrowseView: View {
                     .frame(minHeight: 100, idealHeight: 170, maxHeight: 420)
             }
         }
-        .navigationSubtitle(deck.pageCount == 0 ? "" : "Seite \(session.currentIndex + 1) von \(deck.pageCount)")
+        .navigationSubtitle(session.reloadError ?? (deck.pageCount == 0 ? "" : "Seite \(session.currentIndex + 1) von \(deck.pageCount)"))
         .toolbar {
             ToolbarItemGroup {
                 Picker("Beamer-Notizen", selection: $deck.notesLayout) {
