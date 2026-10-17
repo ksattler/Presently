@@ -28,7 +28,8 @@ step() { echo "==> $*"; }
 step "Checking preconditions"
 [[ $VERSION =~ ^[0-9]+(\.[0-9]+){1,2}$ ]] || die "version must look like 1.0 or 1.0.0"
 [[ -z $(git status --porcelain) ]] || die "working tree not clean"
-security find-identity -v -p codesigning | grep -q "Developer ID Application: .*($TEAM_ID)" \
+# No `cmd | grep -q` under pipefail: grep exits on the first match and cmd dies of SIGPIPE.
+grep -q "Developer ID Application: .*($TEAM_ID)" <<< "$(security find-identity -v -p codesigning)" \
     || die "no \"Developer ID Application\" certificate for team $TEAM_ID in the keychain"
 xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1 \
     || die "notary profile \"$NOTARY_PROFILE\" missing (xcrun notarytool store-credentials)"
@@ -62,7 +63,7 @@ EOF
 xcodebuild -exportArchive -quiet -allowProvisioningUpdates -archivePath "$OUT/Presently.xcarchive" \
     -exportPath "$OUT/export" -exportOptionsPlist "$OUT/ExportOptions.plist"
 codesign --verify --strict --deep "$APP"
-codesign -dvv "$APP" 2>&1 | grep -q "Authority=Developer ID Application" || die "app is not signed with Developer ID"
+grep -q "Authority=Developer ID Application" <<< "$(codesign -dvv "$APP" 2>&1)" || die "app is not signed with Developer ID"
 
 step "Notarizing (takes a few minutes)"
 ditto -c -k --keepParent "$APP" "$OUT/notarize.zip"
