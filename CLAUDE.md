@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Presently (formerly "PDF Presenter", renamed because the name was taken) is a small native macOS app (SwiftUI + PDFKit) that presents PDF slides: audience view full screen on a chosen display, presenter view with current/next slide, upcoming pages, speaker notes and timer. Clickers work (they emulate keyboard keys). Display selection and the presentation window are derived from `../Slidescape` (`Views/Present/`).
 
-The app is localized for English (source language) and German; docs are German; code, comments and commit messages are English.
+The app is localized for English (source language) and German; the README is English; code, comments and commit messages are English.
 
 ## Commands
 

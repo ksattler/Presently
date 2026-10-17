@@ -1,55 +1,55 @@
 # Presently
 
-Kleine macOS-App (ab macOS 14) zum Präsentieren von PDF-Folien.
+Small macOS app (macOS 14 or later) for presenting PDF slides.
 
-## Funktionen
+## Features
 
-- **PDF öffnen** (⌘O, Drag & Drop aufs Dock-Symbol, „Zuletzt benutzt“). Seitenliste, große Vorschau, Notizen-Editor.
-- **Präsentieren** mit ⌘⏎, F5 oder ▶︎ in der Symbolleiste.
-  - **Bildschirm wählen:** Symbolleiste oder Menü *Präsentation → Präsentieren auf*. „Automatisch“ nimmt bei mehreren Bildschirmen den, auf dem das Dokumentfenster *nicht* liegt. Die Wahl bleibt gespeichert.
-  - **Probe:** „Publikumsansicht im Fenster“ öffnet die Publikumsansicht als normales Fenster.
-  - **Referentenansicht** im Dokumentfenster (optional im Vollbild): aktuelle und nächste Folie, die folgenden Seiten, Notizen (Markdown, Schriftgröße einstellbar), verstrichene Zeit (anhaltbar), Uhrzeit, Übersicht aller Seiten.
-  - **Aufbau anpassen:** Die Trenner zwischen aktueller Folie und Seitenspalte sowie zwischen nächster Folie und Notizen lassen sich ziehen. Im Menü *Ansicht* (oben): aktuelle Folie links/rechts, nächste Folie und Notizen ein-/ausblenden, Anzahl der folgenden Seiten (0–8), Zurücksetzen. Gilt für alle Dokumente.
-  - **Zeitplan** (Sanduhr-Symbol): Vortragsdauer *oder* Endzeit. Angezeigt werden Restzeit und ob du vor oder hinter dem Plan liegst (Folienfortschritt gegenüber Zeit, Overlays zählen nicht extra). Der Timer startet standardmäßig erst beim ersten Blättern – du kannst die Präsentation vorher öffnen und auf der Titelfolie warten.
-  - **Vortragsende / Backup:** Rechtsklick auf eine Seite in der Seitenliste → „Vortrag endet hier“. Spätere Seiten gelten als Backup (blasser, Hinweis in der Referentenansicht), zählen nicht zum Zeitplan, und *Ende* springt zuerst zum Vortragsende.
-- **Letzte Seite merken:** Ein PDF öffnet dort, wo du zuletzt warst.
-  - **Einfrieren (F):** Das Publikum behält die aktuelle Folie, während du in der Referentenansicht blätterst (z. B. bei Rückfragen). Nochmal F oder Esc zeigt wieder deine Folie.
-  - **Laserpointer (L):** Der Mauszeiger über der aktuellen Folie (Referentenansicht oder Publikum) erscheint als roter Punkt beim Publikum – auch mit Klickern, die den Mauszeiger bewegen.
-  - **Bildschirme tauschen (S):** Publikum und Referentenansicht wechseln die Displays (falscher Beamer erkannt, Kabel vertauscht). Die Wahl wird gespeichert.
-  - **Links im PDF** (Inhaltsverzeichnis, Beamer-Navigation, URLs) sind anklickbar – in der Publikumsansicht und auf der aktuellen Folie der Referentenansicht. Interne Links springen zur Seite, URLs öffnen den Browser, „Zurück“-Aktionen gehen zur Seite vor dem letzten Link. Ein Klick außerhalb eines Links blättert beim Publikum weiter.
-  - **Beamer ab- und anstecken:** Die Präsentation läuft weiter. Fällt der Beamer weg, wird die Publikumsansicht ausgeblendet (oder wandert auf einen freien dritten Bildschirm), die Referentenansicht bleibt sichtbar und zeigt einen Hinweis. Kommt der Beamer zurück, erscheint die Publikumsansicht wieder dort. Wird der Beamer erst während der Präsentation eingesteckt (Start nur am Laptop), wandert die Publikumsansicht auf ihn.
-  - **Zeichnen:** Stift (D), Textmarker (H), Radierer (E) – auf der aktuellen Folie der Referentenansicht oder direkt auf der Publikumsansicht. Farben über den Farbknopf, Z entfernt den letzten Strich der Folie, X alle. Esc beendet den Zeichenmodus. Zeichnungen bleiben pro Folie erhalten, solange das Dokument offen ist, werden aber nicht gespeichert.
-  - **Übergänge aus dem PDF** (z. B. LaTeX Beamer `\transdissolve`, `\transwipe`, `\transpush`, `\transsplit…`, `\transbox…`, `\transblinds…`, `\transcover`, `\transuncover`) werden in der Publikumsansicht abgespielt – beim Weiterblättern auf die direkt folgende Seite; Zurück und Sprünge wechseln sofort. Abschaltbar im Menü *Präsentation*. Automatisches Weiterblättern (`\transduration`) wird nicht unterstützt.
-- **Automatisch neu laden:** Ändert sich das PDF auf der Platte (z. B. LaTeX neu kompiliert), wird es neu geladen; die aktuelle Seite und die Notizen bleiben. Halb geschriebene Dateien werden ignoriert.
-- **Notizen**
-  - werden im pdfpc-Format neben dem PDF gespeichert (`vortrag.pdf` → `vortrag.pdfpc`) – kompatibel mit [pdfpc](https://pdfpc.github.io);
-  - Text-Annotationen im PDF (Kommentare, `\pdfpcnote`) werden als Notizen angezeigt und für das Publikum ausgeblendet;
-  - LaTeX-Beamer mit `show notes on second screen=right` (bzw. left/top/bottom): das Publikum sieht nur die Folienhälfte, die Notizhälfte erscheint in der Referentenansicht. Breite Seiten werden automatisch erkannt; von Hand im Menü *Präsentation → Beamer-Notizen*. Passt die Einstellung nicht zum Seitenformat, erscheint ein Hinweis mit „Ganze Seite zeigen“.
-  - Beamer-Overlays (gleiche Seitenbeschriftung) teilen sich eine Notiz;
-  - auch während der Präsentation bearbeitbar: Stift-Symbol oder Doppelklick auf die Notizen, Esc beendet das Bearbeiten. Bild↑/Bild↓ (Klicker) blättern dabei weiter.
+- **Open a PDF** (⌘O, drag & drop onto the Dock icon, “Open Recent”). Page list, large preview, notes editor.
+- **Present** with ⌘⏎, F5 or ▶︎ in the toolbar.
+  - **Choose a display:** toolbar or menu *Presentation → Present On*. With several displays, “Automatic” picks the one the document window is *not* on. The choice is remembered.
+  - **Rehearsal:** “Audience View in a Window” opens the audience view as a regular window.
+  - **Presenter view** in the document window (optionally full screen): current and next slide, the upcoming pages, notes (Markdown, adjustable font size), elapsed time (can be paused), clock, overview of all pages.
+  - **Adjust the layout:** the dividers between the current slide and the page column and between the next slide and the notes can be dragged. In the *View* menu (top): current slide left/right, show/hide next slide and notes, number of upcoming pages (0–8), reset. Applies to all documents.
+  - **Schedule** (hourglass icon): talk duration *or* end time. Shows the remaining time and whether you are ahead of or behind schedule (slide progress versus time; overlays don't count separately). By default the timer only starts with the first page turn – you can open the presentation early and wait on the title slide.
+  - **End of talk / backup:** right-click a page in the page list → “Talk Ends Here”. Later pages count as backup (dimmed, notice in the presenter view), don't count toward the schedule, and *End* jumps to the end of the talk first.
+- **Remember the last page:** a PDF opens where you left off.
+  - **Freeze (F):** the audience keeps the current slide while you browse in the presenter view (e.g. for questions). F or Esc again shows your slide again.
+  - **Laser pointer (L):** the mouse pointer over the current slide (presenter view or audience) appears as a red dot for the audience – also with clickers that move the mouse pointer.
+  - **Swap displays (S):** audience and presenter view switch displays (wrong projector detected, cables swapped). The choice is remembered.
+  - **Links in the PDF** (table of contents, Beamer navigation, URLs) are clickable – in the audience view and on the current slide of the presenter view. Internal links jump to the page, URLs open the browser, “Back” actions return to the page before the last link. A click outside a link advances the audience view.
+  - **Unplugging and replugging the projector:** the presentation keeps running. If the projector goes away, the audience view is hidden (or moves to a free third display), the presenter view stays visible and shows a notice. When the projector comes back, the audience view reappears there. If the projector is only plugged in during the presentation (started on the laptop alone), the audience view moves to it.
+  - **Drawing:** pen (D), highlighter (H), eraser (E) – on the current slide of the presenter view or directly on the audience view. Colors via the color button, Z removes the slide's last stroke, X all of them. Esc ends drawing mode. Drawings are kept per slide while the document is open, but are not saved.
+  - **Transitions from the PDF** (e.g. LaTeX Beamer `\transdissolve`, `\transwipe`, `\transpush`, `\transsplit…`, `\transbox…`, `\transblinds…`, `\transcover`, `\transuncover`) are played in the audience view – when advancing to the immediately following page; going back and jumps switch instantly. Can be turned off in the *Presentation* menu. Automatic advancing (`\transduration`) is not supported.
+- **Automatic reload:** if the PDF changes on disk (e.g. LaTeX recompiled), it is reloaded; the current page and the notes are kept. Half-written files are ignored.
+- **Notes**
+  - are stored in pdfpc format next to the PDF (`talk.pdf` → `talk.pdfpc`) – compatible with [pdfpc](https://pdfpc.github.io);
+  - text annotations in the PDF (comments, `\pdfpcnote`) are shown as notes and hidden from the audience;
+  - LaTeX Beamer with `show notes on second screen=right` (or left/top/bottom): the audience sees only the slide half, the notes half appears in the presenter view. Wide pages are detected automatically; set it manually in the menu *Presentation → Beamer Notes*. If the setting doesn't match the page format, a notice with “Show Whole Page” appears.
+  - Beamer overlays (same page label) share one note;
+  - editable during the presentation too: pencil icon or double-click on the notes, Esc ends editing. Page Up/Page Down (clicker) still turn pages meanwhile.
 
-## Tasten (auch Presenter/Klicker)
+## Keys (also presenters/clickers)
 
-| Taste | Funktion |
+| Key | Action |
 |---|---|
-| → ↓ Bild↓ Leertaste Klick (außerhalb von Links) | weiter |
-| ← ↑ Bild↑ ⌫ Rechtsklick | zurück |
-| ⇧ → / ⇧ ← | nächste / vorige Folie (Overlays überspringen) |
-| Pos1 / Ende | erste Seite / Vortragsende, nochmal Ende: letzte Seite |
-| Nummer + ⏎ | zu Folie (Beschriftung) bzw. Seite springen |
-| B oder . / W oder , | Schwarz- / Weißbild (nochmal: zurück) |
-| Tab oder O | Übersicht |
-| P / R | Timer anhalten / zurücksetzen |
-| F | Publikumsansicht einfrieren |
-| L | Laserpointer an/aus |
-| S | Bildschirme tauschen |
-| D / H / E | Stift / Textmarker / Radierer (nochmal: aus) |
-| Z / X | letzten Strich / alle Zeichnungen der Folie entfernen |
-| Esc | Notiz-Bearbeitung/Eingabe/Übersicht/Zeichenmodus/Schwarzbild/Einfrieren beenden, sonst Präsentation beenden |
+| → ↓ Page Down Space Click (outside links) | next |
+| ← ↑ Page Up ⌫ Right-click | previous |
+| ⇧ → / ⇧ ← | next / previous slide (skip overlays) |
+| Home / End | first page / end of talk, End again: last page |
+| Number + ⏎ | go to slide (label) or page |
+| B or . / W or , | black / white screen (again: back) |
+| Tab or O | overview |
+| P / R | pause / reset timer |
+| F | freeze audience view |
+| L | laser pointer on/off |
+| S | swap displays |
+| D / H / E | pen / highlighter / eraser (again: off) |
+| Z / X | remove last stroke / all drawings on the slide |
+| Esc | end note editing/input/overview/drawing mode/black screen/freeze, otherwise end the presentation |
 
-Klicker senden in der Regel Bild↑/Bild↓, B bzw. „.“ und F5/Esc für Start/Stopp – alles abgedeckt.
+Clickers usually send Page Up/Page Down, B or “.”, and F5/Esc for start/stop – all covered.
 
-## Entwicklung
+## Development
 
 ```bash
 brew install xcodegen
@@ -58,6 +58,6 @@ xcodebuild -project Presently.xcodeproj -scheme Presently build
 xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
 ```
 
-## Lizenz
+## License
 
-MIT – siehe [LICENSE](LICENSE).
+MIT – see [LICENSE](LICENSE).
