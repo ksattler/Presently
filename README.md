@@ -57,3 +57,7 @@ xcodegen generate
 xcodebuild -project Presently.xcodeproj -scheme Presently build
 xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
 ```
+
+## Lizenz
+
+MIT – siehe [LICENSE](LICENSE).
