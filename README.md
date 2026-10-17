@@ -1,5 +1,7 @@
 # Presently
 
+[![Tests](https://github.com/ksattler/Presently/actions/workflows/tests.yml/badge.svg)](https://github.com/ksattler/Presently/actions/workflows/tests.yml)
+
 Small macOS app (macOS 14 or later) for presenting PDF slides.
 
 ## Features
