@@ -64,6 +64,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             String(localized: "The timer shows the elapsed time. P pauses and resumes it, R resets it. By default it starts with the first page turn, so you can open the presentation early and wait on the title slide."),
             String(localized: "**Schedule** (hourglass icon): set the talk duration or an end time. Presently shows the remaining time and whether you are ahead of or behind schedule – slide progress compared to elapsed time; overlays don't count separately."),
             String(localized: "**End of talk:** right-click a page in the page list → *Talk Ends Here (Backup After)*. Later pages are backup: dimmed, not counted in the schedule, and End jumps to the end of the talk first."),
+            String(localized: "**Slide times:** while presenting, the presenter view shows the time on the current slide. Afterwards the page list shows it under each slide, and *Presentation → Slide Times…* lists all slides with bars and the total – handy after a rehearsal. Only talk time counts (not pauses); it starts over with the timer."),
             String(localized: "**Skip slides:** right-click a page in the page list or the overview → *Skip Slide in Presentation* (all overlays of the slide). Paging passes over it, the preview and the schedule leave it out; a jump (number, overview, link) still shows it. Stored in the pdfpc file like pdfpc's own hidden slides."),
         ]
         case .notes: [

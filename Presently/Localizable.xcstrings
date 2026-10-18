@@ -251,6 +251,16 @@
         }
       }
     },
+    "**Slide times:** while presenting, the presenter view shows the time on the current slide. Afterwards the page list shows it under each slide, and *Presentation → Slide Times…* lists all slides with bars and the total – handy after a rehearsal. Only talk time counts (not pauses); it starts over with the timer.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Folienzeiten:** Während der Präsentation zeigt die Referentenansicht die Zeit auf der aktuellen Folie. Danach steht sie in der Seitenliste unter jeder Folie, und *Präsentation → Folienzeiten …* listet alle Folien mit Balken und Gesamtzeit – praktisch nach einer Probe. Es zählt nur Vortragszeit (keine Pausen); sie beginnt mit dem Timer neu."
+          }
+        }
+      }
+    },
     "**Start** with ⌘⏎, F5 or ▶︎ in the toolbar. **End** with ⌘⏎ or Esc – Esc first closes an open overview, input, drawing mode, black screen or freeze.": {
       "localizations": {
         "de": {
@@ -511,6 +521,16 @@
         }
       }
     },
+    "Copy as Text": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Text kopieren"
+          }
+        }
+      }
+    },
     "Current": {
       "localizations": {
         "de": {
@@ -557,6 +577,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Folie nicht überspringen"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
           }
         }
       }
@@ -1221,6 +1251,16 @@
         }
       }
     },
+    "Present the slides once; the time spent on each slide shows up here.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentiere die Folien einmal; hier erscheint dann die Zeit pro Folie."
+          }
+        }
+      }
+    },
     "Presentation": {
       "localizations": {
         "de": {
@@ -1417,6 +1457,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Folie %@"
+          }
+        }
+      }
+    },
+    "Slide Times": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folienzeiten"
+          }
+        }
+      }
+    },
+    "Slide Times…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folienzeiten …"
           }
         }
       }
@@ -1621,6 +1681,46 @@
         }
       }
     },
+    "This slide %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Folie %@"
+          }
+        }
+      }
+    },
+    "Time on the slide the audience sees": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeit auf der Folie, die das Publikum sieht"
+          }
+        }
+      }
+    },
+    "Time on this slide in the last presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeit auf dieser Folie in der letzten Präsentation"
+          }
+        }
+      }
+    },
+    "Time per slide in the last presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeit pro Folie in der letzten Präsentation"
+          }
+        }
+      }
+    },
     "Timer and Schedule": {
       "localizations": {
         "de": {
@@ -1637,6 +1737,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Timer startet beim ersten Blättern"
+          }
+        }
+      }
+    },
+    "Total: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamt: %@"
           }
         }
       }

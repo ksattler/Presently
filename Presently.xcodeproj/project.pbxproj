@@ -23,6 +23,7 @@
 		487849B9B4AD86AF818667DB /* TalkPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C0820D052255C1D995967 /* TalkPlan.swift */; };
 		4C3271A5C725397C1BAFAB1A /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 3F9C350806204FBD7587CE01 /* Localizable.xcstrings */; };
 		62FBB344EB0C1648F731D4F0 /* PdfpcFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F4F7E0F140617EE45D84F7 /* PdfpcFile.swift */; };
+		680E88FC799424CF7A331EFD /* SlideTimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDB62607FC9CA61ABE33D0D /* SlideTimesView.swift */; };
 		6D837A8BAC8BEB4026C66A03 /* PDFFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C4B4D221A78BD7C8B28A8D /* PDFFixture.swift */; };
 		6EE9F95E7629E698D2EA863D /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF1A1F39497276B761CBCD2 /* HelpView.swift */; };
 		70736D0B52A315CA56BE8D4F /* PresentKeyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82915E8A78D8530C90C32B0D /* PresentKeyAction.swift */; };
@@ -30,6 +31,7 @@
 		7AD2BE2F132C59200BCC5569 /* AudienceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1075A858B52885C4DAC0CEC7 /* AudienceView.swift */; };
 		7C12909BF159C6F37F67D327 /* FreezeReloadPointerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F893EB58B8D4D3EF0AC343A0 /* FreezeReloadPointerTests.swift */; };
 		870948816846231C2BA78844 /* PageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2ACAF06196D160A1ADEEEF /* PageRenderer.swift */; };
+		891C5E16AC79F80D484904E4 /* SlideTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BDDE50E36B1BDA28FEA935 /* SlideTimes.swift */; };
 		8B856EC7F33CEDEE2F6B819E /* SlideZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B92C505FF52DA3FF231E5F /* SlideZoom.swift */; };
 		8E918AA1BC26275B8008A2C5 /* PresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D26F90A15C92F28DD85F52 /* PresenterView.swift */; };
 		90592C2E165C4A12F7F9C42E /* TalkPlanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B76DDADB6D797CAB637D5F /* TalkPlanTests.swift */; };
@@ -41,6 +43,7 @@
 		BC397897E33819D875250668 /* DeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC84655D132337872C5675F /* DeckTests.swift */; };
 		BEE446C7604CD5BE6A4E3371 /* ZoomLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550FE84E3DFEC51FC70DB5CA /* ZoomLayer.swift */; };
 		C0E1BB6FBA9964F717864C0A /* MediaPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729855882C124E9868E296EA /* MediaPlayback.swift */; };
+		C5556F841C55433A89A70D09 /* SlideTimesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B18E6F413A290C389173F2 /* SlideTimesTests.swift */; };
 		C9686955E4025936C8F87BDA /* PresentationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45181AAB2A04581F6E1C65D /* PresentationSession.swift */; };
 		CA6BAADA123C7E41BE44A742 /* PresentationScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBD783EFB9C80AB52E7545C /* PresentationScreens.swift */; };
 		CC08523B89710F705C1709D7 /* PresentationTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABF251FC1C4A0E634AD2601 /* PresentationTimer.swift */; };
@@ -73,8 +76,10 @@
 		0A51D96059F8719FD16BEE9C /* PageMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMedia.swift; sourceTree = "<group>"; };
 		1075A858B52885C4DAC0CEC7 /* AudienceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceView.swift; sourceTree = "<group>"; };
 		124EBB2AB7E774987EF96F9A /* AboutPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPanel.swift; sourceTree = "<group>"; };
+		17B18E6F413A290C389173F2 /* SlideTimesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideTimesTests.swift; sourceTree = "<group>"; };
 		2190FCD98E632AB7E887D1E4 /* DrawingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingTests.swift; sourceTree = "<group>"; };
 		22A41BED5673410CCD51BD5E /* PresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationTests.swift; sourceTree = "<group>"; };
+		22BDDE50E36B1BDA28FEA935 /* SlideTimes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideTimes.swift; sourceTree = "<group>"; };
 		254B8E3CA106AFC93770A894 /* NotesLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesLayout.swift; sourceTree = "<group>"; };
 		38B62273AD256B7E1308AEF0 /* PresentlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PresentlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9BEAD7B380E7CEB6971866 /* PageTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTransitionAnimator.swift; sourceTree = "<group>"; };
@@ -90,6 +95,7 @@
 		64319EA167BD70178267DA5C /* PresentlyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentlyApp.swift; sourceTree = "<group>"; };
 		64B92C505FF52DA3FF231E5F /* SlideZoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideZoom.swift; sourceTree = "<group>"; };
 		6CFD0F9766D30BF9745C9085 /* NotesTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextView.swift; sourceTree = "<group>"; };
+		6DDB62607FC9CA61ABE33D0D /* SlideTimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideTimesView.swift; sourceTree = "<group>"; };
 		729855882C124E9868E296EA /* MediaPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayback.swift; sourceTree = "<group>"; };
 		7EC84655D132337872C5675F /* DeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTests.swift; sourceTree = "<group>"; };
 		80AE78C718DD0D750FF53023 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -136,6 +142,7 @@
 				F90D4B7A26CFC7C27699A5D9 /* PresenterLayout.swift */,
 				02D26F90A15C92F28DD85F52 /* PresenterView.swift */,
 				5BCE8522B8A9343401FF8BF8 /* SettingsView.swift */,
+				6DDB62607FC9CA61ABE33D0D /* SlideTimesView.swift */,
 				550FE84E3DFEC51FC70DB5CA /* ZoomLayer.swift */,
 			);
 			path = Views;
@@ -153,6 +160,7 @@
 				05C4B4D221A78BD7C8B28A8D /* PDFFixture.swift */,
 				22A41BED5673410CCD51BD5E /* PresentationTests.swift */,
 				C1E2153726AB1E7BA205A8E0 /* SkipTests.swift */,
+				17B18E6F413A290C389173F2 /* SlideTimesTests.swift */,
 				D9B76DDADB6D797CAB637D5F /* TalkPlanTests.swift */,
 				DB5C98A58063B1A2E41A8E9D /* TransitionTests.swift */,
 				8620ED4D70A05C85EDA548C4 /* ZoomTests.swift */,
@@ -189,6 +197,7 @@
 				C739C09BBB9A6D7C575E11CB /* PDFLinks.swift */,
 				42F4F7E0F140617EE45D84F7 /* PdfpcFile.swift */,
 				D8301F7B0869298D8737B4A9 /* SlideDeck.swift */,
+				22BDDE50E36B1BDA28FEA935 /* SlideTimes.swift */,
 				64B92C505FF52DA3FF231E5F /* SlideZoom.swift */,
 				B63C0820D052255C1D995967 /* TalkPlan.swift */,
 				9C45AB72192705FBED793345 /* ThumbnailRenderer.swift */,
@@ -359,6 +368,8 @@
 				A961ED2B4BC75548D1D59381 /* PresentlyApp.swift in Sources */,
 				40A31E6670D16B98590F0329 /* SettingsView.swift in Sources */,
 				DE5D60EB813896B25C3A521E /* SlideDeck.swift in Sources */,
+				891C5E16AC79F80D484904E4 /* SlideTimes.swift in Sources */,
+				680E88FC799424CF7A331EFD /* SlideTimesView.swift in Sources */,
 				8B856EC7F33CEDEE2F6B819E /* SlideZoom.swift in Sources */,
 				487849B9B4AD86AF818667DB /* TalkPlan.swift in Sources */,
 				1236756B8F79CC55B44466E2 /* ThumbnailRenderer.swift in Sources */,
@@ -379,6 +390,7 @@
 				6D837A8BAC8BEB4026C66A03 /* PDFFixture.swift in Sources */,
 				F7EA784847DB40052BF3FF60 /* PresentationTests.swift in Sources */,
 				DCECF27F91F364CC377DE003 /* SkipTests.swift in Sources */,
+				C5556F841C55433A89A70D09 /* SlideTimesTests.swift in Sources */,
 				90592C2E165C4A12F7F9C42E /* TalkPlanTests.swift in Sources */,
 				B7AA8583E6409C95DDA19EED /* TransitionTests.swift in Sources */,
 				F071F5E4214C5EFA0113671E /* ZoomTests.swift in Sources */,

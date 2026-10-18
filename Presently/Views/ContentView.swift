@@ -7,6 +7,7 @@ struct ContentView: View {
     @StateObject private var session: PresentationSession
     @State private var controller = PresentationController()
     @State private var window: NSWindow?
+    @State private var showsSlideTimes = false
 
     init(file: PDFFile, fileURL: URL?) {
         let deck = SlideDeck(data: file.data, fileURL: fileURL) ?? SlideDeck(pdf: PDFDocument(), fileURL: nil)
@@ -19,7 +20,8 @@ struct ContentView: View {
                 PresenterView(session: session, deck: session.deck, stop: stopPresenting,
                               swapScreens: { controller.swapScreens() })
             } else {
-                BrowseView(session: session, deck: session.deck, startPresenting: startPresenting)
+                BrowseView(session: session, deck: session.deck, startPresenting: startPresenting,
+                           showSlideTimes: { showsSlideTimes = true })
             }
         }
         .background(WindowAccessor(window: $window))
@@ -30,7 +32,9 @@ struct ContentView: View {
         .background(BrowseKeyHandler(session: session, window: window, startPresenting: startPresenting))
         .focusedSceneValue(\.presentationActions, PresentationActions(
             isPresenting: session.isPresenting, canPresent: session.deck.pageCount > 0,
-            start: startPresenting, stop: stopPresenting, swapScreens: { controller.swapScreens() }))
+            start: startPresenting, stop: stopPresenting, swapScreens: { controller.swapScreens() },
+            showSlideTimes: { showsSlideTimes = true }))
+        .sheet(isPresented: $showsSlideTimes) { SlideTimesView(session: session, deck: session.deck) }
         .focusedSceneObject(session.deck)
         .onDisappear {
             controller.stop()
@@ -53,6 +57,7 @@ private struct BrowseView: View {
     @ObservedObject var session: PresentationSession
     @ObservedObject var deck: SlideDeck
     let startPresenting: () -> Void
+    let showSlideTimes: () -> Void
     /// The list's own selection, synced with the session via `onChange`: List writes its
     /// selection during view updates, and publishing session changes from there is not allowed.
     @State private var selection: Int?
@@ -73,6 +78,11 @@ private struct BrowseView: View {
                             }
                             if deck.isHidden(i) {
                                 Image(systemName: "eye.slash").help("Skipped in the presentation")
+                            }
+                            if i == session.slide(of: i), let t = session.slideTimes.seconds[i], t >= 1 {
+                                Label(PresentationTimer.format(t), systemImage: "stopwatch")
+                                    .monospacedDigit()
+                                    .help("Time on this slide in the last presentation")
                             }
                         }
                         .font(.caption)
@@ -120,6 +130,12 @@ private struct BrowseView: View {
         .navigationSubtitle(session.reloadError ?? (deck.pageCount == 0 ? "" : String(localized: "Page \(session.currentIndex + 1) of \(deck.pageCount)")))
         .toolbar {
             ToolbarItemGroup {
+                if !session.slideTimes.isEmpty {
+                    Button(action: showSlideTimes) {
+                        Label("Slide Times", systemImage: "stopwatch")
+                    }
+                    .help("Time per slide in the last presentation")
+                }
                 Menu {
                     PresentationScreenMenu()
                 } label: {

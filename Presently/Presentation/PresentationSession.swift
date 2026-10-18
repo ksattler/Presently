@@ -47,6 +47,8 @@ final class PresentationSession: ObservableObject {
     /// The timer starts with the first page turn instead of with the presentation (pdfpc's
     /// behavior: you can open the presentation early and wait on the title slide).
     @Published private(set) var timerWaitsForFirstTurn = false
+    /// Time per slide of the current (or last) presentation; reset with the timer.
+    @Published private(set) var slideTimes = SlideTimes()
     static let timerStartsOnFirstTurnKey = "timerStartsOnFirstTurn"
     /// Page the audience keeps seeing while frozen; nil = follows `currentIndex`.
     @Published private(set) var frozenIndex: Int? {
@@ -126,6 +128,7 @@ final class PresentationSession: ObservableObject {
         pageInput = ""
         frozenIndex = nil
         timer = PresentationTimer()
+        slideTimes = SlideTimes()
         timerWaitsForFirstTurn = timerStartsOnFirstTurn
         if !timerWaitsForFirstTurn { timer.start(at: now()) }
         audiencePageChanged()
@@ -150,6 +153,7 @@ final class PresentationSession: ObservableObject {
     /// with its page; the videos of the new page are loaded while presenting, stopped otherwise.
     /// A new page (or a reload) stops what was playing.
     private func audiencePageChanged() {
+        slideTimes.enter(isPresenting ? slide(of: audienceIndex) : nil, elapsed: timer.elapsed(at: now()))
         if zoom != nil, !isPresenting || zoomPage != audienceIndex { zoom = nil }
         if !isPresenting { isSelectingZoom = false }
         let index = isPresenting ? audienceIndex : nil
@@ -160,6 +164,9 @@ final class PresentationSession: ObservableObject {
         } ?? []
         media.load(clips, page: index)
     }
+
+    /// Key of a page's slide in `slideTimes`: the first page of its overlay group.
+    func slide(of index: Int) -> Int { deck.overlayGroup(of: index).lowerBound }
 
     // MARK: Navigation
 
@@ -330,7 +337,10 @@ final class PresentationSession: ObservableObject {
         case .undoDrawing:    drawings.undo(page: currentIndex)
         case .clearDrawing:   drawings.clear(page: currentIndex)
         case .toggleTimer:    timerWaitsForFirstTurn = false; timer.toggle(at: now())
-        case .resetTimer:     timer.reset(at: now())
+        case .resetTimer:
+            timer.reset(at: now())
+            slideTimes = SlideTimes()
+            slideTimes.enter(slide(of: audienceIndex), elapsed: 0)
         case .ignore:         break
         case .exit:
             if !pageInput.isEmpty { pageInput = "" }

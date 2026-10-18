@@ -32,6 +32,7 @@ struct PresentationActions {
     var start: () -> Void
     var stop: () -> Void
     var swapScreens: () -> Void
+    var showSlideTimes: () -> Void
 }
 
 private struct PresentationActionsKey: FocusedValueKey {
@@ -68,6 +69,8 @@ struct AppCommands: Commands {
                     .keyboardShortcut(.return, modifiers: .command)
                     .disabled(!(actions?.canPresent ?? false))
             }
+            Button("Slide Times…") { actions?.showSlideTimes() }
+                .disabled(actions == nil)
             Divider()
             TransitionsToggle()
             Divider()

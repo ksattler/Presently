@@ -437,6 +437,13 @@ struct PresentationClock: View {
                         .font(.title2.monospacedDigit())
                         .foregroundStyle(session.timer.isRunning ? .primary : Color.orange)
                 }
+                if !session.timerWaitsForFirstTurn {
+                    let onSlide = session.slideTimes.seconds(of: session.slide(of: session.audienceIndex), elapsed: elapsed)
+                    Text("This slide \(PresentationTimer.format(onSlide))")
+                        .font(.title3.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .help("Time on the slide the audience sees")
+                }
                 Button { session.handle(.toggleTimer) } label: {
                     Image(systemName: session.timer.isRunning ? "pause.fill" : "play.fill")
                 }
@@ -553,7 +560,9 @@ struct OverviewGrid: View {
                                         .stroke(i == session.currentIndex ? Color.accentColor : .clear, lineWidth: 3))
                                 Text(verbatim: "\(deck.label(i))  ·  \(i + 1)"
                                      + (deck.isBackup(i) ? "  · " + String(localized: "Backup") : "")
-                                     + (deck.isHidden(i) ? "  · " + String(localized: "Skipped") : ""))
+                                     + (deck.isHidden(i) ? "  · " + String(localized: "Skipped") : "")
+                                     + (i == session.slide(of: i) && (session.slideTimes.seconds[i] ?? 0) >= 1
+                                        ? "  · " + PresentationTimer.format(session.slideTimes.seconds[i]!) : ""))
                                     .font(.caption.monospacedDigit())
                                     .foregroundStyle(.secondary)
                             }
