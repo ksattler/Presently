@@ -291,6 +291,16 @@
         }
       }
     },
+    "**Typst** (Touying, Polylux): overlays, notes on a second screen and `run:` video links work like with Beamer. Notes, skipped slides, duration and the transition come from the pdfpc file – export it next to the PDF with `typst eval 'query(<pdfpc-file>).first().value' --in talk.typ > talk.pdfpc`.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Typst** (Touying, Polylux): Overlays, Notizen auf dem zweiten Bildschirm und `run:`-Videolinks funktionieren wie bei Beamer. Notizen, übersprungene Folien, Dauer und Übergang kommen aus der pdfpc-Datei – exportiere sie neben das PDF mit `typst eval 'query(<pdfpc-file>).first().value' --in talk.typ > talk.pdfpc`."
+          }
+        }
+      }
+    },
     "**Videos** from the PDF play inside the slide: LaTeX Beamer's `\\movie` (with autostart, loop, start, duration) and links like `run:clip.mp4?autostart&loop`. The video file lies next to the PDF. Click a video to play or pause it; the presenter view shows its progress.": {
       "localizations": {
         "de": {
@@ -901,12 +911,12 @@
         }
       }
     },
-    "LaTeX Beamer": {
+    "LaTeX Beamer and Typst": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "LaTeX Beamer"
+            "value": "LaTeX Beamer und Typst"
           }
         }
       }

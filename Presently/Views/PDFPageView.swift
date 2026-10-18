@@ -146,9 +146,11 @@ struct PageThumbnail: View {
 /// Speaker notes as Markdown (inline formatting; line breaks kept), as pdfpc renders them.
 struct NotesText: View {
     let text: String
+    /// pdfpc's `disableMarkdown`: shown as plain text.
+    var markdown = true
 
     var body: some View {
-        if let attributed = try? AttributedString(
+        if markdown, let attributed = try? AttributedString(
             markdown: text, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)) {
             Text(attributed)
         } else {

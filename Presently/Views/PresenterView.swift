@@ -244,7 +244,7 @@ struct PresenterView: View {
                             if text.isEmpty {
                                 Text("No notes for this slide.").foregroundStyle(.tertiary)
                             } else {
-                                NotesText(text: text)
+                                NotesText(text: text, markdown: deck.notesAreMarkdown)
                             }
                         }
                         .font(.system(size: notesFontSize))

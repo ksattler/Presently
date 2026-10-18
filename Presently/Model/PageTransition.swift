@@ -44,6 +44,27 @@ struct PageTransition: Equatable {
         return t
     }
 
+    /// pdfpc's transition string (`defaultTransition` in the `.pdfpc` file, as Typst's Touying
+    /// and Polylux write it — Typst can't put `/Trans` into the PDF):
+    /// `type[:duration[:angle[:alignment[:direction]]]]`, e.g. `push:1:0:horizontal:outward`.
+    static func parse(pdfpc s: String) -> PageTransition? {
+        let parts = s.split(separator: ":", omittingEmptySubsequences: false).map { $0.trimmingCharacters(in: .whitespaces) }
+        guard let type = parts.first?.lowercased(), !type.isEmpty else { return nil }
+        let style: Style
+        if type == "replace" { style = .replace } else {
+            guard let s = Style(rawValue: type.prefix(1).uppercased() + type.dropFirst()) else { return nil }
+            style = s
+        }
+        var t = PageTransition(style: style)
+        if parts.count > 1, let d = Double(parts[1]) {
+            t.duration = min(max(d, durationRange.lowerBound), durationRange.upperBound)
+        }
+        if parts.count > 2, let a = Int(parts[2]) { t.direction = ((a % 360) + 360) % 360 }
+        if parts.count > 3 { t.horizontal = parts[3].lowercased() != "vertical" }
+        if parts.count > 4 { t.inward = parts[4].lowercased() != "outward" }
+        return t
+    }
+
     private static func name(_ dict: CGPDFDictionaryRef, _ key: String) -> String? {
         var ptr: UnsafePointer<CChar>?
         guard CGPDFDictionaryGetName(dict, key, &ptr), let ptr else { return nil }

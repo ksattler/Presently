@@ -22,6 +22,13 @@ struct PdfpcFile {
     /// differently (user slides), so it is left alone.
     var endPage: Int?
 
+    /// pdfpc's own keys, read only (kept in the file unchanged): the transition for pages without
+    /// `/Trans` (Typst can't write those), the talk's last *user slide* (0-based, overlays
+    /// count once — e.g. from Polylux) and whether notes are plain text.
+    var defaultTransition: PageTransition? { (topLevel["defaultTransition"] as? String).flatMap { PageTransition.parse(pdfpc: $0) } }
+    var endSlide: Int? { (topLevel["endSlide"] as? Int).flatMap { $0 >= 0 ? $0 : nil } }
+    var disableMarkdown: Bool { topLevel["disableMarkdown"] as? Bool ?? false }
+
     static let endPageKey = "presentlyEndPage"
     /// Written before the app was renamed to Presently; read, replaced on save.
     static let legacyEndPageKey = "pdfpresenterEndPage"

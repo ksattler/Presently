@@ -36,6 +36,16 @@ Small macOS app (macOS 14 or later) for presenting PDF slides.
   - Beamer overlays (same page label) share one note;
   - editable during the presentation too: pencil icon or double-click on the notes, Esc ends editing. Page Up/Page Down (clicker) still turn pages meanwhile.
 
+## Typst slides (Touying, Polylux)
+
+Typst writes page labels for overlays (`#pause`, `#uncover` …), so overlays work as with Beamer; so do notes on a second screen (`config-common(show-notes-on-second-screen: right)`) and video links (`#link("run:clip.mp4?autostart")[…]`). Typst can't put speaker notes, skipped slides or transitions into the PDF itself – Touying and Polylux collect them as pdfpc metadata. Export it next to the PDF:
+
+```bash
+typst eval 'query(<pdfpc-file>).first().value' --in talk.typ > talk.pdfpc   # Typst 0.14+; older: typst query talk.typ --field value --one "<pdfpc-file>"
+```
+
+(Touying: `config-common(enable-pdfpc: true)`, notes with `#speaker-note[…]`; Polylux: `#pdfpc.speaker-note(…)`.) Presently then shows the notes (a note on any overlay applies to the whole slide), skips `hidden` slides, takes `duration` / `endTime` / `endSlide`, plays `defaultTransition` (pdfpc's `type:duration:angle:alignment:direction`) on every page turn and honors `disableMarkdown`. Notes edited in Presently go into the same file; exporting again from Typst overwrites them.
+
 ## Keys (also presenters/clickers)
 
 | Key | Action |

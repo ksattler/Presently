@@ -40,6 +40,10 @@ final class SlideDeck: ObservableObject {
     @Published private(set) var embeddedNotes: [Int: String]
     /// Page index → transition when moving onto that page (`/Trans`).
     @Published private(set) var transitions: [Int: PageTransition]
+    /// For pages without their own: pdfpc's `defaultTransition` from the sidecar (Typst slides).
+    let defaultTransition: PageTransition?
+    /// Notes are Markdown unless the sidecar says otherwise (pdfpc's `disableMarkdown`).
+    let notesAreMarkdown: Bool
     /// Counts reloads; views that cache per page (thumbnails) key on it.
     @Published private(set) var revision = 0
 
@@ -69,7 +73,8 @@ final class SlideDeck: ObservableObject {
         self.pdf = pdf
         self.fileURL = fileURL
         pageCount = pdf.pageCount
-        labels = Self.labels(of: pdf)
+        let pageLabels = Self.labels(of: pdf)
+        labels = pageLabels
         embeddedNotes = Self.extractAnnotationNotes(from: pdf)
         transitions = Self.transitions(of: pdf)
 
@@ -86,8 +91,12 @@ final class SlideDeck: ObservableObject {
         } else {
             talkLimit = .none
         }
-        endPage = sidecar.endPage.flatMap { $0 < pdf.pageCount ? $0 : nil }
+        // Our own key wins; else pdfpc's endSlide (counted in user slides).
+        endPage = (sidecar.endPage ?? sidecar.endSlide.flatMap { Self.lastPage(ofUserSlide: $0, labels: pageLabels) })
+            .flatMap { $0 < pdf.pageCount ? $0 : nil }
         hiddenPages = sidecar.hiddenPages.filter { $0 < pdf.pageCount }
+        defaultTransition = sidecar.defaultTransition
+        notesAreMarkdown = !sidecar.disableMarkdown
         notesLayout = pdf.page(at: 0).map { NotesLayout.detect(pageSize: PageRenderer.displaySize(of: $0)) } ?? .none
     }
 
@@ -120,9 +129,21 @@ final class SlideDeck: ObservableObject {
     }
 
     /// Transition to play when the audience view goes from page `old` to `new`.
-    /// Also across skipped pages: moving on to the next shown page counts as "next".
+    /// Also across skipped pages: moving on to the next shown page counts as "next". Pages
+    /// without `/Trans` use the sidecar's default transition.
     func transition(from old: Int, to new: Int) -> PageTransition? {
-        PageTransition.plays(from: old, to: new) || nextShown(after: old) == new ? transitions[new] : nil
+        PageTransition.plays(from: old, to: new) || nextShown(after: old) == new ? transitions[new] ?? defaultTransition : nil
+    }
+
+    /// Last page of pdfpc's user slide `n` (0-based; consecutive pages with equal labels are
+    /// one user slide). nil if there are fewer slides.
+    static func lastPage(ofUserSlide n: Int, labels: [String]) -> Int? {
+        var slide = -1
+        for i in labels.indices where i == 0 || labels[i] != labels[i - 1] {
+            slide += 1
+            if slide == n + 1 { return i - 1 }
+        }
+        return slide == n ? labels.count - 1 : nil
     }
 
     private static func labels(of pdf: PDFDocument) -> [String] {
