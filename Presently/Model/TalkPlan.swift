@@ -31,14 +31,17 @@ enum TalkPlan {
     }
 
     /// Talk progress at a page: slides (overlay groups) before the current one, divided by
-    /// the slides of the talk (up to `endPage`). nil for backup pages after the end.
-    static func progress(at index: Int, labels: [String], endPage: Int?) -> Double? {
+    /// the slides of the talk (up to `endPage`, without `hidden` pages). nil for backup pages
+    /// after the end.
+    static func progress(at index: Int, labels: [String], endPage: Int?, hidden: Set<Int> = []) -> Double? {
         let last = min(endPage ?? labels.count - 1, labels.count - 1)
         guard index <= last, last >= 0 else { return nil }
         var slides = 0, done = 0
-        for i in 0...last where i == 0 || labels[i] != labels[i - 1] {
+        var previousLabel: String?
+        for i in 0...last where !hidden.contains(i) && labels[i] != previousLabel {
             if i <= index { done = slides }
             slides += 1
+            previousLabel = labels[i]
         }
         return slides > 0 ? Double(done) / Double(slides) : nil
     }

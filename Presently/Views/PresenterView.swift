@@ -21,7 +21,7 @@ struct PresenterView: View {
     @State private var isEditingNotes = false
 
     private var index: Int { session.currentIndex }
-    private var nextIndex: Int? { index + 1 < deck.pageCount ? index + 1 : nil }
+    private var nextIndex: Int? { deck.nextShown(after: index) }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -68,6 +68,13 @@ struct PresenterView: View {
                     .padding(.horizontal, 8).padding(.vertical, 2)
                     .background(Color.purple.opacity(0.45), in: RoundedRectangle(cornerRadius: 6))
                     .help("After the marked end of the talk")
+            }
+            if deck.isHidden(index) {
+                Label("Skipped", systemImage: "eye.slash")
+                    .font(.title3)
+                    .padding(.horizontal, 8).padding(.vertical, 2)
+                    .background(Color.gray.opacity(0.45), in: RoundedRectangle(cornerRadius: 6))
+                    .help("Paging skips this slide; reached only by jumping to it")
             }
             if let frozen = session.frozenIndex {
                 Label(frozen == index ? String(localized: "Frozen")
@@ -276,7 +283,8 @@ struct PresenterView: View {
     /// Strip of the pages after the next one.
     @ViewBuilder private var upcoming: some View {
         let pages = PresenterLayout.upcomingPages(after: index, showsNext: showsNext,
-                                                  count: upcomingCount, pageCount: deck.pageCount)
+                                                  count: upcomingCount, pageCount: deck.pageCount,
+                                                  isHidden: deck.isHidden)
         if upcomingCount > 0 {
             HStack(spacing: 10) {
                 ForEach(pages, id: \.self) { i in
@@ -337,6 +345,20 @@ struct PresenterView: View {
     }
 
     private var slideAspect: CGFloat { deck.slideAspectRatio }
+}
+
+/// Context menu item: skip a slide (all its overlays) when paging, or not.
+struct SkipSlideButton: View {
+    @ObservedObject var deck: SlideDeck
+    let index: Int
+
+    var body: some View {
+        if deck.isHidden(index) {
+            Button("Don't Skip Slide") { deck.setHidden(false, slideOf: index) }
+        } else {
+            Button("Skip Slide in Presentation") { deck.setHidden(true, slideOf: index) }
+        }
+    }
 }
 
 /// Pen, highlighter, eraser, colors, undo and clear for the current page.
@@ -526,13 +548,18 @@ struct OverviewGrid: View {
                             VStack(spacing: 4) {
                                 PageThumbnail(deck: deck, index: i, region: deck.notesLayout.slideRegion)
                                     .aspectRatio(deck.slideAspectRatio, contentMode: .fit)
+                                    .opacity(deck.isHidden(i) ? 0.35 : 1)
                                     .overlay(RoundedRectangle(cornerRadius: 4)
                                         .stroke(i == session.currentIndex ? Color.accentColor : .clear, lineWidth: 3))
-                                Text(verbatim: "\(deck.label(i))  ·  \(i + 1)" + (deck.isBackup(i) ? "  · " + String(localized: "Backup") : "")).font(.caption.monospacedDigit())
+                                Text(verbatim: "\(deck.label(i))  ·  \(i + 1)"
+                                     + (deck.isBackup(i) ? "  · " + String(localized: "Backup") : "")
+                                     + (deck.isHidden(i) ? "  · " + String(localized: "Skipped") : ""))
+                                    .font(.caption.monospacedDigit())
                                     .foregroundStyle(.secondary)
                             }
                         }
                         .buttonStyle(.plain)
+                        .contextMenu { SkipSlideButton(deck: deck, index: i) }
                         .id(i)
                     }
                 }

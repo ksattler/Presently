@@ -241,6 +241,16 @@
         }
       }
     },
+    "**Skip slides:** right-click a page in the page list or the overview → *Skip Slide in Presentation* (all overlays of the slide). Paging passes over it, the preview and the schedule leave it out; a jump (number, overview, link) still shows it. Stored in the pdfpc file like pdfpc's own hidden slides.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Folien überspringen:** Rechtsklick auf eine Seite in der Seitenliste oder der Übersicht → *Folie in der Präsentation überspringen* (alle Overlays der Folie). Beim Blättern wird sie ausgelassen, Vorschau und Zeitplan zählen sie nicht; per Sprung (Nummer, Übersicht, Link) ist sie weiter erreichbar. Gespeichert in der pdfpc-Datei, wie pdfpcs eigene versteckte Folien."
+          }
+        }
+      }
+    },
     "**Start** with ⌘⏎, F5 or ▶︎ in the toolbar. **End** with ⌘⏎ or Esc – Esc first closes an open overview, input, drawing mode, black screen or freeze.": {
       "localizations": {
         "de": {
@@ -537,6 +547,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bildschirm für die Präsentation"
+          }
+        }
+      }
+    },
+    "Don't Skip Slide": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folie nicht überspringen"
           }
         }
       }
@@ -1121,6 +1141,16 @@
         }
       }
     },
+    "Paging skips this slide; reached only by jumping to it": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beim Blättern wird diese Folie übersprungen; erreichbar nur per Sprung"
+          }
+        }
+      }
+    },
     "Pause timer (P)": {
       "localizations": {
         "de": {
@@ -1341,12 +1371,42 @@
         }
       }
     },
+    "Skip Slide in Presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folie in der Präsentation überspringen"
+          }
+        }
+      }
+    },
     "Skip overlays": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Overlays überspringen"
+          }
+        }
+      }
+    },
+    "Skipped": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersprungen"
+          }
+        }
+      }
+    },
+    "Skipped in the presentation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird in der Präsentation übersprungen"
           }
         }
       }

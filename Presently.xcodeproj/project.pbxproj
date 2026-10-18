@@ -46,6 +46,7 @@
 		CC08523B89710F705C1709D7 /* PresentationTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABF251FC1C4A0E634AD2601 /* PresentationTimer.swift */; };
 		CCBBFEDAEBBED0E5C1B181A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3139DE553CF771B393ED87 /* ContentView.swift */; };
 		CD7A6F5C62A4D072C1A720C7 /* MediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F322F728F7A44E014BA23EA /* MediaTests.swift */; };
+		DCECF27F91F364CC377DE003 /* SkipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E2153726AB1E7BA205A8E0 /* SkipTests.swift */; };
 		DD39969B1678516FFD248790 /* NotesTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD0F9766D30BF9745C9085 /* NotesTextView.swift */; };
 		DE5D60EB813896B25C3A521E /* SlideDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8301F7B0869298D8737B4A9 /* SlideDeck.swift */; };
 		DF94E764CD7006BFA9B55B17 /* PDFLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C739C09BBB9A6D7C575E11CB /* PDFLinks.swift */; };
@@ -103,6 +104,7 @@
 		B63C0820D052255C1D995967 /* TalkPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkPlan.swift; sourceTree = "<group>"; };
 		BABF251FC1C4A0E634AD2601 /* PresentationTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationTimer.swift; sourceTree = "<group>"; };
 		BFFFB9EEBBB72AECB45FB9BF /* LaserPointerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserPointerView.swift; sourceTree = "<group>"; };
+		C1E2153726AB1E7BA205A8E0 /* SkipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipTests.swift; sourceTree = "<group>"; };
 		C2C8752D8D776FE4AC5DB389 /* Presently.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Presently.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6C81D256DD67DF9D175D3EE /* PDFPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPageView.swift; sourceTree = "<group>"; };
 		C739C09BBB9A6D7C575E11CB /* PDFLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFLinks.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				5F322F728F7A44E014BA23EA /* MediaTests.swift */,
 				05C4B4D221A78BD7C8B28A8D /* PDFFixture.swift */,
 				22A41BED5673410CCD51BD5E /* PresentationTests.swift */,
+				C1E2153726AB1E7BA205A8E0 /* SkipTests.swift */,
 				D9B76DDADB6D797CAB637D5F /* TalkPlanTests.swift */,
 				DB5C98A58063B1A2E41A8E9D /* TransitionTests.swift */,
 				8620ED4D70A05C85EDA548C4 /* ZoomTests.swift */,
@@ -375,6 +378,7 @@
 				CD7A6F5C62A4D072C1A720C7 /* MediaTests.swift in Sources */,
 				6D837A8BAC8BEB4026C66A03 /* PDFFixture.swift in Sources */,
 				F7EA784847DB40052BF3FF60 /* PresentationTests.swift in Sources */,
+				DCECF27F91F364CC377DE003 /* SkipTests.swift in Sources */,
 				90592C2E165C4A12F7F9C42E /* TalkPlanTests.swift in Sources */,
 				B7AA8583E6409C95DDA19EED /* TransitionTests.swift in Sources */,
 				F071F5E4214C5EFA0113671E /* ZoomTests.swift in Sources */,

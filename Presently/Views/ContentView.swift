@@ -71,13 +71,16 @@ private struct BrowseView: View {
                             if !deck.note(for: i).isEmpty {
                                 Image(systemName: "note.text").help("Has notes")
                             }
+                            if deck.isHidden(i) {
+                                Image(systemName: "eye.slash").help("Skipped in the presentation")
+                            }
                         }
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 4)
-                    .opacity(deck.isBackup(i) ? 0.55 : 1)
+                    .opacity(deck.isHidden(i) ? 0.35 : deck.isBackup(i) ? 0.55 : 1)
                     .overlay(alignment: .bottom) {
                         if deck.endPage == i {
                             Text("End of Talk").font(.caption2.bold()).foregroundStyle(.white)
@@ -92,6 +95,7 @@ private struct BrowseView: View {
                         } else {
                             Button("Talk Ends Here (Backup After)") { deck.endPage = i }
                         }
+                        SkipSlideButton(deck: deck, index: i)
                     }
                     .tag(i)
                 }

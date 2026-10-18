@@ -33,11 +33,12 @@ enum PresenterLayout {
     }
 
     /// Pages of the upcoming strip: up to `count` pages after the current one (and after the
-    /// next one, if that is shown). Empty near the end — on the last page `start` passes `pageCount`.
-    static func upcomingPages(after index: Int, showsNext: Bool, count: Int, pageCount: Int) -> [Int] {
-        let start = index + (showsNext ? 2 : 1)
-        let end = min(start + max(count, 0), pageCount)
-        return start < end ? Array(start..<end) : []
+    /// next one, if that is shown), without skipped pages. Empty near the end.
+    static func upcomingPages(after index: Int, showsNext: Bool, count: Int, pageCount: Int,
+                              isHidden: (Int) -> Bool = { _ in false }) -> [Int] {
+        guard index + 1 < pageCount else { return [] }
+        let shown = (index + 1..<pageCount).filter { !isHidden($0) }
+        return Array(shown.dropFirst(showsNext ? 1 : 0).prefix(max(count, 0)))
     }
 
     static func reset(_ defaults: UserDefaults = .standard) {

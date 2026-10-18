@@ -173,18 +173,27 @@ final class PresentationSession: ObservableObject {
         if index != currentIndex { currentIndex = index }
     }
 
-    func next() { go(to: currentIndex + 1) }
-    func previous() { go(to: currentIndex - 1) }
+    /// Paging skips pages marked as skipped (`deck.hiddenPages`); jumps don't.
+    func next() {
+        if let i = deck.nextShown(after: currentIndex) { go(to: i) }
+    }
 
+    func previous() {
+        if let i = deck.previousShown(before: currentIndex) { go(to: i) }
+    }
+
+    /// Start of the next slide; on the last slide, its last shown overlay.
     func nextSlide() {
-        if let i = deck.nextSlideStart(after: currentIndex) { go(to: i) } else { go(to: deck.pageCount - 1) }
+        if let i = deck.nextSlideStart(after: currentIndex) {
+            go(to: i)
+        } else if let last = (currentIndex..<deck.pageCount).last(where: { !deck.isHidden($0) }) {
+            go(to: last)
+        }
     }
 
     /// Start of the previous slide; from inside a slide's overlays, its own first overlay.
     func previousSlide() {
-        let group = deck.overlayGroup(of: currentIndex)
-        go(to: currentIndex > group.lowerBound ? group.lowerBound
-                                               : deck.overlayGroup(of: group.lowerBound - 1).lowerBound)
+        if let i = deck.previousSlideStart(before: currentIndex) { go(to: i) }
     }
 
     /// Page for typed input: a page label matches first (so "12" finds slide 12 even with

@@ -3,14 +3,17 @@ import Foundation
 /// Speaker notes sidecar in pdfpc's JSON format (`talk.pdf` → `talk.pdfpc`, `pdfpcFormat` 2),
 /// so notes are shared with pdfpc and tools that write its files.
 ///
-/// Interpreted: `note`s per page, `duration` (minutes), `endTime` ("HH:MM") and our own
-/// `presentlyEndPage` (last page of the talk; later pages are backup). Every other key — top
-/// level and per page — is kept and written back unchanged.
+/// Interpreted: `note`s and `hidden` (skipped in the presentation) per page, `duration`
+/// (minutes), `endTime` ("HH:MM") and our own `presentlyEndPage` (last page of the talk; later
+/// pages are backup). Every other key — top level and per page — is kept and written back
+/// unchanged.
 struct PdfpcFile {
     static let fileExtension = "pdfpc"
 
     /// Page index (0-based, pdfpc's `idx`) → note text (Markdown).
     var notes: [Int: String] = [:]
+    /// Pages skipped when paging through the presentation (pdfpc's `hidden`).
+    var hiddenPages: Set<Int> = []
     /// Planned talk length in minutes; nil = none.
     var durationMinutes: Int?
     /// Planned end as wall-clock time; nil = none. pdfpc uses either this or `duration`.
@@ -48,8 +51,10 @@ struct PdfpcFile {
         for page in root["pages"] as? [[String: Any]] ?? [] {
             guard let idx = page["idx"] as? Int else { continue }
             if let note = page["note"] as? String, !note.isEmpty { notes[idx] = note }
+            if page["hidden"] as? Bool == true { hiddenPages.insert(idx) }
             var extra = page
             extra["note"] = nil
+            extra["hidden"] = nil
             pageExtras[idx] = extra
         }
     }
@@ -64,17 +69,19 @@ struct PdfpcFile {
         root[Self.endPageKey] = endPage
 
         var pages: [[String: Any]] = []
-        let indices = Set(notes.keys).union(pageExtras.keys).sorted()
+        let indices = Set(notes.keys).union(pageExtras.keys).union(hiddenPages).sorted()
         for idx in indices {
             var page = pageExtras[idx] ?? [:]
             let note = notes[idx] ?? ""
-            if note.isEmpty && page.keys.allSatisfy({ ["idx", "label", "overlay"].contains($0) }) { continue }
+            let hidden = hiddenPages.contains(idx)
+            if note.isEmpty, !hidden, page.keys.allSatisfy({ ["idx", "label", "overlay"].contains($0) }) { continue }
             page["idx"] = idx
             if pageLabels.indices.contains(idx) {
                 page["label"] = pageLabels[idx]
                 page["overlay"] = Self.overlayIndex(of: idx, labels: pageLabels)
             }
             page["note"] = note.isEmpty ? nil : note
+            page["hidden"] = hidden ? true : nil
             pages.append(page)
         }
         root["pages"] = pages

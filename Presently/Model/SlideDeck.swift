@@ -52,6 +52,10 @@ final class SlideDeck: ObservableObject {
     @Published var endPage: Int? {
         didSet { if endPage != oldValue { scheduleSave() } }
     }
+    /// Pages skipped when paging through the presentation (still reachable by jumps).
+    @Published private(set) var hiddenPages: Set<Int> {
+        didSet { if hiddenPages != oldValue { scheduleSave() } }
+    }
     @Published private(set) var saveError: String?
 
     private var sidecar: PdfpcFile
@@ -83,6 +87,7 @@ final class SlideDeck: ObservableObject {
             talkLimit = .none
         }
         endPage = sidecar.endPage.flatMap { $0 < pdf.pageCount ? $0 : nil }
+        hiddenPages = sidecar.hiddenPages.filter { $0 < pdf.pageCount }
         notesLayout = pdf.page(at: 0).map { NotesLayout.detect(pageSize: PageRenderer.displaySize(of: $0)) } ?? .none
     }
 
@@ -102,6 +107,7 @@ final class SlideDeck: ObservableObject {
         embeddedNotes = Self.extractAnnotationNotes(from: newPDF)
         transitions = Self.transitions(of: newPDF)
         if let e = endPage, e >= pageCount { endPage = nil }
+        hiddenPages = hiddenPages.filter { $0 < pageCount }
         revision += 1
     }
 
@@ -114,8 +120,9 @@ final class SlideDeck: ObservableObject {
     }
 
     /// Transition to play when the audience view goes from page `old` to `new`.
+    /// Also across skipped pages: moving on to the next shown page counts as "next".
     func transition(from old: Int, to new: Int) -> PageTransition? {
-        PageTransition.plays(from: old, to: new) ? transitions[new] : nil
+        PageTransition.plays(from: old, to: new) || nextShown(after: old) == new ? transitions[new] : nil
     }
 
     private static func labels(of pdf: PDFDocument) -> [String] {
@@ -141,9 +148,29 @@ final class SlideDeck: ObservableObject {
 
     func isBackup(_ index: Int) -> Bool { endPage.map { index > $0 } ?? false }
 
-    /// Share of the talk done at a page (see `TalkPlan.progress`).
+    /// Share of the talk done at a page (see `TalkPlan.progress`); skipped pages don't count.
     func talkProgress(at index: Int) -> Double? {
-        TalkPlan.progress(at: index, labels: labels, endPage: endPage)
+        TalkPlan.progress(at: index, labels: labels, endPage: endPage, hidden: hiddenPages)
+    }
+
+    // MARK: Skipped slides
+
+    func isHidden(_ index: Int) -> Bool { hiddenPages.contains(index) }
+
+    /// Skips (or no longer skips) the whole slide of a page, all its overlays.
+    func setHidden(_ hidden: Bool, slideOf index: Int) {
+        let group = Set(overlayGroup(of: index))
+        hiddenPages = hidden ? hiddenPages.union(group) : hiddenPages.subtracting(group)
+    }
+
+    /// Next page that isn't skipped; nil at the end.
+    func nextShown(after index: Int) -> Int? {
+        (index + 1..<max(index + 1, pageCount)).first { !isHidden($0) }
+    }
+
+    /// Previous page that isn't skipped; nil at the start.
+    func previousShown(before index: Int) -> Int? {
+        (0..<min(max(index, 0), pageCount)).last { !isHidden($0) }
     }
 
     func label(_ index: Int) -> String {
@@ -187,10 +214,23 @@ final class SlideDeck: ObservableObject {
         return lo...hi
     }
 
-    /// First page of the next slide — skips the remaining overlays of the current one.
+    /// First page of the next slide — skips the remaining overlays of the current one (and
+    /// skipped pages).
     func nextSlideStart(after index: Int) -> Int? {
-        let next = overlayGroup(of: index).upperBound + 1
-        return next < pageCount ? next : nil
+        nextShown(after: overlayGroup(of: index).upperBound)
+    }
+
+    /// First shown page of the previous slide; from inside a slide's overlays, the first shown
+    /// overlay of its own slide.
+    func previousSlideStart(before index: Int) -> Int? {
+        if let first = overlayGroup(of: index).first(where: { !isHidden($0) }), first < index { return first }
+        var lower = overlayGroup(of: index).lowerBound
+        while lower > 0 {
+            let group = overlayGroup(of: lower - 1)
+            if let first = group.first(where: { !isHidden($0) }) { return first }
+            lower = group.lowerBound
+        }
+        return nil
     }
 
     // MARK: Saving
@@ -217,9 +257,10 @@ final class SlideDeck: ObservableObject {
         case .endTime(let h, let m):    sidecar.durationMinutes = nil; sidecar.endTime = DateComponents(hour: h, minute: m)
         }
         sidecar.endPage = endPage
+        sidecar.hiddenPages = hiddenPages
         let url = PdfpcFile.url(forPDF: fileURL)
         // Nothing to store and no file yet: don't create an empty sidecar.
-        if notes.isEmpty, talkLimit == .none, endPage == nil, !FileManager.default.fileExists(atPath: url.path) { return }
+        if notes.isEmpty, talkLimit == .none, endPage == nil, hiddenPages.isEmpty, !FileManager.default.fileExists(atPath: url.path) { return }
         do {
             try sidecar.serialized(pageLabels: labels).write(to: url, options: .atomic)
             saveError = nil
