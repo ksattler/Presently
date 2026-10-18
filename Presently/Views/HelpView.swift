@@ -39,6 +39,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             String(localized: "Presently presents PDF slides: the audience sees the slide full screen on one display, you see the presenter view with the current and next slide, notes and timer."),
             String(localized: "**Open a PDF** with ⌘O, by dragging it onto the Dock icon or via *File → Open Recent*. The document window shows the page list, a large preview and the notes of the selected page."),
             String(localized: "A PDF opens on the page where you left off. Presently never changes the PDF itself."),
+            String(localized: "**Settings** (⌘,) gather the display, rehearsal, transition, timer and presenter layout options in one place."),
             String(localized: "**Clickers** work without setup: they send keys such as Page Up/Page Down, B or “.”, F5 and Esc, which Presently understands."),
         ]
         case .presenting: [

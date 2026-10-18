@@ -231,6 +231,16 @@
         }
       }
     },
+    "**Settings** (⌘,) gather the display, rehearsal, transition, timer and presenter layout options in one place.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Einstellungen** (⌘,) bündeln Bildschirm, Probe, Übergänge, Timer und Aufteilung der Referentenansicht an einem Ort."
+          }
+        }
+      }
+    },
     "**Start** with ⌘⏎, F5 or ▶︎ in the toolbar. **End** with ⌘⏎ or Esc – Esc first closes an open overview, input, drawing mode, black screen or freeze.": {
       "localizations": {
         "de": {
@@ -997,6 +1007,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Notizen rechts"
+          }
+        }
+      }
+    },
+    "Notes text size: %lld pt": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schriftgröße der Notizen: %lld pt"
           }
         }
       }

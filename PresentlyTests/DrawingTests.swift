@@ -148,10 +148,13 @@ final class PresenterLayoutTests: XCTestCase {
         let defaults = UserDefaults(suiteName: "PresenterLayout-\(UUID().uuidString)")!
         defaults.set(0.3, forKey: PresenterLayout.Key.currentFraction)
         defaults.set(true, forKey: PresenterLayout.Key.currentOnRight)
+        defaults.set(30.0, forKey: PresenterLayout.Key.notesFontSize)
         defaults.set("x", forKey: "unrelated")
         PresenterLayout.reset(defaults)
         XCTAssertNil(defaults.object(forKey: PresenterLayout.Key.currentFraction))
         XCTAssertNil(defaults.object(forKey: PresenterLayout.Key.currentOnRight))
+        // The notes text size is not part of the layout.
+        XCTAssertEqual(defaults.double(forKey: PresenterLayout.Key.notesFontSize), 30)
         XCTAssertEqual(defaults.string(forKey: "unrelated"), "x")
     }
 }

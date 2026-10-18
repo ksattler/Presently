@@ -19,6 +19,10 @@ struct PresentlyApp: App {
             HelpView()
         }
         .defaultSize(width: 820, height: 560)
+
+        Settings {
+            SettingsView()
+        }
     }
 }
 

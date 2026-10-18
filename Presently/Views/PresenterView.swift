@@ -8,7 +8,7 @@ struct PresenterView: View {
     let stop: () -> Void
     let swapScreens: () -> Void
     @ObservedObject private var screens = PresentationScreens.shared
-    @AppStorage("presenterNotesFontSize") private var notesFontSize: Double = 22
+    @AppStorage(PresenterLayout.Key.notesFontSize) private var notesFontSize = PresenterLayout.Default.notesFontSize
     @AppStorage(PresenterLayout.Key.upcomingCount) private var upcomingCount = PresenterLayout.Default.upcomingCount
     @AppStorage(PresenterLayout.Key.currentFraction) private var currentFraction = PresenterLayout.Default.currentFraction
     @AppStorage(PresenterLayout.Key.nextFraction) private var nextFraction = PresenterLayout.Default.nextFraction
@@ -204,9 +204,9 @@ struct PresenterView: View {
                     Text("all overlays").font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
-                Button { notesFontSize = max(12, notesFontSize - 2) } label: { Image(systemName: "textformat.size.smaller") }
+                Button { notesFontSize = max(PresenterLayout.notesFontSizeRange.lowerBound, notesFontSize - 2) } label: { Image(systemName: "textformat.size.smaller") }
                     .help("Smaller text")
-                Button { notesFontSize = min(72, notesFontSize + 2) } label: { Image(systemName: "textformat.size.larger") }
+                Button { notesFontSize = min(PresenterLayout.notesFontSizeRange.upperBound, notesFontSize + 2) } label: { Image(systemName: "textformat.size.larger") }
                     .help("Larger text")
                 Button { isEditingNotes.toggle() } label: {
                     Image(systemName: isEditingNotes ? "checkmark.circle.fill" : "pencil")

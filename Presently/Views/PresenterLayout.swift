@@ -10,16 +10,19 @@ enum PresenterLayout {
         static let showsNext = "presenterShowsNext"
         static let showsNotes = "presenterShowsNotes"
         static let upcomingCount = "presenterUpcomingCount"
+        static let notesFontSize = "presenterNotesFontSize"
     }
 
     enum Default {
         static let currentFraction = 0.65   // width share of the current slide
         static let nextFraction = 0.4       // height share of the next slide in the side column
         static let upcomingCount = 4
+        static let notesFontSize = 22.0
     }
 
     static let fractionRange: ClosedRange<Double> = 0.25...0.85
     static let upcomingRange: ClosedRange<Int> = 0...8
+    static let notesFontSizeRange: ClosedRange<Double> = 12...72
 
     /// Divider drag: share at drag start plus the moved distance relative to the total length.
     /// `inverted` when the measured part is on the far side (current slide on the right).

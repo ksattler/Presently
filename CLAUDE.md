@@ -34,6 +34,7 @@ SlideDeck             PDFDocument, page labels, NotesLayout, notes (pdfpc sideca
 PageRenderer          vector drawing of a PageRegion (PDFPageView) and bitmaps
 ThumbnailRenderer     actor with its own PDFDocument copy: thumbnails off the main thread
 TalkPlan / TalkLimit  remaining time, pace, talk progress; LastPageStore (UserDefaults)
+SettingsView          Settings scene (⌘,): same UserDefaults keys as the menus / schedule popover
 HelpView / HelpTopic  help window (Window scene, menu Help → Presently Help): topics, Markdown paragraphs, search
 ```
 
@@ -57,6 +58,7 @@ HelpView / HelpTopic  help window (Window scene, menu Help → Presently Help): 
 - **Sidecar keys:** `duration` / `endTime` ("HH:MM") are pdfpc's; the talk's end page is our own `presentlyEndPage` (older files: `pdfpresenterEndPage`, still read) (pdfpc's `endSlide` counts user slides — not mapped). The last shown page lives in UserDefaults (`LastPageStore`), so merely viewing a PDF never creates a sidecar.
 - **Timer start:** `timerStartsOnFirstTurn` (UserDefaults, default true): `begin()` arms the timer, the first change of `currentIndex` starts it.
 - **Rename:** settings from the old bundle ID `com.pdfpresenter.app` are copied once at launch (`LegacySettings`). The bundle ID is `kus.presently.app` (team in `project.yml`).
+- **Settings:** `SettingsView` duplicates no state — it binds the same keys (`PresentationScreens.shared`, `@AppStorage` with `PresenterLayout.Key`, `PageTransition.enabledKey`, `PresentationSession.timerStartsOnFirstTurnKey`). A new user-facing setting goes there too.
 - **Help:** `HelpTopic.paragraphs` are inline Markdown via `String(localized:)` — keep them in sync with the features (README) and translate each into German with matching `**`/`*`/`` ` `` markers. The keys topic shows `AboutPanel.shortcuts`. No ⌘? on the menu item: the system reserves it for the Help menu search.
 - **About panel:** standard panel (`AboutPanel`), copyright from `NSHumanReadableCopyright` in `project.yml`, credits = key list `AboutPanel.shortcuts` — keep it in sync with `PresentKeyAction`.
 - **Localization:** UI strings are English keys in `Presently/Localizable.xcstrings` with German translations. SwiftUI literals (`Text("…")`, `.help("…")`) are localized automatically; strings held as `String` (titles, errors, ternaries, `caption(_:)`) need `String(localized:)`. Keys must be unique per meaning — e.g. "Up Next" (Nächste) vs. "Next" (Weiter). Tests compare against `String(localized:)`, not literal German. The build extracts keys into `*.stringsdata`; every one must have a `de` entry.
