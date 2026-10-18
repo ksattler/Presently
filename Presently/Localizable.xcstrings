@@ -71,6 +71,206 @@
         }
       }
     },
+    "**Automatic reload:** when the PDF changes on disk – e.g. after compiling again – it is reloaded; the current page and the notes are kept. Half-written files are ignored.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Automatisch neu laden:** Ändert sich das PDF auf der Festplatte – z. B. nach erneutem Kompilieren –, wird es neu geladen; aktuelle Seite und Notizen bleiben erhalten. Halb geschriebene Dateien werden ignoriert."
+          }
+        }
+      }
+    },
+    "**Black or white screen:** B or “.” / W or “,”. Press the key again to return.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Schwarzer oder weißer Bildschirm:** B oder „.“ / W oder „,“. Dieselbe Taste noch einmal kehrt zurück."
+          }
+        }
+      }
+    },
+    "**Choose a display** in the toolbar or via *Presentation → Present On*. With several displays, *Automatic* picks the one the document window is not on. The choice is remembered.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Bildschirm wählen** in der Symbolleiste oder über *Präsentation → Präsentieren auf*. Bei mehreren Bildschirmen nimmt *Automatisch* den, auf dem das Dokumentfenster nicht liegt. Die Wahl wird gespeichert."
+          }
+        }
+      }
+    },
+    "**Clickers** work without setup: they send keys such as Page Up/Page Down, B or “.”, F5 and Esc, which Presently understands.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Presenter (Clicker)** funktionieren ohne Einrichtung: Sie senden Tasten wie Bild↑/Bild↓, B oder „.“, F5 und Esc, die Presently versteht."
+          }
+        }
+      }
+    },
+    "**End of talk:** right-click a page in the page list → *Talk Ends Here (Backup After)*. Later pages are backup: dimmed, not counted in the schedule, and End jumps to the end of the talk first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Vortragsende:** Rechtsklick auf eine Seite in der Seitenliste → *Vortrag endet hier (danach Backup)*. Spätere Seiten sind Backup: abgeblendet, zählen nicht zum Zeitplan, und Ende springt zuerst ans Vortragsende."
+          }
+        }
+      }
+    },
+    "**Freeze (F):** the audience keeps the current slide while you browse, e.g. for questions. F or Esc shows your slide again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Einfrieren (F):** Das Publikum behält die aktuelle Folie, während du blätterst, z. B. bei Fragen. F oder Esc zeigt wieder deine Folie."
+          }
+        }
+      }
+    },
+    "**Go to a page:** click an upcoming page, open the overview (Tab or O), or type the slide number and press ⏎.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Zu einer Seite springen:** Klick auf eine der folgenden Seiten, Übersicht öffnen (Tab oder O) oder Foliennummer tippen und ⏎ drücken."
+          }
+        }
+      }
+    },
+    "**Laser pointer (L):** the mouse pointer over the current slide appears as a red dot for the audience.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Laserpointer (L):** Der Mauszeiger über der aktuellen Folie erscheint beim Publikum als roter Punkt."
+          }
+        }
+      }
+    },
+    "**Layout:** drag the dividers between the areas. The *View* menu puts the current slide left or right, shows or hides the next slide and the notes, sets the number of upcoming pages and resets the layout. The layout applies to all documents.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Aufteilung:** Die Trenner zwischen den Bereichen lassen sich ziehen. Im Menü *Ansicht* kommt die aktuelle Folie nach links oder rechts, nächste Folie und Notizen werden ein- oder ausgeblendet, die Zahl der folgenden Seiten gewählt und die Aufteilung zurückgesetzt. Die Aufteilung gilt für alle Dokumente."
+          }
+        }
+      }
+    },
+    "**Links** in the PDF are clickable on the current slide and in the audience view. A click outside a link advances.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Links** im PDF sind auf der aktuellen Folie und in der Publikumsansicht klickbar. Ein Klick außerhalb eines Links blättert weiter."
+          }
+        }
+      }
+    },
+    "**Notes on the second screen:** with `show notes on second screen=right` (or left, top, bottom) the audience sees only the slide half and the presenter view shows the notes half. Wide pages are detected automatically; change it via *Presentation → Beamer Notes*. If the setting doesn't match the page format, a notice offers *Show Whole Page*.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Notizen auf dem zweiten Bildschirm:** Mit `show notes on second screen=right` (oder left, top, bottom) sieht das Publikum nur die Folienhälfte, die Referentenansicht zeigt die Notizhälfte. Breite Seiten werden automatisch erkannt; ändern über *Präsentation → Beamer-Notizen*. Passt die Einstellung nicht zum Seitenformat, bietet ein Hinweis *Ganze Seite zeigen* an."
+          }
+        }
+      }
+    },
+    "**Open a PDF** with ⌘O, by dragging it onto the Dock icon or via *File → Open Recent*. The document window shows the page list, a large preview and the notes of the selected page.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**PDF öffnen** mit ⌘O, per Drag & Drop auf das Dock-Symbol oder über *Ablage → Benutzte Dokumente öffnen*. Das Dokumentfenster zeigt die Seitenliste, eine große Vorschau und die Notizen der gewählten Seite."
+          }
+        }
+      }
+    },
+    "**Overlays:** ⇧ with an arrow key skips them. They share one note and count as one slide in the schedule.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Overlays:** ⇧ mit einer Pfeiltaste überspringt sie. Sie teilen sich eine Notiz und zählen im Zeitplan als eine Folie."
+          }
+        }
+      }
+    },
+    "**Projector unplugged:** the presentation keeps running. The audience view is hidden (or moves to a free display) and comes back when the projector is reconnected.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Beamer abgezogen:** Die Präsentation läuft weiter. Die Publikumsansicht wird ausgeblendet (oder wandert auf einen freien Bildschirm) und kehrt zurück, sobald der Beamer wieder angeschlossen ist."
+          }
+        }
+      }
+    },
+    "**Rehearsal:** *Audience View in a Window (Rehearsal)* opens the audience view as a regular window – useful with a single display.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Probe:** *Publikumsansicht im Fenster (Probe)* öffnet die Publikumsansicht als normales Fenster – praktisch mit nur einem Bildschirm."
+          }
+        }
+      }
+    },
+    "**Schedule** (hourglass icon): set the talk duration or an end time. Presently shows the remaining time and whether you are ahead of or behind schedule – slide progress compared to elapsed time; overlays don't count separately.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Zeitplan** (Sanduhr-Symbol): Vortragsdauer oder Endzeit festlegen. Presently zeigt die Restzeit und ob du vor oder hinter dem Plan liegst – Folienfortschritt gegenüber verstrichener Zeit; Overlays zählen nicht einzeln."
+          }
+        }
+      }
+    },
+    "**Start** with ⌘⏎, F5 or ▶︎ in the toolbar. **End** with ⌘⏎ or Esc – Esc first closes an open overview, input, drawing mode, black screen or freeze.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Starten** mit ⌘⏎, F5 oder ▶︎ in der Symbolleiste. **Beenden** mit ⌘⏎ oder Esc – Esc schließt zuerst eine offene Übersicht, Eingabe, den Zeichenmodus, schwarzen Bildschirm oder das Einfrieren."
+          }
+        }
+      }
+    },
+    "**Swap displays (S)** when the audience view ended up on the wrong display. The choice is remembered.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Bildschirme tauschen (S)**, wenn die Publikumsansicht auf dem falschen Bildschirm gelandet ist. Die Wahl wird gespeichert."
+          }
+        }
+      }
+    },
+    "**Transitions** from the PDF (e.g. from LaTeX Beamer) are played when advancing to the next page. Turn them off via *Presentation → Play Transitions from the PDF*.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Übergänge** aus dem PDF (z. B. von LaTeX Beamer) werden beim Weiterblättern zur nächsten Seite abgespielt. Abschalten über *Präsentation → Übergänge aus dem PDF abspielen*."
+          }
+        }
+      }
+    },
+    "A PDF opens on the page where you left off. Presently never changes the PDF itself.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein PDF öffnet sich auf der Seite, auf der du aufgehört hast. Presently verändert das PDF selbst nie."
+          }
+        }
+      }
+    },
     "About Presently": {
       "localizations": {
         "de": {
@@ -191,6 +391,16 @@
         }
       }
     },
+    "Beamer overlays (consecutive pages with the same label) share one note.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beamer-Overlays (aufeinanderfolgende Seiten mit gleichem Label) teilen sich eine Notiz."
+          }
+        }
+      }
+    },
     "Black": {
       "localizations": {
         "de": {
@@ -307,6 +517,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ziehen, um die Aufteilung zu ändern"
+          }
+        }
+      }
+    },
+    "Draw on the current slide in the presenter view or directly on the audience view: pen (D), highlighter (H), eraser (E). Press the key again or Esc to stop drawing.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeichne auf der aktuellen Folie in der Referentenansicht oder direkt auf der Publikumsansicht: Stift (D), Textmarker (H), Radierer (E). Dieselbe Taste noch einmal oder Esc beendet das Zeichnen."
+          }
+        }
+      }
+    },
+    "Drawing": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeichnen"
+          }
+        }
+      }
+    },
+    "Drawings are kept per slide while the document is open, but they are not saved.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeichnungen bleiben pro Folie erhalten, solange das Dokument offen ist, werden aber nicht gespeichert."
           }
         }
       }
@@ -461,6 +701,16 @@
         }
       }
     },
+    "Getting Started": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erste Schritte"
+          }
+        }
+      }
+    },
     "Go to %@ ⏎": {
       "localizations": {
         "de": {
@@ -547,6 +797,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tastenkürzel"
+          }
+        }
+      }
+    },
+    "LaTeX Beamer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LaTeX Beamer"
           }
         }
       }
@@ -691,6 +951,16 @@
         }
       }
     },
+    "Notes are stored next to the PDF in pdfpc format (`talk.pdf` → `talk.pdfpc`), so pdfpc can use them too.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen werden neben dem PDF im pdfpc-Format gespeichert (`talk.pdf` → `talk.pdfpc`), sodass auch pdfpc sie nutzen kann."
+          }
+        }
+      }
+    },
     "Notes could not be saved: %@": {
       "localizations": {
         "de": {
@@ -821,6 +1091,16 @@
         }
       }
     },
+    "Pick a color with the color button. Z removes the slide's last stroke, X all strokes on the slide.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Farbe wählst du mit der Farbtaste. Z entfernt den letzten Strich der Folie, X alle Striche der Folie."
+          }
+        }
+      }
+    },
     "Play Transitions from the PDF": {
       "localizations": {
         "de": {
@@ -861,12 +1141,52 @@
         }
       }
     },
+    "Presenter View": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Referentenansicht"
+          }
+        }
+      }
+    },
     "Presenter View in Full Screen": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Referentenansicht im Vollbild"
+          }
+        }
+      }
+    },
+    "Presenting": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Präsentieren"
+          }
+        }
+      }
+    },
+    "Presently Help": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Presently-Hilfe"
+          }
+        }
+      }
+    },
+    "Presently presents PDF slides: the audience sees the slide full screen on one display, you see the presenter view with the current and next slide, notes and timer.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Presently präsentiert PDF-Folien: Das Publikum sieht die Folie im Vollbild auf einem Bildschirm, du siehst die Referentenansicht mit aktueller und nächster Folie, Notizen und Timer."
           }
         }
       }
@@ -1121,12 +1441,32 @@
         }
       }
     },
+    "Text annotations in the PDF (comments, `pdfpcnote` from LaTeX) are shown as notes and hidden from the audience.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textanmerkungen im PDF (Kommentare, `pdfpcnote` aus LaTeX) werden als Notizen gezeigt und vor dem Publikum verborgen."
+          }
+        }
+      }
+    },
     "The audience keeps the current slide while you browse (F)": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Publikum behält die aktuelle Folie, während du blätterst (F)"
+          }
+        }
+      }
+    },
+    "The keys work in the presenter view and in the audience view. A click on the audience view advances, a right-click goes back. ⌘, ⌥ and ⌃ combinations are left to the menus.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Tasten wirken in der Referenten- und in der Publikumsansicht. Ein Klick auf die Publikumsansicht blättert weiter, ein Rechtsklick zurück. Kombinationen mit ⌘, ⌥ und ⌃ bleiben den Menüs vorbehalten."
           }
         }
       }
@@ -1147,6 +1487,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vortrag endet nach Folie %@; danach Backup."
+          }
+        }
+      }
+    },
+    "The timer shows the elapsed time. P pauses and resumes it, R resets it. By default it starts with the first page turn, so you can open the presentation early and wait on the title slide.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Timer zeigt die verstrichene Zeit. P hält ihn an und setzt ihn fort, R setzt ihn zurück. Standardmäßig startet er erst beim ersten Blättern – du kannst die Präsentation also früh öffnen und auf der Titelfolie warten."
+          }
+        }
+      }
+    },
+    "Timer and Schedule": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timer und Zeitplan"
           }
         }
       }
@@ -1221,12 +1581,32 @@
         }
       }
     },
+    "While presenting, the document window shows the presenter view: current slide, next slide, upcoming pages, notes, elapsed time and clock.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Während der Präsentation zeigt das Dokumentfenster die Referentenansicht: aktuelle Folie, nächste Folie, folgende Seiten, Notizen, verstrichene Zeit und Uhr."
+          }
+        }
+      }
+    },
     "White": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Weiß"
+          }
+        }
+      }
+    },
+    "Write notes for each slide in the document window or during the presentation (pencil icon or double-click on the notes; Esc ends editing). Notes support Markdown. While editing, a clicker's Page Up/Page Down still turn pages.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen schreibst du pro Folie im Dokumentfenster oder während der Präsentation (Stift-Symbol oder Doppelklick auf die Notizen; Esc beendet das Bearbeiten). Notizen unterstützen Markdown. Beim Bearbeiten blättern Bild↑/Bild↓ des Presenters weiter."
           }
         }
       }

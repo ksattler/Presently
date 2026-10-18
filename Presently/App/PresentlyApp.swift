@@ -14,6 +14,11 @@ struct PresentlyApp: App {
         .commands {
             AppCommands()
         }
+
+        Window("Presently Help", id: HelpView.windowID) {
+            HelpView()
+        }
+        .defaultSize(width: 820, height: 560)
     }
 }
 
@@ -39,10 +44,15 @@ extension FocusedValues {
 struct AppCommands: Commands {
     @FocusedValue(\.presentationActions) private var actions
     @FocusedObject private var deck: SlideDeck?
+    @Environment(\.openWindow) private var openWindow
 
     var body: some Commands {
         CommandGroup(replacing: .appInfo) {
             Button("About Presently") { AboutPanel.show() }
+        }
+        CommandGroup(replacing: .help) {
+            // No ⌘? here: the system reserves it for the Help menu search, which lists this item first.
+            Button("Presently Help") { openWindow(id: HelpView.windowID) }
         }
         CommandMenu("Presentation") {
             if actions?.isPresenting == true {
