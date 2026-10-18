@@ -135,6 +135,10 @@ struct PresenterView: View {
                     DrawingLayer(drawings: session.drawings, page: deck.page(index), pageIndex: index,
                                  region: deck.notesLayout.slideRegion)
                 }
+                // Above the drawing layer: while selecting a zoom, drags select instead of draw.
+                .overlay {
+                    ZoomLayer(session: session, page: deck.page(index), region: deck.notesLayout.slideRegion)
+                }
                 .overlay(alignment: .center) { blankBadge.allowsHitTesting(false) }
         }
         .frame(maxHeight: .infinity)
@@ -305,11 +309,17 @@ struct PresenterView: View {
             .toggleStyle(.button)
             .help("The audience keeps the current slide while you browse (F)")
             PointerToggle(pointer: session.pointer) { session.handle(.togglePointer) }
+            Toggle(isOn: Binding(get: { session.isSelectingZoom || session.zoom != nil },
+                                 set: { _ in session.handle(.toggleZoom) })) {
+                Label("Zoom", systemImage: "plus.magnifyingglass")
+            }
+            .toggleStyle(.button)
+            .help("Enlarge a part of the slide for the audience: drag a rectangle on the current slide, or click for 2× (M)")
             DrawingTools(session: session, drawings: session.drawings)
             Button(action: swapScreens) { Label("Swap", systemImage: "arrow.left.arrow.right") }
                 .help("Audience and presenter view swap displays (S)")
                 .disabled(screens.windowed || screens.screens.count < 2)
-            Text("← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end")
+            Text("← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · M zoom · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)

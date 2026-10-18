@@ -12,6 +12,8 @@ struct LaserPointerLayer: View {
     let region: PageRegion
     /// False when this view shows another page than the pointer refers to (frozen audience).
     var showsDot = true
+    /// Part of the slide shown enlarged (audience view while zoomed).
+    var zoom: CGRect = PageRenderer.unzoomed
     /// Click on the slide (normalized point); nil = clicks pass through.
     var onClick: ((CGPoint) -> Void)? = nil
     @State private var hidesCursor = false
@@ -19,7 +21,7 @@ struct LaserPointerLayer: View {
 
     var body: some View {
         GeometryReader { geo in
-            let slide = page.map { PageRenderer.fittedRect(for: $0, region: region, in: CGRect(origin: .zero, size: geo.size)) } ?? .zero
+            let slide = page.map { PageRenderer.fittedRect(for: $0, region: region, in: CGRect(origin: .zero, size: geo.size), zoom: zoom) } ?? .zero
             ZStack(alignment: .topLeading) {
                 Color.clear
                 if showsDot, pointer.isEnabled, let p = pointer.position, slide.width > 0 {

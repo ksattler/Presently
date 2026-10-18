@@ -17,6 +17,7 @@ Small macOS app (macOS 14 or later) for presenting PDF slides.
 - **Remember the last page:** a PDF opens where you left off.
   - **Freeze (F):** the audience keeps the current slide while you browse in the presenter view (e.g. for questions). F or Esc again shows your slide again.
   - **Laser pointer (L):** the mouse pointer over the current slide (presenter view or audience) appears as a red dot for the audience – also with clickers that move the mouse pointer.
+  - **Zoom (M):** drag a rectangle on the current slide of the presenter view (or click for 2×); the audience sees that part enlarged, drawn as vectors (sharp). Pointer, drawings, videos and links follow. The presenter view shows the whole slide with the zoomed part framed. M, Esc or a page turn return to the whole slide.
   - **Swap displays (S):** audience and presenter view switch displays (wrong projector detected, cables swapped). The choice is remembered.
   - **Links in the PDF** (table of contents, Beamer navigation, URLs) are clickable – in the audience view and on the current slide of the presenter view. Internal links jump to the page, URLs open the browser, “Back” actions return to the page before the last link. A click outside a link advances the audience view.
   - **Unplugging and replugging the projector:** the presentation keeps running. If the projector goes away, the audience view is hidden (or moves to a free third display), the presenter view stays visible and shows a notice. When the projector comes back, the audience view reappears there. If the projector is only plugged in during the presentation (started on the laptop alone), the audience view moves to it.
@@ -47,10 +48,11 @@ Small macOS app (macOS 14 or later) for presenting PDF slides.
 | P / R | pause / reset timer |
 | F | freeze audience view |
 | L | laser pointer on/off |
+| M | zoom: select a part of the slide (drag or click) / whole slide again |
 | S | swap displays |
 | D / H / E | pen / highlighter / eraser (again: off) |
 | Z / X | remove last stroke / all drawings on the slide |
-| Esc | end note editing/input/overview/drawing mode/black screen/freeze, otherwise end the presentation |
+| Esc | end note editing/input/overview/drawing mode/zoom/black screen/freeze, otherwise end the presentation |
 
 Clickers usually send Page Up/Page Down, B or “.”, and F5/Esc for start/stop – all covered.
 

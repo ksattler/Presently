@@ -9,27 +9,41 @@ enum PageRenderer {
         return page.rotation % 180 == 0 ? b.size : CGSize(width: b.height, height: b.width)
     }
 
-    /// Aspect-fit rect of `region` inside `rect`.
-    static func fittedRect(for page: PDFPage, region: PageRegion, in rect: CGRect) -> CGRect {
+    /// The whole slide (normalized 0…1, y down) — no zoom.
+    static let unzoomed = CGRect(x: 0, y: 0, width: 1, height: 1)
+
+    /// Rect of the whole `region` such that its part `zoom` (normalized to the region, y down)
+    /// is aspect-fit and centered in `rect`. Unzoomed: the aspect-fit rect of the region. With a
+    /// zoom it is larger than `rect` and reaches outside. `yUp`: `rect` lives in a y-up space
+    /// (AppKit drawing, window coordinates); otherwise y down (SwiftUI).
+    static func fittedRect(for page: PDFPage, region: PageRegion, in rect: CGRect,
+                           zoom: CGRect = unzoomed, yUp: Bool = false) -> CGRect {
         let src = region.rect(in: CGRect(origin: .zero, size: displaySize(of: page)))
-        guard src.width > 0, src.height > 0 else { return .zero }
-        let scale = min(rect.width / src.width, rect.height / src.height)
+        guard src.width > 0, src.height > 0, zoom.width > 0, zoom.height > 0 else { return .zero }
+        let scale = min(rect.width / (src.width * zoom.width), rect.height / (src.height * zoom.height))
         let size = CGSize(width: src.width * scale, height: src.height * scale)
-        return CGRect(x: rect.midX - size.width / 2, y: rect.midY - size.height / 2,
-                      width: size.width, height: size.height)
+        let x = rect.midX - zoom.midX * size.width
+        // The zoomed part's center sits at rect's center; zoom.midY counts from the top.
+        let y = yUp ? rect.midY + zoom.midY * size.height - size.height : rect.midY - zoom.midY * size.height
+        return CGRect(x: x, y: y, width: size.width, height: size.height)
     }
 
     /// `context` must be y-up (unflipped). Pages get a white backdrop, like on paper — PDFs
     /// without an explicit background would otherwise show the view's color through.
-    static func draw(_ page: PDFPage, region: PageRegion, in rect: CGRect, context: CGContext) {
-        let dest = fittedRect(for: page, region: region, in: rect)
+    /// `zoom`: only that part of the region (normalized, y down), enlarged to fill `rect`.
+    static func draw(_ page: PDFPage, region: PageRegion, in rect: CGRect, zoom: CGRect = unzoomed,
+                     context: CGContext) {
+        let dest = fittedRect(for: page, region: region, in: rect, zoom: zoom, yUp: true)
         guard dest.width > 0 else { return }
         let src = region.rect(in: CGRect(origin: .zero, size: displaySize(of: page)))
         let scale = dest.width / src.width
+        // Visible: the zoomed part (y up: zoom.maxY counts from the top).
+        let visible = CGRect(x: dest.minX + zoom.minX * dest.width, y: dest.maxY - zoom.maxY * dest.height,
+                             width: zoom.width * dest.width, height: zoom.height * dest.height)
         context.saveGState()
-        context.clip(to: dest)
+        context.clip(to: visible)
         context.setFillColor(.white)
-        context.fill(dest)
+        context.fill(visible)
         context.translateBy(x: dest.minX - src.minX * scale, y: dest.minY - src.minY * scale)
         context.scaleBy(x: scale, y: scale)
         context.interpolationQuality = .high

@@ -13,11 +13,13 @@ struct MediaLayer: View {
     /// Progress bar under every started clip (presenter view); otherwise only for clips with
     /// `showsControls`.
     var showsProgress = false
+    /// Part of the slide shown enlarged (audience view while zoomed).
+    var zoom: CGRect = PageRenderer.unzoomed
 
     var body: some View {
         GeometryReader { geo in
             if playback.pageIndex == pageIndex, let page {
-                let slide = PageRenderer.fittedRect(for: page, region: region, in: CGRect(origin: .zero, size: geo.size))
+                let slide = PageRenderer.fittedRect(for: page, region: region, in: CGRect(origin: .zero, size: geo.size), zoom: zoom)
                 ForEach(playback.items) { item in
                     let n = PDFLinks.normalizedRect(forPageRect: item.clip.bounds, page: page, region: region)
                     let r = CGRect(x: slide.minX + n.minX * slide.width, y: slide.minY + n.minY * slide.height,

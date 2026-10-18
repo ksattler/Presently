@@ -35,7 +35,7 @@ final class PresentationSession: ObservableObject {
                 timer.start(at: now())
             }
             if let url = deck.fileURL { lastPages?.set(currentIndex, for: url) }
-            updateMedia()
+            audiencePageChanged()
         }
     }
     @Published private(set) var isPresenting = false
@@ -50,7 +50,7 @@ final class PresentationSession: ObservableObject {
     static let timerStartsOnFirstTurnKey = "timerStartsOnFirstTurn"
     /// Page the audience keeps seeing while frozen; nil = follows `currentIndex`.
     @Published private(set) var frozenIndex: Int? {
-        didSet { if frozenIndex != oldValue { updateMedia() } }
+        didSet { if frozenIndex != oldValue { audiencePageChanged() } }
     }
     /// The audience display is disconnected; the audience view is hidden until it's back.
     @Published var audienceDisconnected = false
@@ -60,6 +60,12 @@ final class PresentationSession: ObservableObject {
     let pointer = LaserPointer()
     let drawings = Drawings()
     let media = MediaPlayback()
+    /// Part of the audience slide shown enlarged (`SlideZoom`); nil = the whole slide.
+    @Published private(set) var zoom: CGRect?
+    private var zoomPage: Int?
+    /// The next drag (or click) on the presenter's current slide selects the zoom.
+    @Published private(set) var isSelectingZoom = false
+    var audienceZoom: CGRect { zoom ?? PageRenderer.unzoomed }
     /// Deck revision the loaded clips belong to (a reload re-reads them).
     private var mediaRevision = -1
     /// Opens external links (browser); replaceable in tests.
@@ -107,7 +113,7 @@ final class PresentationSession: ObservableObject {
         deck.reload(pdf: pdf, data: data)
         go(to: currentIndex)
         if let frozenIndex { self.frozenIndex = min(frozenIndex, deck.pageCount - 1) }
-        updateMedia()
+        audiencePageChanged()
     }
 
     // MARK: Lifecycle
@@ -122,7 +128,7 @@ final class PresentationSession: ObservableObject {
         timer = PresentationTimer()
         timerWaitsForFirstTurn = timerStartsOnFirstTurn
         if !timerWaitsForFirstTurn { timer.start(at: now()) }
-        updateMedia()
+        audiencePageChanged()
     }
 
     func end() {
@@ -137,12 +143,15 @@ final class PresentationSession: ObservableObject {
         drawings.end()
         drawings.tool = nil   // the strokes stay
         timer.pause(at: now())
-        updateMedia()
+        audiencePageChanged()
     }
 
-    /// Loads the videos of the audience page while presenting; stops them otherwise. A new
-    /// page (or a reload) stops what was playing.
-    private func updateMedia() {
+    /// The audience page may have changed (page turn, freeze, reload, begin/end): a zoom ends
+    /// with its page; the videos of the new page are loaded while presenting, stopped otherwise.
+    /// A new page (or a reload) stops what was playing.
+    private func audiencePageChanged() {
+        if zoom != nil, !isPresenting || zoomPage != audienceIndex { zoom = nil }
+        if !isPresenting { isSelectingZoom = false }
         let index = isPresenting ? audienceIndex : nil
         guard index != media.pageIndex || deck.revision != mediaRevision else { return }
         mediaRevision = deck.revision
@@ -242,7 +251,29 @@ final class PresentationSession: ObservableObject {
     func selectTool(_ tool: Drawings.Tool) {
         drawings.end()
         drawings.tool = drawings.tool == tool ? nil : tool
-        if drawings.tool != nil { pointer.isEnabled = false }
+        if drawings.tool != nil { pointer.isEnabled = false; isSelectingZoom = false }
+    }
+
+    /// M: start selecting a zoom; while zoomed (or selecting) back to the whole slide.
+    func toggleZoom() {
+        if zoom != nil || isSelectingZoom {
+            zoom = nil
+            isSelectingZoom = false
+        } else {
+            drawings.end()
+            drawings.tool = nil
+            pointer.isEnabled = false
+            isSelectingZoom = true
+        }
+    }
+
+    /// Zooms the audience view to a drag on the current slide (normalized points), or 2× around
+    /// a clicked point. Only while the audience shows the current page.
+    func zoom(from a: CGPoint, to b: CGPoint) {
+        isSelectingZoom = false
+        guard audienceIndex == currentIndex else { return }
+        zoom = SlideZoom.rect(from: a, to: b)
+        zoomPage = currentIndex
     }
 
     // MARK: Keys
@@ -282,7 +313,8 @@ final class PresentationSession: ObservableObject {
         case .toggleFreeze:   frozenIndex = frozenIndex == nil ? currentIndex : nil
         case .togglePointer:
             pointer.isEnabled.toggle()
-            if pointer.isEnabled { drawings.tool = nil }
+            if pointer.isEnabled { drawings.tool = nil; isSelectingZoom = false }
+        case .toggleZoom:     toggleZoom()
         case .pen:            selectTool(.pen)
         case .highlighter:    selectTool(.highlighter)
         case .eraser:         selectTool(.eraser)
@@ -295,6 +327,7 @@ final class PresentationSession: ObservableObject {
             if !pageInput.isEmpty { pageInput = "" }
             else if showsOverview { showsOverview = false }
             else if drawings.tool != nil { drawings.end(); drawings.tool = nil }
+            else if isSelectingZoom || zoom != nil { isSelectingZoom = false; zoom = nil }
             else if blank != nil { blank = nil }
             else if frozenIndex != nil { frozenIndex = nil }
             else { return false }   // caller ends the presentation

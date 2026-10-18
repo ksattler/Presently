@@ -20,6 +20,7 @@ enum AboutPanel {
             ("B / W", String(localized: "Black / white screen")),
             ("F", String(localized: "Freeze audience view")),
             ("L", String(localized: "Laser pointer")),
+            ("M", String(localized: "Zoom in / whole slide")),
             ("S", String(localized: "Swap displays")),
             ("D / H / E", String(localized: "Pen / highlighter / eraser")),
             ("Z / X", String(localized: "Undo / clear drawing")),

@@ -9,10 +9,12 @@ struct DrawingLayer: View {
     let page: PDFPage?
     let pageIndex: Int
     let region: PageRegion
+    /// Part of the slide shown enlarged (audience view while zoomed).
+    var zoom: CGRect = PageRenderer.unzoomed
 
     var body: some View {
         GeometryReader { geo in
-            let slide = page.map { PageRenderer.fittedRect(for: $0, region: region, in: CGRect(origin: .zero, size: geo.size)) } ?? .zero
+            let slide = page.map { PageRenderer.fittedRect(for: $0, region: region, in: CGRect(origin: .zero, size: geo.size), zoom: zoom) } ?? .zero
             ZStack {
                 Canvas { ctx, _ in
                     guard slide.width > 0 else { return }
@@ -27,7 +29,7 @@ struct DrawingLayer: View {
                 .allowsHitTesting(false)
 
                 if drawings.tool != nil, slide.width > 0 {
-                    DrawingInput(
+                    DragInput(
                         cursor: drawings.tool == .eraser ? .disappearingItem : .crosshair,
                         onBegin: { drawings.begin(at: normalize($0, slide), page: pageIndex) },
                         onMove: { drawings.move(to: normalize($0, slide), page: pageIndex) },
@@ -45,7 +47,7 @@ struct DrawingLayer: View {
 
 /// Mouse drags in view coordinates (y down). Takes the first click of an inactive window —
 /// the presenter window usually isn't key while the audience window is.
-private struct DrawingInput: NSViewRepresentable {
+struct DragInput: NSViewRepresentable {
     let cursor: NSCursor
     let onBegin: (CGPoint) -> Void
     let onMove: (CGPoint) -> Void

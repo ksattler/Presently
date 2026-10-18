@@ -12,6 +12,8 @@ struct PDFPageView: NSViewRepresentable {
     var pageIndex: Int? = nil
     /// Transition to play when the shown page changes from one index to another.
     var transition: ((_ old: Int, _ new: Int) -> PageTransition?)? = nil
+    /// Part of the region to show enlarged (normalized, y down).
+    var zoom: CGRect = PageRenderer.unzoomed
 
     func makeNSView(context: Context) -> PDFPageNSView { PDFPageNSView() }
 
@@ -21,10 +23,12 @@ struct PDFPageView: NSViewRepresentable {
             if let old = view.pageIndex, let new = pageIndex, view.page != nil { t = transition?(old, new) }
             view.region = region
             view.background = background
+            view.zoom = zoom
             view.show(page, index: pageIndex, transition: t)
-        } else if view.region != region || view.background != background {
+        } else if view.region != region || view.background != background || view.zoom != zoom {
             view.region = region
             view.background = background
+            view.zoom = zoom
             view.needsDisplay = true
         }
     }
@@ -35,6 +39,7 @@ final class PDFPageNSView: NSView {
     private(set) var pageIndex: Int?
     var region: PageRegion = .full
     var background: NSColor = .black
+    var zoom: CGRect = PageRenderer.unzoomed
     /// Layer-hosting subview for transition overlays (the page itself is drawn in `draw`).
     private let overlayView: NSView = {
         let v = NSView()
@@ -98,7 +103,7 @@ final class PDFPageNSView: NSView {
         background.setFill()
         bounds.fill()
         guard let page, let ctx = NSGraphicsContext.current?.cgContext else { return }
-        PageRenderer.draw(page, region: region, in: bounds, context: ctx)
+        PageRenderer.draw(page, region: region, in: bounds, zoom: zoom, context: ctx)
     }
 
     override func setFrameSize(_ newSize: NSSize) {

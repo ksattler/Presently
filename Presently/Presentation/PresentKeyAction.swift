@@ -14,6 +14,7 @@ enum PresentKeyAction: Equatable {
     case toggleTimer, resetTimer
     case toggleFreeze               // audience keeps the current page while the presenter browses
     case togglePointer              // laser pointer
+    case toggleZoom                 // select a part of the slide to enlarge for the audience / back
     case swapScreens                // audience and presenter trade displays
     case pen, highlighter, eraser   // drawing tools (toggle)
     case undoDrawing, clearDrawing  // on the current page
@@ -56,6 +57,7 @@ enum PresentKeyAction: Equatable {
         case "o":      self = .toggleOverview
         case "f":      self = .toggleFreeze
         case "l":      self = .togglePointer
+        case "m":      self = .toggleZoom
         case "s":      self = .swapScreens
         case "d":      self = .pen
         case "h":      self = .highlighter

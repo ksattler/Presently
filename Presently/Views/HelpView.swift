@@ -57,6 +57,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             String(localized: "**Freeze (F):** the audience keeps the current slide while you browse, e.g. for questions. F or Esc shows your slide again."),
             String(localized: "**Black or white screen:** B or “.” / W or “,”. Press the key again to return."),
             String(localized: "**Laser pointer (L):** the mouse pointer over the current slide appears as a red dot for the audience."),
+            String(localized: "**Zoom (M):** drag a rectangle on the current slide – or click for 2× – and the audience sees that part enlarged, sharp at any size. The presenter view dims the rest. M, Esc or the next page show the whole slide again."),
             String(localized: "**Links** in the PDF are clickable on the current slide and in the audience view. A click outside a link advances."),
         ]
         case .timer: [

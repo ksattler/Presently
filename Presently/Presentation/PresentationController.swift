@@ -290,7 +290,8 @@ final class PresentationController: NSObject, NSWindowDelegate {
         guard let session, let view = audienceWindow?.contentView,
               let page = session.deck.page(session.audienceIndex) else { return nil }
         let area = view.convert(view.bounds, to: nil)   // window coordinates, y up
-        let slide = PageRenderer.fittedRect(for: page, region: session.deck.notesLayout.slideRegion, in: area)
+        let slide = PageRenderer.fittedRect(for: page, region: session.deck.notesLayout.slideRegion, in: area,
+                                            zoom: session.audienceZoom, yUp: true)
         guard slide.width > 0, slide.height > 0 else { return nil }
         let p = event.locationInWindow
         return CGPoint(x: (p.x - slide.minX) / slide.width, y: (slide.maxY - p.y) / slide.height)

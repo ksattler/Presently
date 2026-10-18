@@ -281,6 +281,16 @@
         }
       }
     },
+    "**Zoom (M):** drag a rectangle on the current slide – or click for 2× – and the audience sees that part enlarged, sharp at any size. The presenter view dims the rest. M, Esc or the next page show the whole slide again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Zoom (M):** Rechteck auf der aktuellen Folie ziehen – oder für 2× klicken –, und das Publikum sieht diesen Teil vergrößert, in jeder Größe scharf. Die Referentenansicht dunkelt den Rest ab. M, Esc oder die nächste Seite zeigen wieder die ganze Folie."
+          }
+        }
+      }
+    },
     "A PDF opens on the page where you left off. Presently never changes the PDF itself.": {
       "localizations": {
         "de": {
@@ -647,6 +657,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ende um"
+          }
+        }
+      }
+    },
+    "Enlarge a part of the slide for the audience: drag a rectangle on the current slide, or click for 2× (M)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einen Teil der Folie für das Publikum vergrößern: Rechteck auf der aktuellen Folie ziehen oder für 2× klicken (M)"
           }
         }
       }
@@ -1651,6 +1671,26 @@
         }
       }
     },
+    "Zoom": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom"
+          }
+        }
+      }
+    },
+    "Zoom in / whole slide": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoomen / ganze Folie"
+          }
+        }
+      }
+    },
     "all overlays": {
       "localizations": {
         "de": {
@@ -1701,12 +1741,12 @@
         }
       }
     },
-    "← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end": {
+    "← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · M zoom · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende"
+            "value": "← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · M Zoom · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende"
           }
         }
       }
