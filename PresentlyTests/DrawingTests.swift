@@ -133,6 +133,17 @@ final class PresenterLayoutTests: XCTestCase {
         XCTAssertEqual(PresenterLayout.draggedFraction(start: 0.5, translation: 10, total: 0), 0.5)
     }
 
+    func testUpcomingPages() {
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 0, showsNext: true, count: 3, pageCount: 10), [2, 3, 4])
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 0, showsNext: false, count: 3, pageCount: 10), [1, 2, 3])
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 7, showsNext: true, count: 3, pageCount: 10), [9])
+        // Near and on the last page the strip is empty instead of building an invalid range.
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 8, showsNext: true, count: 3, pageCount: 10), [])
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 9, showsNext: true, count: 3, pageCount: 10), [])
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 9, showsNext: false, count: 3, pageCount: 10), [])
+        XCTAssertEqual(PresenterLayout.upcomingPages(after: 0, showsNext: true, count: 0, pageCount: 10), [])
+    }
+
     func testReset() {
         let defaults = UserDefaults(suiteName: "PresenterLayout-\(UUID().uuidString)")!
         defaults.set(0.3, forKey: PresenterLayout.Key.currentFraction)

@@ -267,8 +267,8 @@ struct PresenterView: View {
 
     /// Strip of the pages after the next one.
     @ViewBuilder private var upcoming: some View {
-        let start = index + (showsNext ? 2 : 1)   // after the next slide, if that is shown
-        let pages = Array(start..<min(start + upcomingCount, deck.pageCount))
+        let pages = PresenterLayout.upcomingPages(after: index, showsNext: showsNext,
+                                                  count: upcomingCount, pageCount: deck.pageCount)
         if upcomingCount > 0 {
             HStack(spacing: 10) {
                 ForEach(pages, id: \.self) { i in

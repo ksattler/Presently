@@ -29,6 +29,14 @@ enum PresenterLayout {
         return min(max(start + delta, fractionRange.lowerBound), fractionRange.upperBound)
     }
 
+    /// Pages of the upcoming strip: up to `count` pages after the current one (and after the
+    /// next one, if that is shown). Empty near the end — on the last page `start` passes `pageCount`.
+    static func upcomingPages(after index: Int, showsNext: Bool, count: Int, pageCount: Int) -> [Int] {
+        let start = index + (showsNext ? 2 : 1)
+        let end = min(start + max(count, 0), pageCount)
+        return start < end ? Array(start..<end) : []
+    }
+
     static func reset(_ defaults: UserDefaults = .standard) {
         for key in [Key.currentFraction, Key.nextFraction, Key.currentOnRight, Key.showsNext, Key.showsNotes, Key.upcomingCount] {
             defaults.removeObject(forKey: key)
