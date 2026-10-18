@@ -1,13 +1,16 @@
 import PDFKit
 import SwiftUI
 
-/// Over the presenter's current slide: while selecting, takes a drag (or click) and shows the
-/// dragged rectangle; while zoomed, dims what the audience doesn't see. Only when the audience
-/// shows the current page (not frozen elsewhere).
+/// Over the presenter's current slide and the (unzoomed) audience slide: while selecting, takes
+/// a drag (or click) and shows the dragged rectangle. In the presenter view it also marks the
+/// selection mode (frame and hint) and, while zoomed, dims what the audience doesn't see. Only
+/// when the audience shows the current page (not frozen elsewhere).
 struct ZoomLayer: View {
     @ObservedObject var session: PresentationSession
     let page: PDFPage?
     let region: PageRegion
+    /// Audience view: selection only, nothing else is shown there.
+    var isAudience = false
     @State private var dragStart: CGPoint?
     @State private var dragEnd: CGPoint?
 
@@ -16,8 +19,11 @@ struct ZoomLayer: View {
             let slide = page.map { PageRenderer.fittedRect(for: $0, region: region, in: CGRect(origin: .zero, size: geo.size)) } ?? .zero
             if slide.width > 0, session.audienceIndex == session.currentIndex {
                 ZStack(alignment: .topLeading) {
-                    if let zoom = session.zoom {
+                    if let zoom = session.zoom, !isAudience {
                         outline(denormalize(zoom, slide), in: slide)
+                    }
+                    if session.isSelectingZoom, !isAudience, dragStart == nil {
+                        selectionHint(slide)
                     }
                     if session.isSelectingZoom {
                         if let a = dragStart, let b = dragEnd {
@@ -40,6 +46,24 @@ struct ZoomLayer: View {
                 }
             }
         }
+    }
+
+    /// Selection mode: the slide framed, with a hint at its top.
+    private func selectionHint(_ slide: CGRect) -> some View {
+        ZStack(alignment: .top) {
+            Rectangle()
+                .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 3, dash: [10, 6]))
+            Text("Drag a rectangle to zoom in for the audience, or click for 2× · Esc cancels")
+                .font(.callout.weight(.medium))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.accentColor, in: Capsule())
+                .padding(.top, 8)
+        }
+        .frame(width: slide.width, height: slide.height)
+        .offset(x: slide.minX, y: slide.minY)
+        .allowsHitTesting(false)
     }
 
     /// The part the audience sees, framed; the rest of the slide dimmed.

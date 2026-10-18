@@ -281,12 +281,12 @@
         }
       }
     },
-    "**Zoom (M):** drag a rectangle on the current slide – or click for 2× – and the audience sees that part enlarged, sharp at any size. The presenter view dims the rest. M, Esc or the next page show the whole slide again.": {
+    "**Zoom (M):** drag a rectangle on the current slide or on the audience view – or click for 2× – and the audience sees that part enlarged, sharp at any size. The presenter view dims the rest. M, Esc or the next page show the whole slide again.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "**Zoom (M):** Rechteck auf der aktuellen Folie ziehen – oder für 2× klicken –, und das Publikum sieht diesen Teil vergrößert, in jeder Größe scharf. Die Referentenansicht dunkelt den Rest ab. M, Esc oder die nächste Seite zeigen wieder die ganze Folie."
+            "value": "**Zoom (M):** Rechteck auf der aktuellen Folie oder auf der Publikumsansicht ziehen – oder für 2× klicken –, und das Publikum sieht diesen Teil vergrößert, in jeder Größe scharf. Die Referentenansicht dunkelt den Rest ab. M, Esc oder die nächste Seite zeigen wieder die ganze Folie."
           }
         }
       }
@@ -537,6 +537,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bildschirm für die Präsentation"
+          }
+        }
+      }
+    },
+    "Drag a rectangle to zoom in for the audience, or click for 2× · Esc cancels": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechteck ziehen, um für das Publikum zu zoomen, oder für 2× klicken · Esc bricht ab"
           }
         }
       }

@@ -36,6 +36,9 @@ struct AudienceView: View {
                         .position(x: slide.midX, y: slide.midY)
                 }
             }
+            if session.isSelectingZoom {
+                ZoomLayer(session: session, page: page, region: region, isAudience: true)
+            }
             if let blank = session.blank {
                 (blank == .black ? Color.black : Color.white)
                     .transition(.opacity)
