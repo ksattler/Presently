@@ -121,9 +121,13 @@ struct PresenterView: View {
             PDFPageView(page: deck.page(index), region: deck.notesLayout.slideRegion,
                         background: .black)
                 .overlay {
+                    MediaLayer(playback: session.media, page: deck.page(index), pageIndex: index,
+                               region: deck.notesLayout.slideRegion, showsProgress: true)
+                }
+                .overlay {
                     LaserPointerLayer(pointer: session.pointer, page: deck.page(index),
                                       region: deck.notesLayout.slideRegion) { point in
-                        session.followLink(atNormalized: point, pageIndex: index)
+                        _ = session.click(atNormalized: point, pageIndex: index)
                     }
                 }
                 // Above the pointer layer, whose click handler would take the drags.

@@ -271,6 +271,16 @@
         }
       }
     },
+    "**Videos** from the PDF play inside the slide: LaTeX Beamer's `\\movie` (with autostart, loop, start, duration) and links like `run:clip.mp4?autostart&loop`. The video file lies next to the PDF. Click a video to play or pause it; the presenter view shows its progress.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Videos** aus dem PDF laufen direkt auf der Folie: `\\movie` aus LaTeX Beamer (mit autostart, loop, start, duration) und Links wie `run:clip.mp4?autostart&loop`. Die Videodatei liegt neben dem PDF. Ein Klick auf das Video startet oder pausiert es; die Referentenansicht zeigt den Fortschritt."
+          }
+        }
+      }
+    },
     "A PDF opens on the page where you left off. Presently never changes the PDF itself.": {
       "localizations": {
         "de": {

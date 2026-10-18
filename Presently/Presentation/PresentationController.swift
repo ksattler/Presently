@@ -308,7 +308,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
             case .leftMouseDown where inAudience && event.clickCount == 1:
                 // A link on the slide is followed; anywhere else a click advances.
                 if let p = self.audienceSlidePoint(event),
-                   session.followLink(atNormalized: p, pageIndex: session.audienceIndex, unfreeze: true) { return nil }
+                   session.click(atNormalized: p, pageIndex: session.audienceIndex, unfreeze: true) { return nil }
                 session.handle(.next)
                 return nil
             case .rightMouseDown where inAudience:

@@ -18,6 +18,16 @@ enum PDFLinks {
         return display.applying(page.transform(for: .cropBox).inverted())
     }
 
+    /// Inverse of `pagePoint`: a page-space rect (annotation bounds) normalized to the shown
+    /// region (0…1, y down). May reach outside 0…1 when the rect lies outside the region.
+    static func normalizedRect(forPageRect rect: CGRect, page: PDFPage, region: PageRegion) -> CGRect {
+        let r = region.rect(in: CGRect(origin: .zero, size: PageRenderer.displaySize(of: page)))
+        guard r.width > 0, r.height > 0 else { return .zero }
+        let d = rect.applying(page.transform(for: .cropBox))   // bounding box, also when rotated
+        return CGRect(x: (d.minX - r.minX) / r.width, y: (r.maxY - d.maxY) / r.height,
+                      width: d.width / r.width, height: d.height / r.height)
+    }
+
     static func target(atNormalized p: CGPoint, page: PDFPage, region: PageRegion) -> LinkTarget? {
         guard (0...1).contains(p.x), (0...1).contains(p.y) else { return nil }
         let point = pagePoint(forNormalized: p, page: page, region: region)

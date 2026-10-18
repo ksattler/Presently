@@ -35,6 +35,7 @@ final class PresentationSession: ObservableObject {
                 timer.start(at: now())
             }
             if let url = deck.fileURL { lastPages?.set(currentIndex, for: url) }
+            updateMedia()
         }
     }
     @Published private(set) var isPresenting = false
@@ -48,7 +49,9 @@ final class PresentationSession: ObservableObject {
     @Published private(set) var timerWaitsForFirstTurn = false
     static let timerStartsOnFirstTurnKey = "timerStartsOnFirstTurn"
     /// Page the audience keeps seeing while frozen; nil = follows `currentIndex`.
-    @Published private(set) var frozenIndex: Int?
+    @Published private(set) var frozenIndex: Int? {
+        didSet { if frozenIndex != oldValue { updateMedia() } }
+    }
     /// The audience display is disconnected; the audience view is hidden until it's back.
     @Published var audienceDisconnected = false
     /// Set when reloading the PDF from disk failed (file unreadable or not a PDF).
@@ -56,6 +59,9 @@ final class PresentationSession: ObservableObject {
 
     let pointer = LaserPointer()
     let drawings = Drawings()
+    let media = MediaPlayback()
+    /// Deck revision the loaded clips belong to (a reload re-reads them).
+    private var mediaRevision = -1
     /// Opens external links (browser); replaceable in tests.
     var openURL: (URL) -> Void = { NSWorkspace.shared.open($0) }
     /// Pages left by following internal links, for the PDF's "GoBack" action.
@@ -101,6 +107,7 @@ final class PresentationSession: ObservableObject {
         deck.reload(pdf: pdf, data: data)
         go(to: currentIndex)
         if let frozenIndex { self.frozenIndex = min(frozenIndex, deck.pageCount - 1) }
+        updateMedia()
     }
 
     // MARK: Lifecycle
@@ -115,6 +122,7 @@ final class PresentationSession: ObservableObject {
         timer = PresentationTimer()
         timerWaitsForFirstTurn = timerStartsOnFirstTurn
         if !timerWaitsForFirstTurn { timer.start(at: now()) }
+        updateMedia()
     }
 
     func end() {
@@ -129,6 +137,19 @@ final class PresentationSession: ObservableObject {
         drawings.end()
         drawings.tool = nil   // the strokes stay
         timer.pause(at: now())
+        updateMedia()
+    }
+
+    /// Loads the videos of the audience page while presenting; stops them otherwise. A new
+    /// page (or a reload) stops what was playing.
+    private func updateMedia() {
+        let index = isPresenting ? audienceIndex : nil
+        guard index != media.pageIndex || deck.revision != mediaRevision else { return }
+        mediaRevision = deck.revision
+        let clips = index.flatMap { deck.page($0) }.map {
+            PageMedia.clips(on: $0, baseURL: deck.fileURL?.deletingLastPathComponent())
+        } ?? []
+        media.load(clips, page: index)
     }
 
     // MARK: Navigation
@@ -171,6 +192,19 @@ final class PresentationSession: ObservableObject {
     /// `unfreeze`: the click came from the audience view, which should then show the result.
     /// Returns false if there is no link there.
     @discardableResult
+    /// Click on a shown slide: a video there plays or pauses, otherwise a link is followed.
+    /// False if there is neither (the audience view then advances).
+    func click(atNormalized point: CGPoint, pageIndex: Int, unfreeze: Bool = false) -> Bool {
+        if pageIndex == media.pageIndex, (0...1).contains(point.x), (0...1).contains(point.y),
+           let page = deck.page(pageIndex),
+           let id = media.clip(atPagePoint: PDFLinks.pagePoint(forNormalized: point, page: page,
+                                                               region: deck.notesLayout.slideRegion)) {
+            media.toggle(id)
+            return true
+        }
+        return followLink(atNormalized: point, pageIndex: pageIndex, unfreeze: unfreeze)
+    }
+
     func followLink(atNormalized point: CGPoint, pageIndex: Int, unfreeze: Bool = false) -> Bool {
         guard let page = deck.page(pageIndex),
               let target = PDFLinks.target(atNormalized: point, page: page, region: deck.notesLayout.slideRegion)

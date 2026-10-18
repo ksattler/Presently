@@ -16,6 +16,8 @@ struct AudienceView: View {
             PDFPageView(page: deck.page(session.audienceIndex), region: deck.notesLayout.slideRegion,
                         pageIndex: session.audienceIndex,
                         transition: transitionsEnabled ? { [deck] in deck.transition(from: $0, to: $1) } : nil)
+            MediaLayer(playback: session.media, page: deck.page(session.audienceIndex),
+                       pageIndex: session.audienceIndex, region: deck.notesLayout.slideRegion)
             LaserPointerLayer(pointer: session.pointer, page: deck.page(session.audienceIndex),
                               region: deck.notesLayout.slideRegion,
                               showsDot: session.audienceIndex == session.currentIndex)

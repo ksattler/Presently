@@ -72,6 +72,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
         ]
         case .beamer: [
             String(localized: "**Notes on the second screen:** with `show notes on second screen=right` (or left, top, bottom) the audience sees only the slide half and the presenter view shows the notes half. Wide pages are detected automatically; change it via *Presentation → Beamer Notes*. If the setting doesn't match the page format, a notice offers *Show Whole Page*."),
+            String(localized: "**Videos** from the PDF play inside the slide: LaTeX Beamer's `\\movie` (with autostart, loop, start, duration) and links like `run:clip.mp4?autostart&loop`. The video file lies next to the PDF. Click a video to play or pause it; the presenter view shows its progress."),
             String(localized: "**Overlays:** ⇧ with an arrow key skips them. They share one note and count as one slide in the schedule."),
             String(localized: "**Automatic reload:** when the PDF changes on disk – e.g. after compiling again – it is reloaded; the current page and the notes are kept. Half-written files are ignored."),
         ]
