@@ -261,6 +261,16 @@
         }
       }
     },
+    "**Spotlight (C):** the audience sees the slide dimmed except a circle around the mouse pointer; the presenter view shows it lighter. The size is set in the settings. L switches to the red dot.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Spotlight (C):** Das Publikum sieht die Folie abgedunkelt, nur ein Kreis um den Mauszeiger bleibt hell; die Referentenansicht zeigt es schwächer. Die Größe stellst du in den Einstellungen ein. L wechselt zum roten Punkt."
+          }
+        }
+      }
+    },
     "**Start** with ⌘⏎, F5 or ▶︎ in the toolbar. **End** with ⌘⏎ or Esc – Esc first closes an open overview, input, drawing mode, black screen or freeze.": {
       "localizations": {
         "de": {
@@ -1511,6 +1521,26 @@
         }
       }
     },
+    "Spotlight": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spotlight"
+          }
+        }
+      }
+    },
+    "Spotlight size": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Größe des Spotlights"
+          }
+        }
+      }
+    },
     "Start Presentation": {
       "localizations": {
         "de": {
@@ -1647,6 +1677,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Publikum behält die aktuelle Folie, während du blätterst (F)"
+          }
+        }
+      }
+    },
+    "The audience sees the slide dimmed except a circle around the mouse pointer (C)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Publikum sieht die Folie abgedunkelt, nur ein Kreis um den Mauszeiger bleibt hell (C)"
           }
         }
       }
@@ -1931,12 +1971,12 @@
         }
       }
     },
-    "← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · M zoom · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end": {
+    "← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · C spotlight · M zoom · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · M Zoom · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende"
+            "value": "← → Bild↑↓ Leertaste · ⇧ Overlays überspringen · Nummer ⏎ springen · B/W Schwarz/Weiß · F Einfrieren · L Laserpointer · C Spotlight · M Zoom · S Bildschirme tauschen · D/H/E Stift/Marker/Radierer · Z/X Rückgängig/Löschen · Tab Übersicht · P Timer · Doppelklick Notizen bearbeiten · Esc Ende"
           }
         }
       }

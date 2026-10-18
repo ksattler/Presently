@@ -5,8 +5,26 @@ import PDFKit
 /// pointer overlays, not the whole presenter view.
 @MainActor
 final class LaserPointer: ObservableObject {
+    /// A red dot, or a spotlight: the slide dimmed except a circle around the pointer.
+    enum Style { case dot, spotlight }
+
     @Published var isEnabled = false {
         didSet { if !isEnabled { position = nil } }
+    }
+    @Published var style = Style.dot
+    /// UserDefaults: spotlight radius as a fraction of the slide width.
+    static let spotlightRadiusKey = "spotlightRadius"
+    static let defaultSpotlightRadius = 0.12
+    static let spotlightRadiusRange: ClosedRange<Double> = 0.05...0.3
+
+    /// L / C: switches to `style`, or off if that style is already on.
+    func toggle(_ style: Style) {
+        if isEnabled, self.style == style {
+            isEnabled = false
+        } else {
+            self.style = style
+            isEnabled = true
+        }
     }
     /// Position in the shown slide region, normalized to 0…1 (y down); nil = not over the slide.
     @Published var position: CGPoint?
@@ -327,8 +345,8 @@ final class PresentationSession: ObservableObject {
         case .toggleOverview: showsOverview.toggle()
         case .swapScreens:    break   // done by the PresentationController
         case .toggleFreeze:   frozenIndex = frozenIndex == nil ? currentIndex : nil
-        case .togglePointer:
-            pointer.isEnabled.toggle()
+        case .togglePointer, .toggleSpotlight:
+            pointer.toggle(action == .toggleSpotlight ? .spotlight : .dot)
             if pointer.isEnabled { drawings.tool = nil; isSelectingZoom = false }
         case .toggleZoom:     toggleZoom()
         case .pen:            selectTool(.pen)

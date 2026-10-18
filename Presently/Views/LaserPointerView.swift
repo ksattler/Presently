@@ -14,6 +14,9 @@ struct LaserPointerLayer: View {
     var showsDot = true
     /// Part of the slide shown enlarged (audience view while zoomed).
     var zoom: CGRect = PageRenderer.unzoomed
+    /// How dark the spotlight makes the rest of the slide (the presenter view uses less).
+    var spotlightDimming = 0.8
+    @AppStorage(LaserPointer.spotlightRadiusKey) private var spotlightRadius = LaserPointer.defaultSpotlightRadius
     /// Click on the slide (normalized point); nil = clicks pass through.
     var onClick: ((CGPoint) -> Void)? = nil
     @State private var hidesCursor = false
@@ -24,7 +27,9 @@ struct LaserPointerLayer: View {
             let slide = page.map { PageRenderer.fittedRect(for: $0, region: region, in: CGRect(origin: .zero, size: geo.size), zoom: zoom) } ?? .zero
             ZStack(alignment: .topLeading) {
                 Color.clear
-                if showsDot, pointer.isEnabled, let p = pointer.position, slide.width > 0 {
+                if showsDot, pointer.isEnabled, pointer.style == .spotlight, let p = pointer.position, slide.width > 0 {
+                    spotlight(at: p, in: slide)
+                } else if showsDot, pointer.isEnabled, let p = pointer.position, slide.width > 0 {
                     let d = max(12, slide.width * 0.018)
                     Circle()
                         .fill(RadialGradient(colors: [.white, Color(red: 1, green: 0.15, blue: 0.1), Color(red: 1, green: 0, blue: 0).opacity(0)],
@@ -52,6 +57,23 @@ struct LaserPointerLayer: View {
         }
         .onChange(of: pointer.isEnabled) { if !pointer.isEnabled { setCursorHidden(false) } }
         .onDisappear { setCursorHidden(false) }
+    }
+
+    /// The slide dimmed except a soft-edged circle around `p` (normalized). The radius is a
+    /// fraction of the slide width, so it covers the same content in every view.
+    private func spotlight(at p: CGPoint, in slide: CGRect) -> some View {
+        let r = slide.width * min(max(spotlightRadius, LaserPointer.spotlightRadiusRange.lowerBound),
+                                  LaserPointer.spotlightRadiusRange.upperBound)
+        return Rectangle()
+            .fill(Color.black.opacity(spotlightDimming))
+            .mask {
+                // Clear up to 85 % of the radius, a short fade, opaque beyond (the last stop extends).
+                RadialGradient(stops: [.init(color: .clear, location: 0.85), .init(color: .black, location: 1)],
+                               center: UnitPoint(x: p.x, y: p.y), startRadius: 0, endRadius: r)
+            }
+            .frame(width: slide.width, height: slide.height)
+            .offset(x: slide.minX, y: slide.minY)
+            .allowsHitTesting(false)
     }
 
     private func updateLinkCursor(at p: CGPoint?) {

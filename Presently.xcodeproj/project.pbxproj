@@ -43,6 +43,7 @@
 		B9E25CFDB067E3F90A7CAFCE /* NotesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254B8E3CA106AFC93770A894 /* NotesLayout.swift */; };
 		BC397897E33819D875250668 /* DeckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC84655D132337872C5675F /* DeckTests.swift */; };
 		BEE446C7604CD5BE6A4E3371 /* ZoomLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550FE84E3DFEC51FC70DB5CA /* ZoomLayer.swift */; };
+		BFAF1644165914D9C5E68E08 /* SpotlightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D08441E3DF2B08C29020C0 /* SpotlightTests.swift */; };
 		C0E1BB6FBA9964F717864C0A /* MediaPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729855882C124E9868E296EA /* MediaPlayback.swift */; };
 		C5556F841C55433A89A70D09 /* SlideTimesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B18E6F413A290C389173F2 /* SlideTimesTests.swift */; };
 		C9686955E4025936C8F87BDA /* PresentationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45181AAB2A04581F6E1C65D /* PresentationSession.swift */; };
@@ -102,6 +103,7 @@
 		7EC84655D132337872C5675F /* DeckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckTests.swift; sourceTree = "<group>"; };
 		80AE78C718DD0D750FF53023 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82915E8A78D8530C90C32B0D /* PresentKeyAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentKeyAction.swift; sourceTree = "<group>"; };
+		82D08441E3DF2B08C29020C0 /* SpotlightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightTests.swift; sourceTree = "<group>"; };
 		8620ED4D70A05C85EDA548C4 /* ZoomTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomTests.swift; sourceTree = "<group>"; };
 		886AB8AB9742B5A137F2557F /* MediaLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLayer.swift; sourceTree = "<group>"; };
 		9B00B9E798FFF9F9A0074BB7 /* Drawings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drawings.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				22A41BED5673410CCD51BD5E /* PresentationTests.swift */,
 				C1E2153726AB1E7BA205A8E0 /* SkipTests.swift */,
 				17B18E6F413A290C389173F2 /* SlideTimesTests.swift */,
+				82D08441E3DF2B08C29020C0 /* SpotlightTests.swift */,
 				D9B76DDADB6D797CAB637D5F /* TalkPlanTests.swift */,
 				DB5C98A58063B1A2E41A8E9D /* TransitionTests.swift */,
 				475F2D809C3D3091EB124157 /* TypstTests.swift */,
@@ -394,6 +397,7 @@
 				F7EA784847DB40052BF3FF60 /* PresentationTests.swift in Sources */,
 				DCECF27F91F364CC377DE003 /* SkipTests.swift in Sources */,
 				C5556F841C55433A89A70D09 /* SlideTimesTests.swift in Sources */,
+				BFAF1644165914D9C5E68E08 /* SpotlightTests.swift in Sources */,
 				90592C2E165C4A12F7F9C42E /* TalkPlanTests.swift in Sources */,
 				B7AA8583E6409C95DDA19EED /* TransitionTests.swift in Sources */,
 				4F6639FA5EDB460E7796612D /* TypstTests.swift in Sources */,

@@ -19,6 +19,7 @@ Small macOS app (macOS 14 or later) for presenting PDF slides.
 - **Remember the last page:** a PDF opens where you left off.
   - **Freeze (F):** the audience keeps the current slide while you browse in the presenter view (e.g. for questions). F or Esc again shows your slide again.
   - **Laser pointer (L):** the mouse pointer over the current slide (presenter view or audience) appears as a red dot for the audience – also with clickers that move the mouse pointer.
+  - **Spotlight (C):** the slide is dimmed for the audience except a soft circle around the mouse pointer (the presenter view shows it lighter); same tracking as the laser pointer, so it works from either window and while zoomed. Size in *Settings*. L and C switch between dot and spotlight.
   - **Zoom (M):** drag a rectangle on the current slide of the presenter view or on the audience view (or click for 2×) – the presenter view frames the slide and shows a hint while selecting; the audience sees that part enlarged, drawn as vectors (sharp). Pointer, drawings, videos and links follow. The presenter view shows the whole slide with the zoomed part framed. M, Esc or a page turn return to the whole slide.
   - **Swap displays (S):** audience and presenter view switch displays (wrong projector detected, cables swapped). The choice is remembered.
   - **Links in the PDF** (table of contents, Beamer navigation, URLs) are clickable – in the audience view and on the current slide of the presenter view. Internal links jump to the page, URLs open the browser, “Back” actions return to the page before the last link. A click outside a link advances the audience view.
@@ -60,6 +61,7 @@ typst eval 'query(<pdfpc-file>).first().value' --in talk.typ > talk.pdfpc   # Ty
 | P / R | pause / reset timer |
 | F | freeze audience view |
 | L | laser pointer on/off |
+| C | spotlight on/off |
 | M | zoom: select a part of the slide (drag or click) / whole slide again |
 | S | swap displays |
 | D / H / E | pen / highlighter / eraser (again: off) |

@@ -18,6 +18,7 @@ private struct PresentationSettings: View {
     @ObservedObject private var screens = PresentationScreens.shared
     @AppStorage(PageTransition.enabledKey) private var transitionsEnabled = true
     @AppStorage(PresentationSession.timerStartsOnFirstTurnKey) private var timerStartsOnFirstTurn = true
+    @AppStorage(LaserPointer.spotlightRadiusKey) private var spotlightRadius = LaserPointer.defaultSpotlightRadius
 
     var body: some View {
         Form {
@@ -31,6 +32,13 @@ private struct PresentationSettings: View {
             Toggle("Presenter View in Full Screen", isOn: $screens.presenterFullScreen)
             Toggle("Play Transitions from the PDF", isOn: $transitionsEnabled)
             Toggle("Timer starts on the first page turn", isOn: $timerStartsOnFirstTurn)
+            Slider(value: $spotlightRadius, in: LaserPointer.spotlightRadiusRange) {
+                Text("Spotlight size")
+            } minimumValueLabel: {
+                Image(systemName: "circle.fill").imageScale(.small)
+            } maximumValueLabel: {
+                Image(systemName: "circle.fill").imageScale(.large)
+            }
         }
         .formStyle(.grouped)
         .fixedSize(horizontal: false, vertical: true)   // window as tall as the tab

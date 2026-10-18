@@ -133,7 +133,7 @@ struct PresenterView: View {
                 }
                 .overlay {
                     LaserPointerLayer(pointer: session.pointer, page: deck.page(index),
-                                      region: deck.notesLayout.slideRegion) { point in
+                                      region: deck.notesLayout.slideRegion, spotlightDimming: 0.45) { point in
                         _ = session.click(atNormalized: point, pageIndex: index)
                     }
                 }
@@ -316,7 +316,7 @@ struct PresenterView: View {
             }
             .toggleStyle(.button)
             .help("The audience keeps the current slide while you browse (F)")
-            PointerToggle(pointer: session.pointer) { session.handle(.togglePointer) }
+            PointerToggle(pointer: session.pointer) { session.handle($0 == .spotlight ? .toggleSpotlight : .togglePointer) }
             Toggle(isOn: Binding(get: { session.isSelectingZoom || session.zoom != nil },
                                  set: { _ in session.handle(.toggleZoom) })) {
                 Label("Zoom", systemImage: "plus.magnifyingglass")
@@ -327,7 +327,7 @@ struct PresenterView: View {
             Button(action: swapScreens) { Label("Swap", systemImage: "arrow.left.arrow.right") }
                 .help("Audience and presenter view swap displays (S)")
                 .disabled(screens.windowed || screens.screens.count < 2)
-            Text("← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · M zoom · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end")
+            Text("← → Page↑↓ Space · ⇧ skip overlays · number ⏎ jump · B/W black/white · F freeze · L laser pointer · C spotlight · M zoom · S swap displays · D/H/E pen/highlighter/eraser · Z/X undo/clear · Tab overview · P timer · double-click edit notes · Esc end")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -403,16 +403,22 @@ private struct DrawingTools: View {
     }
 }
 
+/// Laser pointer and spotlight (two styles of the same pointer; at most one is on).
 private struct PointerToggle: View {
     @ObservedObject var pointer: LaserPointer
-    let toggle: () -> Void
+    let toggle: (LaserPointer.Style) -> Void
 
     var body: some View {
-        Toggle(isOn: Binding(get: { pointer.isEnabled }, set: { _ in toggle() })) {
+        Toggle(isOn: Binding(get: { pointer.isEnabled && pointer.style == .dot }, set: { _ in toggle(.dot) })) {
             Label("Laser Pointer", systemImage: "circle.circle.fill")
         }
         .toggleStyle(.button)
         .help("The mouse pointer over the current slide appears as a red dot for the audience (L)")
+        Toggle(isOn: Binding(get: { pointer.isEnabled && pointer.style == .spotlight }, set: { _ in toggle(.spotlight) })) {
+            Label("Spotlight", systemImage: "flashlight.on.fill")
+        }
+        .toggleStyle(.button)
+        .help("The audience sees the slide dimmed except a circle around the mouse pointer (C)")
     }
 }
 
