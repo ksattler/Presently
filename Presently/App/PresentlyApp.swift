@@ -4,6 +4,7 @@ import SwiftUI
 struct PresentlyApp: App {
     init() {
         LegacySettings.migrate(from: "com.pdfpresenter.app", to: .standard)
+        _ = Updater.shared   // starts Sparkle's scheduled checks
     }
 
     var body: some Scene {
@@ -54,6 +55,7 @@ struct AppCommands: Commands {
     var body: some Commands {
         CommandGroup(replacing: .appInfo) {
             Button("About Presently") { AboutPanel.show() }
+            CheckForUpdatesButton()
         }
         CommandGroup(replacing: .help) {
             // No ⌘? here: the system reserves it for the Help menu search, which lists this item first.

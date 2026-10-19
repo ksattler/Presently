@@ -48,5 +48,11 @@
 	<string>© 2026 Kai-Uwe Sattler</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://github.com/ksattler/Presently/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>a5wc3IxJhtQ4VyE9+hPHmVrFF+AvVg1d3oKc8AL52Uw=</string>
 </dict>
 </plist>

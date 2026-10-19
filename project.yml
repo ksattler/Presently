@@ -21,6 +21,11 @@ settings:
     DEAD_CODE_STRIPPING: YES
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    majorVersion: 2.6.0
+
 targets:
   Presently:
     type: application
@@ -28,6 +33,8 @@ targets:
     deploymentTarget: "14.0"
     sources:
       - path: Presently
+    dependencies:
+      - package: Sparkle
     entitlements:
       path: Presently/Presently.entitlements
     settings:
@@ -53,6 +60,11 @@ targets:
         NSPrincipalClass: NSApplication
         LSMinimumSystemVersion: "$(MACOSX_DEPLOYMENT_TARGET)"
         LSApplicationCategoryType: public.app-category.productivity
+        # Sparkle: appcast.xml is an asset of every GitHub release (scripts/release.sh), so this
+        # URL always points to the latest published one; drafts stay invisible.
+        SUFeedURL: https://github.com/ksattler/Presently/releases/latest/download/appcast.xml
+        SUPublicEDKey: "a5wc3IxJhtQ4VyE9+hPHmVrFF+AvVg1d3oKc8AL52Uw="
+        SUEnableAutomaticChecks: true
         CFBundleDocumentTypes:
           - CFBundleTypeName: PDF
             CFBundleTypeRole: Viewer

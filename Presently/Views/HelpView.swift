@@ -41,6 +41,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             String(localized: "A PDF opens on the page where you left off. Presently never changes the PDF itself."),
             String(localized: "**Settings** (⌘,) gather the display, rehearsal, transition, timer and presenter layout options in one place."),
             String(localized: "**Clickers** work without setup: they send keys such as Page Up/Page Down, B or “.”, F5 and Esc, which Presently understands."),
+            String(localized: "**Updates:** Presently checks for new versions once a day and offers to install them. *Presently → Check for Updates…* checks right away; automatic checks can be turned off in the settings."),
         ]
         case .presenting: [
             String(localized: "**Start** with ⌘⏎, F5 or ▶︎ in the toolbar. **End** with ⌘⏎ or Esc – Esc first closes an open overview, input, drawing mode, black screen or freeze."),

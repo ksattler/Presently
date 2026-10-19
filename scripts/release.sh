@@ -1,6 +1,8 @@
 #!/bin/bash
 # Builds Presently, signs it with Developer ID, notarizes and staples it, and uploads the zip
-# as a draft GitHub release (publish it on GitHub after checking).
+# and a Sparkle appcast.xml as a draft GitHub release (publish it on GitHub after checking).
+# Installed copies find the update once the release is published: SUFeedURL points to
+# releases/latest/download/appcast.xml.
 #
 # Usage: scripts/release.sh 1.0.0
 #
@@ -10,6 +12,10 @@
 #   - notary credentials in the keychain:
 #     xcrun notarytool store-credentials presently-notary --apple-id <id> --team-id 7XW8432Z53
 #   - gh logged in, repository with a GitHub remote, HEAD pushed
+#   - Sparkle EdDSA key in the keychain, its public key as SUPublicEDKey in project.yml:
+#     build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys
+#     (after one run of this script or `xcodebuild -resolvePackageDependencies
+#     -clonedSourcePackagesDirPath build/SourcePackages`; back up the key: generate_keys -x <file>)
 set -euo pipefail
 
 VERSION=${1:?usage: scripts/release.sh <version>, e.g. 1.0.0}
@@ -19,6 +25,9 @@ TAG="v$VERSION"
 OUT=build/release
 APP="$OUT/export/Presently.app"
 ZIP="$OUT/Presently-$VERSION.zip"
+PACKAGES=build/SourcePackages     # outside $OUT: kept between releases
+SPARKLE_BIN="$PACKAGES/artifacts/sparkle/Sparkle/bin"
+REPO_URL=https://github.com/ksattler/Presently
 
 cd "$(dirname "$0")/.."
 
@@ -37,6 +46,10 @@ gh auth status >/dev/null 2>&1 || die "gh is not logged in (gh auth login)"
 gh release view "$TAG" >/dev/null 2>&1 && die "release $TAG already exists"
 git fetch --quiet
 [[ -n $(git branch -r --contains HEAD) ]] || die "HEAD is not pushed"
+grep -q "SUPublicEDKey: \"SPARKLE_PUBLIC_KEY\"" project.yml && die "SUPublicEDKey in project.yml is still the placeholder"
+xcodebuild -resolvePackageDependencies -quiet -project Presently.xcodeproj -clonedSourcePackagesDirPath "$PACKAGES"
+"$SPARKLE_BIN/generate_keys" -p >/dev/null 2>&1 \
+    || die "no Sparkle signing key in the keychain ($SPARKLE_BIN/generate_keys)"
 
 # Build number: commit count, so it grows with every release.
 BUILD=$(git rev-list --count HEAD)
@@ -46,6 +59,7 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 xcodebuild archive -quiet -project Presently.xcodeproj -scheme Presently -configuration Release \
     -destination "generic/platform=macOS" -archivePath "$OUT/Presently.xcarchive" \
+    -clonedSourcePackagesDirPath "$PACKAGES" \
     MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD"
 
 step "Exporting with Developer ID"
@@ -84,4 +98,16 @@ ditto -c -k --keepParent "$APP" "$ZIP"
 step "Creating draft release $TAG"
 gh release create "$TAG" "$ZIP" --draft --target "$(git rev-parse HEAD)" \
     --title "Presently $VERSION" --generate-notes
+
+# One item per appcast: older versions only need to learn about the newest one.
+# The release notes (GitHub's generated ones, Markdown) are embedded; edits made on GitHub
+# afterwards don't reach the appcast.
+step "Generating appcast"
+mkdir -p "$OUT/appcast"
+cp "$ZIP" "$OUT/appcast/"
+gh release view "$TAG" --json body --jq .body > "$OUT/appcast/Presently-$VERSION.md"
+"$SPARKLE_BIN/generate_appcast" "$OUT/appcast" --embed-release-notes \
+    --download-url-prefix "$REPO_URL/releases/download/$TAG/" \
+    --full-release-notes-url "$REPO_URL/releases" --link "$REPO_URL"
+gh release upload "$TAG" "$OUT/appcast/appcast.xml"
 echo "Draft created — check it and publish it on GitHub."

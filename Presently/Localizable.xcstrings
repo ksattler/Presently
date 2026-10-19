@@ -311,6 +311,16 @@
         }
       }
     },
+    "**Updates:** Presently checks for new versions once a day and offers to install them. *Presently → Check for Updates…* checks right away; automatic checks can be turned off in the settings.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Updates:** Presently sucht einmal täglich nach neuen Versionen und bietet an, sie zu installieren. *Presently → Nach Updates suchen …* sucht sofort; die automatische Suche lässt sich in den Einstellungen abschalten."
+          }
+        }
+      }
+    },
     "**Videos** from the PDF play inside the slide: LaTeX Beamer's `\\movie` (with autostart, loop, start, duration) and links like `run:clip.mp4?autostart&loop`. The video file lies next to the PDF. Click a video to play or pause it; the presenter view shows its progress.": {
       "localizations": {
         "de": {
@@ -507,6 +517,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nicht speicherbar (keine Datei)"
+          }
+        }
+      }
+    },
+    "Check Now": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt suchen"
+          }
+        }
+      }
+    },
+    "Check for Updates…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Updates suchen …"
+          }
+        }
+      }
+    },
+    "Check for updates automatically": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch nach Updates suchen"
           }
         }
       }
@@ -1847,6 +1887,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Folgende Seiten"
+          }
+        }
+      }
+    },
+    "Updates": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates"
           }
         }
       }

@@ -38,6 +38,7 @@ MediaPlayback         AVPlayers of the audience page (ObservableObject like Lase
 TalkPlan / TalkLimit  remaining time, pace, talk progress; LastPageStore (UserDefaults)
 SettingsView          Settings scene (⌘,): same UserDefaults keys as the menus / schedule popover
 HelpView / HelpTopic  help window (Window scene, menu Help → Presently Help): topics, Markdown paragraphs, search
+Updater               Sparkle (SPM) wrapper: menu Check for Updates…, Settings → Updates; not started in DEBUG/tests
 ```
 
 ## Conventions
@@ -70,4 +71,5 @@ HelpView / HelpTopic  help window (Window scene, menu Help → Presently Help): 
 - **Help:** `HelpTopic.paragraphs` are inline Markdown via `String(localized:)` — keep them in sync with the features (README) and translate each into German with matching `**`/`*`/`` ` `` markers. The keys topic shows `AboutPanel.shortcuts`. No ⌘? on the menu item: the system reserves it for the Help menu search.
 - **About panel:** standard panel (`AboutPanel`), copyright from `NSHumanReadableCopyright` in `project.yml`, credits = key list `AboutPanel.shortcuts` — keep it in sync with `PresentKeyAction`.
 - **Localization:** UI strings are English keys in `Presently/Localizable.xcstrings` with German translations. SwiftUI literals (`Text("…")`, `.help("…")`) are localized automatically; strings held as `String` (titles, errors, ternaries, `caption(_:)`) need `String(localized:)`. Keys must be unique per meaning — e.g. "Up Next" (Nächste) vs. "Next" (Weiter). Tests compare against `String(localized:)`, not literal German. The build extracts keys into `*.stringsdata`; every one must have a `de` entry.
+- **Updates:** Sparkle 2, feed `releases/latest/download/appcast.xml` (asset of each GitHub release, so drafts stay invisible), EdDSA public key `SUPublicEDKey` in `project.yml`, private key in the keychain. `scripts/release.sh` embeds GitHub's release notes and uploads the signed one-item appcast. Build number = commit count (Sparkle compares `CFBundleVersion`).
 - **Tests** build PDFs in code (`PDFFixture`: page labels, text annotations, red/blue halves).

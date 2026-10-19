@@ -9,6 +9,8 @@ struct SettingsView: View {
                 .tabItem { Label("Presentation", systemImage: "play.rectangle") }
             PresenterViewSettings()
                 .tabItem { Label("Presenter View", systemImage: "rectangle.split.3x1") }
+            UpdateSettings()
+                .tabItem { Label("Updates", systemImage: "arrow.down.circle") }
         }
         .frame(width: 460)
     }
@@ -71,5 +73,23 @@ private struct PresenterViewSettings: View {
         }
         .formStyle(.grouped)
         .fixedSize(horizontal: false, vertical: true)   // window as tall as the tab
+    }
+}
+
+private struct UpdateSettings: View {
+    @ObservedObject private var updater = Updater.shared
+
+    var body: some View {
+        Form {
+            Toggle("Check for updates automatically", isOn: $updater.automaticallyChecksForUpdates)
+            HStack {
+                Spacer()
+                Button("Check Now") { updater.checkForUpdates() }
+                    .disabled(!updater.canCheckForUpdates)
+            }
+        }
+        .formStyle(.grouped)
+        .fixedSize(horizontal: false, vertical: true)   // window as tall as the tab
+        .disabled(!updater.isAvailable)
     }
 }
