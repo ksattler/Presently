@@ -13,9 +13,10 @@ The app is localized for English (source language) and German; the README is Eng
 ```bash
 xcodegen generate     # regenerate Presently.xcodeproj from project.yml — required after adding/removing files;
                       # settings made only in Xcode get lost, so they belong in project.yml
-xcodebuild -project Presently.xcodeproj -scheme Presently build
-xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
+xcodebuild -project Presently.xcodeproj -scheme Presently -skipPackagePluginValidation build
+xcodebuild test -project Presently.xcodeproj -scheme Presently -skipPackagePluginValidation CODE_SIGN_IDENTITY=-
 xcodebuild test ... -only-testing:PresentlyTests/SlideDeckTests    # single test class
+swiftlint                  # lint (also runs in every build via the SwiftLint plugin; config .swiftlint.yml)
 scripts/release.sh 1.0.0   # Developer ID archive → notarize → staple → zip → draft GitHub release (setup: see script header)
 ```
 
@@ -72,4 +73,5 @@ Updater               Sparkle (SPM) wrapper: menu Check for Updates…, Settings
 - **About panel:** standard panel (`AboutPanel`), copyright from `NSHumanReadableCopyright` in `project.yml`, credits = key list `AboutPanel.shortcuts` — keep it in sync with `PresentKeyAction`.
 - **Localization:** UI strings are English keys in `Presently/Localizable.xcstrings` with German translations. SwiftUI literals (`Text("…")`, `.help("…")`) are localized automatically; strings held as `String` (titles, errors, ternaries, `caption(_:)`) need `String(localized:)`. Keys must be unique per meaning — e.g. "Up Next" (Nächste) vs. "Next" (Weiter). Tests compare against `String(localized:)`, not literal German. The build extracts keys into `*.stringsdata`; every one must have a `de` entry.
 - **Updates:** Sparkle 2, feed `releases/latest/download/appcast.xml` (asset of each GitHub release, so drafts stay invisible), EdDSA public key `SUPublicEDKey` in `project.yml`, private key in the keychain. `scripts/release.sh` embeds GitHub's release notes and uploads the signed one-item appcast. Build number = commit count (Sparkle compares `CFBundleVersion`).
+- **SwiftLint:** build tool plugin (`SwiftLintPlugins`, pinned like the Homebrew version) on both targets; lint errors fail the build. Command-line builds need `-skipPackagePluginValidation`, Xcode asks once to trust the plugin. `.swiftlint.yml` is tuned to the code's style (short math names, trailing commas, one-line `else if` chains); long single-string lines (localized help, fixtures) are exempt. Silence a rule only with `// swiftlint:disable:next <rule>` and a reason on the line above.
 - **Tests** build PDFs in code (`PDFFixture`: page labels, text annotations, red/blue halves).

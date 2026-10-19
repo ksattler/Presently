@@ -59,7 +59,7 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 xcodebuild archive -quiet -project Presently.xcodeproj -scheme Presently -configuration Release \
     -destination "generic/platform=macOS" -archivePath "$OUT/Presently.xcarchive" \
-    -clonedSourcePackagesDirPath "$PACKAGES" \
+    -clonedSourcePackagesDirPath "$PACKAGES" -skipPackagePluginValidation \
     MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD"
 
 step "Exporting with Developer ID"

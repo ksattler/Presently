@@ -25,6 +25,9 @@ packages:
   Sparkle:
     url: https://github.com/sparkle-project/Sparkle
     majorVersion: 2.6.0
+  SwiftLintPlugins:
+    url: https://github.com/SimplyDanny/SwiftLintPlugins
+    exactVersion: 0.65.1   # same as `brew install swiftlint`, so command line and build agree
 
 targets:
   Presently:
@@ -35,6 +38,9 @@ targets:
       - path: Presently
     dependencies:
       - package: Sparkle
+    buildToolPlugins:
+      - plugin: SwiftLintBuildToolPlugin
+        package: SwiftLintPlugins
     entitlements:
       path: Presently/Presently.entitlements
     settings:
@@ -80,6 +86,9 @@ targets:
       - path: PresentlyTests
     dependencies:
       - target: Presently
+    buildToolPlugins:
+      - plugin: SwiftLintBuildToolPlugin
+        package: SwiftLintPlugins
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.presently.app.tests

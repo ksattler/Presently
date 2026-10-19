@@ -219,10 +219,14 @@ struct PresenterView: View {
                     Text("all overlays").font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
-                Button { notesFontSize = max(PresenterLayout.notesFontSizeRange.lowerBound, notesFontSize - 2) } label: { Image(systemName: "textformat.size.smaller") }
-                    .help("Smaller text")
-                Button { notesFontSize = min(PresenterLayout.notesFontSizeRange.upperBound, notesFontSize + 2) } label: { Image(systemName: "textformat.size.larger") }
-                    .help("Larger text")
+                Button { notesFontSize = max(PresenterLayout.notesFontSizeRange.lowerBound, notesFontSize - 2) } label: {
+                    Image(systemName: "textformat.size.smaller")
+                }
+                .help("Smaller text")
+                Button { notesFontSize = min(PresenterLayout.notesFontSizeRange.upperBound, notesFontSize + 2) } label: {
+                    Image(systemName: "textformat.size.larger")
+                }
+                .help("Larger text")
                 Button { isEditingNotes.toggle() } label: {
                     Image(systemName: isEditingNotes ? "checkmark.circle.fill" : "pencil")
                 }

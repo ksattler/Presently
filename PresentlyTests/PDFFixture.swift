@@ -48,13 +48,15 @@ enum PDFFixture {
                 case .uri(let u):   target = "/A << /S /URI /URI (\(u)) >>"
                 case .named(let n): target = "/A << /S /Named /N /\(n) >>"
                 }
-                annots.append(add("<< /Type /Annot /Subtype /Link /Rect [\(Int(r.minX)) \(Int(r.minY)) \(Int(r.maxX)) \(Int(r.maxY))] /Border [0 0 0] \(target) >>"))
+                let rect = "[\(Int(r.minX)) \(Int(r.minY)) \(Int(r.maxX)) \(Int(r.maxY))]"
+                annots.append(add("<< /Type /Annot /Subtype /Link /Rect \(rect) /Border [0 0 0] \(target) >>"))
             }
             for a in page.annotations { annots.append(add(a)) }
             let annotsEntry = annots.isEmpty ? "" : " /Annots [\(annots.map { "\($0) 0 R" }.joined(separator: " "))]"
             let trans = page.transition.map { " /Trans << \($0) >>" } ?? ""
             let entries = page.entries.map { " \($0)" } ?? ""
-            objects[kids[i] - 1] = "<< /Type /Page /Parent \(pagesObj) 0 R /MediaBox [0 0 \(w) \(h)] /Rotate \(rotation) /Contents \(stream) 0 R\(annotsEntry)\(trans)\(entries) >>"
+            objects[kids[i] - 1] = "<< /Type /Page /Parent \(pagesObj) 0 R /MediaBox [0 0 \(w) \(h)] /Rotate \(rotation)"
+                + " /Contents \(stream) 0 R\(annotsEntry)\(trans)\(entries) >>"
         }
         objects[pagesObj - 1] = "<< /Type /Pages /Kids [\(kids.map { "\($0) 0 R" }.joined(separator: " "))] /Count \(kids.count) >>"
         var labels = ""
