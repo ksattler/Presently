@@ -4,31 +4,31 @@ import XCTest
 
 /// The decisions of `PresentationController`, without windows or displays.
 final class ControllerDecisionTests: XCTestCase {
-    private typealias C = PresentationController
+    private typealias Controller = PresentationController
     private typealias Key = PresentKeyAction.KeyCode
 
     // MARK: Event routing
 
-    private func key(_ code: UInt16 = 0, _ characters: String? = nil, from source: C.EventSource = .audience,
-                     editingText: Bool = false, modifiers: NSEvent.ModifierFlags = []) -> C.EventRoute {
-        C.route(.init(kind: .key, source: source, editingText: editingText, keyCode: code,
+    private func key(_ code: UInt16 = 0, _ characters: String? = nil, from source: Controller.EventSource = .audience,
+                     editingText: Bool = false, modifiers: NSEvent.ModifierFlags = []) -> Controller.EventRoute {
+        Controller.route(.init(kind: .key, source: source, editingText: editingText, keyCode: code,
                       characters: characters, modifiers: modifiers))
     }
 
     func testClicksOnTheAudienceView() {
-        XCTAssertEqual(C.route(.init(kind: .leftClick, source: .audience)), .clickOnAudience)
-        XCTAssertEqual(C.route(.init(kind: .rightClick, source: .audience)), .previous)
-        XCTAssertEqual(C.route(.init(kind: .leftClick, source: .audience, clickCount: 2)), .passThrough,
+        XCTAssertEqual(Controller.route(.init(kind: .leftClick, source: .audience)), .clickOnAudience)
+        XCTAssertEqual(Controller.route(.init(kind: .rightClick, source: .audience)), .previous)
+        XCTAssertEqual(Controller.route(.init(kind: .leftClick, source: .audience, clickCount: 2)), .passThrough,
                        "the second click of a double click doesn't turn again")
-        XCTAssertEqual(C.route(.init(kind: .leftClick, source: .audience, audienceTakesDrags: true)), .passThrough,
+        XCTAssertEqual(Controller.route(.init(kind: .leftClick, source: .audience, audienceTakesDrags: true)), .passThrough,
                        "drawing or selecting a zoom")
-        XCTAssertEqual(C.route(.init(kind: .rightClick, source: .audience, audienceTakesDrags: true)), .previous)
+        XCTAssertEqual(Controller.route(.init(kind: .rightClick, source: .audience, audienceTakesDrags: true)), .previous)
     }
 
     func testClicksElsewhereAreLeftAlone() {
-        for kind in [C.EventInput.Kind.leftClick, .rightClick] {
-            XCTAssertEqual(C.route(.init(kind: kind, source: .presenter)), .passThrough, "presenter view handles its own")
-            XCTAssertEqual(C.route(.init(kind: kind, source: .other)), .passThrough)
+        for kind in [Controller.EventInput.Kind.leftClick, .rightClick] {
+            XCTAssertEqual(Controller.route(.init(kind: kind, source: .presenter)), .passThrough, "presenter view handles its own")
+            XCTAssertEqual(Controller.route(.init(kind: kind, source: .other)), .passThrough)
         }
     }
 
@@ -58,20 +58,20 @@ final class ControllerDecisionTests: XCTestCase {
 
     func testNormalizedClickIsYDown() throws {
         let slide = CGRect(x: 100, y: 50, width: 400, height: 300)
-        let topLeft = try XCTUnwrap(C.normalized(CGPoint(x: 100, y: 350), in: slide))
+        let topLeft = try XCTUnwrap(Controller.normalized(CGPoint(x: 100, y: 350), in: slide))
         XCTAssertEqual(topLeft, CGPoint(x: 0, y: 0))
-        let p = try XCTUnwrap(C.normalized(CGPoint(x: 400, y: 125), in: slide))
+        let p = try XCTUnwrap(Controller.normalized(CGPoint(x: 400, y: 125), in: slide))
         XCTAssertEqual(p.x, 0.75, accuracy: 1e-9)
         XCTAssertEqual(p.y, 0.75, accuracy: 1e-9)
-        XCTAssertEqual(C.normalized(CGPoint(x: 0, y: 0), in: slide)?.x, -0.25, "letterbox: outside 0…1, no link there")
-        XCTAssertNil(C.normalized(.zero, in: CGRect(x: 0, y: 0, width: 0, height: 300)))
+        XCTAssertEqual(Controller.normalized(CGPoint(x: 0, y: 0), in: slide)?.x, -0.25, "letterbox: outside 0…1, no link there")
+        XCTAssertNil(Controller.normalized(.zero, in: CGRect(x: 0, y: 0, width: 0, height: 300)))
     }
 
     // MARK: Displays connected / disconnected
 
     private func update(_ intended: CGDirectDisplayID, _ presenter: CGDirectDisplayID?, _ available: [CGDirectDisplayID])
-        -> C.PlacementUpdate {
-        C.placementUpdate(intended: intended, presenter: presenter, available: available)
+        -> Controller.PlacementUpdate {
+        Controller.placementUpdate(intended: intended, presenter: presenter, available: available)
     }
 
     func testNothingChangesWhileEverythingIsConnected() {
@@ -118,17 +118,17 @@ final class ControllerDecisionTests: XCTestCase {
 
     func testMenuBarHiddenOnlyOnItsDisplay() {
         let saved: NSApplication.PresentationOptions = [.autoHideToolbar]
-        XCTAssertEqual(C.presentationOptions(coveringMenuBarDisplay: true, saved: saved), [.autoHideMenuBar, .autoHideDock])
-        XCTAssertEqual(C.presentationOptions(coveringMenuBarDisplay: false, saved: saved), saved)
+        XCTAssertEqual(Controller.presentationOptions(coveringMenuBarDisplay: true, saved: saved), [.autoHideMenuBar, .autoHideDock])
+        XCTAssertEqual(Controller.presentationOptions(coveringMenuBarDisplay: false, saved: saved), saved)
     }
 
     func testRehearsalWindowIsCenteredAndFits() {
         let visible = CGRect(x: 0, y: 25, width: 1440, height: 875)
-        let f = C.rehearsalFrame(in: visible)
+        let f = Controller.rehearsalFrame(in: visible)
         XCTAssertEqual(f.size, CGSize(width: 960, height: 540))
         XCTAssertEqual(f.midX, visible.midX)
         XCTAssertEqual(f.midY, visible.midY)
         let tiny = CGRect(x: 0, y: 0, width: 800, height: 500)
-        XCTAssertTrue(tiny.contains(C.rehearsalFrame(in: tiny)))
+        XCTAssertTrue(tiny.contains(Controller.rehearsalFrame(in: tiny)))
     }
 }
