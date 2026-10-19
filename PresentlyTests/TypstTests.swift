@@ -35,6 +35,7 @@ final class TypstTests: XCTestCase {
         let push = PageTransition(style: .push, duration: 1, horizontal: true, inward: false, direction: 0)
         XCTAssertEqual(deck.transition(from: 0, to: 1), push, "Typst can't write /Trans: pdfpc's default applies")
         XCTAssertNil(deck.transition(from: 0, to: 2), "still only when moving on")
+        XCTAssertNil(deck.transition(from: 3, to: 4), "not between the overlays of a slide")
     }
 
     func testSavingKeepsTouyingsKeys() throws {

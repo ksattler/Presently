@@ -4,10 +4,47 @@ import PDFKit
 /// writes it with `\transdissolve`, `\transwipe`, `\transpush` etc. Played when the audience
 /// view moves forward onto that page.
 struct PageTransition: Equatable {
-    enum Style: String {
+    /// The 12 PDF styles (raw value = `/S` name) and our own ones, which neither PDF nor pdfpc know.
+    enum Style: String, CaseIterable, Identifiable {
         case replace = "R", dissolve = "Dissolve", fade = "Fade", glitter = "Glitter"
         case wipe = "Wipe", push = "Push", cover = "Cover", uncover = "Uncover", fly = "Fly"
         case split = "Split", blinds = "Blinds", box = "Box"
+        case fadeThroughBlack = "FadeThroughBlack", zoom = "Zoom", flip = "Flip", cube = "Cube", moveIn = "MoveIn"
+
+        var id: Self { self }
+
+        /// Part of the PDF spec — and of pdfpc, whose transition names are the same.
+        var isStandard: Bool { ![.fadeThroughBlack, .zoom, .flip, .cube, .moveIn].contains(self) }
+
+        /// Name in pdfpc's transition string (ours use the same scheme).
+        var pdfpcName: String { self == .replace ? "replace" : rawValue.lowercased() }
+
+        /// Which of the parameters the style uses.
+        var hasDirection: Bool { [.wipe, .push, .cover, .uncover, .fly, .glitter, .flip, .cube, .moveIn].contains(self) }
+        var hasLineOrientation: Bool { [.split, .blinds].contains(self) }
+        var hasInOut: Bool { [.split, .box, .zoom].contains(self) }
+
+        var title: String {
+            switch self {
+            case .replace:          String(localized: "No Transition")
+            case .dissolve:         String(localized: "Dissolve")
+            case .fade:             String(localized: "Fade")
+            case .glitter:          String(localized: "Glitter")
+            case .wipe:             String(localized: "Wipe")
+            case .push:             String(localized: "Push")
+            case .cover:            String(localized: "Cover")
+            case .uncover:          String(localized: "Uncover")
+            case .fly:              String(localized: "Fly In")
+            case .split:            String(localized: "Split")
+            case .blinds:           String(localized: "Blinds")
+            case .box:              String(localized: "Box")
+            case .fadeThroughBlack: String(localized: "Fade through Black")
+            case .zoom:             String(localized: "Zoom")
+            case .flip:             String(localized: "Flip")
+            case .cube:             String(localized: "Cube")
+            case .moveIn:           String(localized: "Move In")
+            }
+        }
     }
 
     var style: Style
@@ -20,7 +57,7 @@ struct PageTransition: Equatable {
     /// `/Di`: direction of motion in degrees, counterclockwise from left-to-right (default 0).
     var direction = 0
 
-    /// UserDefaults: play transitions at all.
+    /// UserDefaults: play transitions at all (from the PDF and the document's own).
     static let enabledKey = "pdfTransitionsEnabled"
     static let durationRange: ClosedRange<Double> = 0.05...5
 
@@ -32,7 +69,7 @@ struct PageTransition: Equatable {
 
         var t = PageTransition(style: .replace)
         if let s = name(trans, "S") {
-            guard let style = Style(rawValue: s) else { return PageTransition(style: .dissolve) }  // unknown: something soft
+            guard let style = Style(rawValue: s), style.isStandard else { return PageTransition(style: .dissolve) }  // unknown: something soft
             t.style = style
         }
         var d: CGPDFReal = 0
@@ -47,14 +84,12 @@ struct PageTransition: Equatable {
     /// pdfpc's transition string (`defaultTransition` in the `.pdfpc` file, as Typst's Touying
     /// and Polylux write it — Typst can't put `/Trans` into the PDF):
     /// `type[:duration[:angle[:alignment[:direction]]]]`, e.g. `push:1:0:horizontal:outward`.
+    /// Also reads our own styles in the same scheme (`presentlyTransition`).
     static func parse(pdfpc s: String) -> PageTransition? {
         let parts = s.split(separator: ":", omittingEmptySubsequences: false).map { $0.trimmingCharacters(in: .whitespaces) }
-        guard let type = parts.first?.lowercased(), !type.isEmpty else { return nil }
-        let style: Style
-        if type == "replace" { style = .replace } else {
-            guard let s = Style(rawValue: type.prefix(1).uppercased() + type.dropFirst()) else { return nil }
-            style = s
-        }
+        guard let type = parts.first?.lowercased(), !type.isEmpty,
+              let style = Style.allCases.first(where: { $0.pdfpcName == type })
+        else { return nil }
         var t = PageTransition(style: style)
         if parts.count > 1, let d = Double(parts[1]) {
             t.duration = min(max(d, durationRange.lowerBound), durationRange.upperBound)
@@ -63,6 +98,13 @@ struct PageTransition: Equatable {
         if parts.count > 3 { t.horizontal = parts[3].lowercased() != "vertical" }
         if parts.count > 4 { t.inward = parts[4].lowercased() != "outward" }
         return t
+    }
+
+    /// The pdfpc transition string, complete so that pdfpc reads it as meant.
+    var pdfpcString: String {
+        let d = duration == duration.rounded() ? String(Int(duration)) : String(duration)
+        return [style.pdfpcName, d, String(direction), horizontal ? "horizontal" : "vertical", inward ? "inward" : "outward"]
+            .joined(separator: ":")
     }
 
     private static func name(_ dict: CGPDFDictionaryRef, _ key: String) -> String? {

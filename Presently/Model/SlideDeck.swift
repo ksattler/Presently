@@ -40,8 +40,16 @@ final class SlideDeck: ObservableObject {
     @Published private(set) var embeddedNotes: [Int: String]
     /// Page index → transition when moving onto that page (`/Trans`).
     @Published private(set) var transitions: [Int: PageTransition]
-    /// For pages without their own: pdfpc's `defaultTransition` from the sidecar (Typst slides).
-    let defaultTransition: PageTransition?
+    /// The document's transition for pages without their own `/Trans`, played only when a new
+    /// slide begins (not between overlays). From the sidecar: pdfpc's `defaultTransition`
+    /// (Typst slides) or our `presentlyTransition`; chosen in the app. nil or `.replace`: none.
+    @Published var defaultTransition: PageTransition? {
+        didSet {
+            guard defaultTransition != oldValue else { return }
+            sidecar.defaultTransition = defaultTransition
+            scheduleSave()
+        }
+    }
     /// Notes are Markdown unless the sidecar says otherwise (pdfpc's `disableMarkdown`).
     let notesAreMarkdown: Bool
     /// Counts reloads; views that cache per page (thumbnails) key on it.
@@ -129,10 +137,13 @@ final class SlideDeck: ObservableObject {
     }
 
     /// Transition to play when the audience view goes from page `old` to `new`.
-    /// Also across skipped pages: moving on to the next shown page counts as "next". Pages
-    /// without `/Trans` use the sidecar's default transition.
+    /// Also across skipped pages: moving on to the next shown page counts as "next". `/Trans`
+    /// from the PDF plays on every page; the document's transition only where a new slide
+    /// begins — between the overlays of a slide it would distract.
     func transition(from old: Int, to new: Int) -> PageTransition? {
-        PageTransition.plays(from: old, to: new) || nextShown(after: old) == new ? transitions[new] ?? defaultTransition : nil
+        guard PageTransition.plays(from: old, to: new) || nextShown(after: old) == new else { return nil }
+        if let own = transitions[new] { return own }
+        return overlayGroup(of: old) == overlayGroup(of: new) ? nil : defaultTransition
     }
 
     /// Last page of pdfpc's user slide `n` (0-based; consecutive pages with equal labels are
@@ -281,7 +292,7 @@ final class SlideDeck: ObservableObject {
         sidecar.hiddenPages = hiddenPages
         let url = PdfpcFile.url(forPDF: fileURL)
         // Nothing to store and no file yet: don't create an empty sidecar.
-        if notes.isEmpty, talkLimit == .none, endPage == nil, hiddenPages.isEmpty, !FileManager.default.fileExists(atPath: url.path) { return }
+        if notes.isEmpty, talkLimit == .none, endPage == nil, hiddenPages.isEmpty, defaultTransition == nil, !FileManager.default.fileExists(atPath: url.path) { return }
         do {
             try sidecar.serialized(pageLabels: labels).write(to: url, options: .atomic)
             saveError = nil
