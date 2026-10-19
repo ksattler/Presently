@@ -142,6 +142,24 @@ enum PageTransitionAnimator {
             container.addSublayer(o)
             container.addSublayer(n)
             animate(n, "position", CGPoint(x: center.x - shift.x, y: center.y - shift.y), center)
+        case .moveIn:
+            // Like Keynote's "Move In": the new page slides over the old one, which drifts a
+            // little the same way (parallax), shrinks back and darkens.
+            let dim = CALayer()
+            dim.frame = full
+            dim.backgroundColor = CGColor(gray: 0, alpha: 1)
+            dim.opacity = 0
+            n.shadowColor = CGColor(gray: 0, alpha: 1)
+            n.shadowOpacity = 0.5
+            n.shadowRadius = 12
+            container.backgroundColor = CGColor(gray: 0, alpha: 1)
+            container.addSublayer(o)
+            container.addSublayer(dim)
+            container.addSublayer(n)
+            animate(o, "position", center, CGPoint(x: center.x + 0.3 * shift.x, y: center.y + 0.3 * shift.y))
+            animate(o, "transform.scale", 1.0, 0.9)
+            animate(dim, "opacity", 0.0, 0.5)
+            animate(n, "position", CGPoint(x: center.x - shift.x, y: center.y - shift.y), center)
         case .uncover:
             container.addSublayer(n)
             container.addSublayer(o)

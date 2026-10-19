@@ -77,6 +77,7 @@ final class TransitionTests: XCTestCase {
     func testOwnStylesAreNotReadFromThePDF() throws {
         XCTAssertEqual(try transition("/S /Cube")?.style, .dissolve, "not a PDF style")
         XCTAssertEqual(try transition("/S /FadeThroughBlack")?.style, .dissolve)
+        XCTAssertEqual(try transition("/S /MoveIn")?.style, .dissolve)
     }
 
     func testSavesTheDocumentTransitionInTheSidecar() throws {

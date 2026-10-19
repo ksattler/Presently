@@ -9,18 +9,18 @@ struct PageTransition: Equatable {
         case replace = "R", dissolve = "Dissolve", fade = "Fade", glitter = "Glitter"
         case wipe = "Wipe", push = "Push", cover = "Cover", uncover = "Uncover", fly = "Fly"
         case split = "Split", blinds = "Blinds", box = "Box"
-        case fadeThroughBlack = "FadeThroughBlack", zoom = "Zoom", flip = "Flip", cube = "Cube"
+        case fadeThroughBlack = "FadeThroughBlack", zoom = "Zoom", flip = "Flip", cube = "Cube", moveIn = "MoveIn"
 
         var id: Self { self }
 
         /// Part of the PDF spec — and of pdfpc, whose transition names are the same.
-        var isStandard: Bool { ![.fadeThroughBlack, .zoom, .flip, .cube].contains(self) }
+        var isStandard: Bool { ![.fadeThroughBlack, .zoom, .flip, .cube, .moveIn].contains(self) }
 
         /// Name in pdfpc's transition string (ours use the same scheme).
         var pdfpcName: String { self == .replace ? "replace" : rawValue.lowercased() }
 
         /// Which of the parameters the style uses.
-        var hasDirection: Bool { [.wipe, .push, .cover, .uncover, .fly, .glitter, .flip, .cube].contains(self) }
+        var hasDirection: Bool { [.wipe, .push, .cover, .uncover, .fly, .glitter, .flip, .cube, .moveIn].contains(self) }
         var hasLineOrientation: Bool { [.split, .blinds].contains(self) }
         var hasInOut: Bool { [.split, .box, .zoom].contains(self) }
 
@@ -42,6 +42,7 @@ struct PageTransition: Equatable {
             case .zoom:             String(localized: "Zoom")
             case .flip:             String(localized: "Flip")
             case .cube:             String(localized: "Cube")
+            case .moveIn:           String(localized: "Move In")
             }
         }
     }

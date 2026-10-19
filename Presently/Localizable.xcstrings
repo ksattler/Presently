@@ -1201,6 +1201,16 @@
         }
       }
     },
+    "Move In": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hineinbewegen"
+          }
+        }
+      }
+    },
     "Movement": {
       "localizations": {
         "de": {
