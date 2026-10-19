@@ -44,10 +44,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
 
         let w: NSWindow
         if screens.windowed {
-            let size = CGSize(width: 960, height: 540)
-            let frame = CGRect(x: screen.visibleFrame.midX - size.width / 2, y: screen.visibleFrame.midY - size.height / 2,
-                               width: size.width, height: size.height)
-            w = AudienceWindow(contentRect: frame, styleMask: [.titled, .closable, .resizable, .miniaturizable],
+            w = AudienceWindow(contentRect: Self.rehearsalFrame(in: screen.visibleFrame), styleMask: [.titled, .closable, .resizable, .miniaturizable],
                                backing: .buffered, defer: false)
             w.title = String(localized: "Audience – \(presenterWindow?.title ?? String(localized: "Presentation"))")
         } else {
@@ -87,6 +84,12 @@ final class PresentationController: NSObject, NSWindowDelegate {
         w.makeKeyAndOrderFront(nil)
         NSAnimationContext.runAnimationGroup { $0.duration = 0.2; w.animator().alphaValue = 1 }
         if !screens.windowed { NSCursor.setHiddenUntilMouseMoves(true) }
+    }
+
+    /// The audience window for rehearsal: 16:9, centered, at most the display's visible area.
+    nonisolated static func rehearsalFrame(in visible: CGRect) -> CGRect {
+        let size = CGSize(width: min(960, visible.width), height: min(540, visible.height))
+        return CGRect(x: visible.midX - size.width / 2, y: visible.midY - size.height / 2, width: size.width, height: size.height)
     }
 
     func stop() {
@@ -171,7 +174,10 @@ final class PresentationController: NSObject, NSWindowDelegate {
               let session else { return }
         let screens = NSScreen.screens
         let presenterID = presenterWindow?.screen?.displayID
-        switch Self.audiencePlacement(intended: intended, presenter: presenterID, available: screens.compactMap(\.displayID)) {
+        let update = Self.placementUpdate(intended: intended, presenter: presenterID,
+                                          available: screens.compactMap(\.displayID))
+        audienceDisplayID = update.intended
+        switch update.placement {
         case .hide:
             if aw.isVisible {
                 aw.orderOut(nil)
@@ -181,25 +187,42 @@ final class PresentationController: NSObject, NSWindowDelegate {
             session.audienceDisconnected = true
         case .show(let id):
             guard let screen = screens.first(where: { $0.displayID == id }) else { return }
-            // Moved off the presenter's display (projector plugged in later): that's home now.
-            // Not when standing in for a disconnected display — it should come back there.
-            if intended == presenterID { audienceDisplayID = id }
             if aw.frame != screen.frame { aw.setFrame(screen.frame, display: true) }
             hideMenuBar(ifOn: screen)
             if !aw.isVisible { aw.makeKeyAndOrderFront(nil) }
             session.audienceDisconnected = false
-            // The presenter view must not stay hidden under the audience window.
-            if let pw = presenterWindow, presenterID == id, fullScreenObserver == nil,
-               let other = screens.first(where: { $0.displayID != id }) {
-                movePresenter(pw, to: other)
-            }
         }
+    }
+
+    struct PlacementUpdate: Equatable {
+        var placement: AudiencePlacement
+        /// The audience's display from now on.
+        var intended: CGDirectDisplayID
+    }
+
+    /// Everything `updateAudiencePlacement` decides, from display IDs only. The audience never
+    /// lands on the presenter's display while another one is free, so the presenter window
+    /// never has to make way.
+    nonisolated static func placementUpdate(intended: CGDirectDisplayID, presenter: CGDirectDisplayID?,
+                                            available: [CGDirectDisplayID]) -> PlacementUpdate {
+        let placement = audiencePlacement(intended: intended, presenter: presenter, available: available)
+        var update = PlacementUpdate(placement: placement, intended: intended)
+        // Moved off the presenter's display (projector plugged in later): that's home now.
+        // Not when standing in for a disconnected display — it should come back there.
+        if case .show(let id) = placement, intended == presenter { update.intended = id }
+        return update
     }
 
     /// Menu bar and Dock can still slide in on hover on the display that has them: auto-hide
     /// them while the audience window covers that display.
     private func hideMenuBar(ifOn screen: NSScreen) {
-        NSApp.presentationOptions = screen == NSScreen.screens.first ? [.autoHideMenuBar, .autoHideDock] : savedOptions
+        NSApp.presentationOptions = Self.presentationOptions(coveringMenuBarDisplay: screen == NSScreen.screens.first,
+                                                             saved: savedOptions)
+    }
+
+    nonisolated static func presentationOptions(coveringMenuBarDisplay: Bool,
+                                                saved: NSApplication.PresentationOptions) -> NSApplication.PresentationOptions {
+        coveringMenuBarDisplay ? [.autoHideMenuBar, .autoHideDock] : saved
     }
 
     // MARK: Swapping displays
@@ -292,43 +315,94 @@ final class PresentationController: NSObject, NSWindowDelegate {
         let area = view.convert(view.bounds, to: nil)   // window coordinates, y up
         let slide = PageRenderer.fittedRect(for: page, region: session.deck.notesLayout.slideRegion, in: area,
                                             zoom: session.audienceZoom, yUp: true)
+        return Self.normalized(event.locationInWindow, in: slide)
+    }
+
+    /// A point in window coordinates (y up) relative to the slide's rect: 0…1, y down.
+    nonisolated static func normalized(_ p: CGPoint, in slide: CGRect) -> CGPoint? {
         guard slide.width > 0, slide.height > 0 else { return nil }
-        let p = event.locationInWindow
         return CGPoint(x: (p.x - slide.minX) / slide.width, y: (slide.maxY - p.y) / slide.height)
     }
 
     private func installMonitor() {
         monitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .leftMouseDown, .rightMouseDown]) { [weak self] event in
             guard let self, let session = self.session, session.isPresenting else { return event }
-            let inAudience = event.window != nil && event.window === self.audienceWindow
-            let inPresenter = event.window != nil && event.window === self.presenterWindow
+            let source: EventSource = event.window == nil ? .other
+                : event.window === self.audienceWindow ? .audience
+                : event.window === self.presenterWindow ? .presenter : .other
+            let isKey = event.type == .keyDown
+            let input = EventInput(
+                kind: isKey ? .key : event.type == .rightMouseDown ? .rightClick : .leftClick,
+                source: source,
+                clickCount: isKey ? 0 : event.clickCount,
+                audienceTakesDrags: session.drawings.tool != nil || session.isSelectingZoom,
+                editingText: event.window?.firstResponder is NSText,
+                keyCode: isKey ? event.keyCode : 0,
+                characters: isKey ? event.charactersIgnoringModifiers : nil,
+                modifiers: event.modifierFlags)
 
-            switch event.type {
-            case .leftMouseDown where inAudience && (session.drawings.tool != nil || session.isSelectingZoom):
-                return event   // drawing or selecting a zoom on the audience view
-            case .leftMouseDown where inAudience && event.clickCount == 1:
+            switch Self.route(input) {
+            case .passThrough:
+                return event
+            case .clickOnAudience:
                 // A link on the slide is followed; anywhere else a click advances.
                 if let p = self.audienceSlidePoint(event),
                    session.click(atNormalized: p, pageIndex: session.audienceIndex, unfreeze: true) { return nil }
                 session.handle(.next)
                 return nil
-            case .rightMouseDown where inAudience:
+            case .previous:
                 session.handle(.previous)
                 return nil
-            case .keyDown where inAudience || inPresenter:
-                // Typing in the presenter window (notes, timer duration) stays there — except the
-                // clicker's page keys, so the talk can go on while a note is being edited.
-                if event.window?.firstResponder is NSText, !Self.isClickerPageKey(event.keyCode) { return event }
-                guard let action = PresentKeyAction(keyCode: event.keyCode, characters: event.charactersIgnoringModifiers,
-                                                    modifiers: event.modifierFlags)
-                else { return event }
-                if inAudience, self.audienceWindow?.styleMask == .borderless { NSCursor.setHiddenUntilMouseMoves(true) }
+            case .key(let action):
+                if source == .audience, self.audienceWindow?.styleMask == .borderless { NSCursor.setHiddenUntilMouseMoves(true) }
                 if action == .swapScreens { self.swapScreens(); return nil }
                 if !session.handle(action), action == .exit { self.stop() }
                 return nil
-            default:
-                return event
             }
+        }
+    }
+
+    enum EventSource { case audience, presenter, other }
+
+    /// What the event monitor needs to know about an event, without `NSEvent`.
+    struct EventInput {
+        enum Kind { case key, leftClick, rightClick }
+        var kind: Kind
+        var source: EventSource
+        var clickCount = 1
+        /// A drawing tool or the zoom selection is active: the audience view takes clicks itself.
+        var audienceTakesDrags = false
+        /// A text view has focus (notes editor, timer duration).
+        var editingText = false
+        var keyCode: UInt16 = 0
+        var characters: String? = nil
+        var modifiers: NSEvent.ModifierFlags = []
+    }
+
+    enum EventRoute: Equatable {
+        /// Not ours: the event goes on to the window.
+        case passThrough
+        /// Follow a link at the click, else next page.
+        case clickOnAudience
+        case previous
+        case key(PresentKeyAction)
+    }
+
+    /// How the event monitor handles an event during a presentation.
+    nonisolated static func route(_ e: EventInput) -> EventRoute {
+        switch (e.kind, e.source) {
+        case (.leftClick, .audience):
+            // Drawing or selecting a zoom; a double click's second click doesn't turn twice.
+            return e.audienceTakesDrags || e.clickCount != 1 ? .passThrough : .clickOnAudience
+        case (.rightClick, .audience):
+            return .previous
+        case (.key, .audience), (.key, .presenter):
+            // Typing in the presenter window (notes, timer duration) stays there — except the
+            // clicker's page keys, so the talk can go on while a note is being edited.
+            if e.editingText, !isClickerPageKey(e.keyCode) { return .passThrough }
+            return PresentKeyAction(keyCode: e.keyCode, characters: e.characters, modifiers: e.modifiers).map { .key($0) } ?? .passThrough
+        default:
+            return .passThrough
         }
     }
 
