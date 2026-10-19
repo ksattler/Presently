@@ -315,7 +315,7 @@
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					2D5F9CC7B8E89256A7BE0D0D = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 7XW8432Z53;
 						ProvisioningStyle = Automatic;
 					};
 					F84A6CD911EC101BBCDE276C = {
@@ -619,6 +619,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7XW8432Z53;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -637,6 +638,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7XW8432Z53;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

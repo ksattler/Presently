@@ -83,4 +83,6 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.presently.app.tests
+        # Same team as the app: the hardened runtime only loads a test bundle signed by the host's team.
+        DEVELOPMENT_TEAM: 7XW8432Z53
         GENERATE_INFOPLIST_FILE: YES
