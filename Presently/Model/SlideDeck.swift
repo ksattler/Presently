@@ -292,7 +292,8 @@ final class SlideDeck: ObservableObject {
         sidecar.hiddenPages = hiddenPages
         let url = PdfpcFile.url(forPDF: fileURL)
         // Nothing to store and no file yet: don't create an empty sidecar.
-        if notes.isEmpty, talkLimit == .none, endPage == nil, hiddenPages.isEmpty, defaultTransition == nil, !FileManager.default.fileExists(atPath: url.path) { return }
+        let nothingToStore = notes.isEmpty && talkLimit == .none && endPage == nil && hiddenPages.isEmpty && defaultTransition == nil
+        if nothingToStore, !FileManager.default.fileExists(atPath: url.path) { return }
         do {
             try sidecar.serialized(pageLabels: labels).write(to: url, options: .atomic)
             saveError = nil
