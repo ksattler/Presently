@@ -10,6 +10,8 @@ enum PageTransitionAnimator {
 
     /// Returns the overlay (to cancel it: remove it from its superlayer).
     @discardableResult
+    // One short case per style.
+    // swiftlint:disable:next function_body_length
     static func play(_ t: PageTransition, in host: CALayer, size: CGSize, scale: CGFloat,
                      old: CGImage, new: CGImage, completion: @escaping () -> Void) -> CALayer {
         let full = CGRect(origin: .zero, size: size)

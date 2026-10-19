@@ -77,9 +77,11 @@ Clickers usually send Page Up/Page Down, B or “.”, and F5/Esc for start/stop
 ```bash
 brew install xcodegen
 xcodegen generate
-xcodebuild -project Presently.xcodeproj -scheme Presently build
-xcodebuild test -project Presently.xcodeproj -scheme Presently CODE_SIGN_IDENTITY=-
+xcodebuild -project Presently.xcodeproj -scheme Presently -skipPackagePluginValidation build
+xcodebuild test -project Presently.xcodeproj -scheme Presently -skipPackagePluginValidation CODE_SIGN_IDENTITY=-
 ```
+
+SwiftLint runs in every build as a package plugin (Xcode asks once to trust it; on the command line `-skipPackagePluginValidation` does that). `brew install swiftlint` and `swiftlint` lint without building.
 
 ## License
 

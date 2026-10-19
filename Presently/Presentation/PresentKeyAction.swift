@@ -31,7 +31,7 @@ enum PresentKeyAction: Equatable {
     /// ⌘, ⌥ and ⌃ combinations are never handled, so menu shortcuts (⌘Q, ⌘W, …) keep working.
     init?(keyCode: UInt16, characters: String?, modifiers: NSEvent.ModifierFlags = []) {
         let mods = modifiers.intersection([.command, .option, .control, .shift])
-        guard mods.intersection([.command, .option, .control]).isEmpty else { return nil }
+        guard mods.isDisjoint(with: [.command, .option, .control]) else { return nil }
         let shift = mods.contains(.shift)
 
         switch keyCode {

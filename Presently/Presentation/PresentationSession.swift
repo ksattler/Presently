@@ -314,6 +314,8 @@ final class PresentationSession: ObservableObject {
 
     /// Returns false if the action isn't meaningful right now (event passes through).
     @discardableResult
+    // Esc's chain of "close the topmost thing" counts as complex.
+    // swiftlint:disable:next cyclomatic_complexity
     func handle(_ action: PresentKeyAction) -> Bool {
         // Any navigation shows the slides again.
         switch action {

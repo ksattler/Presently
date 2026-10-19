@@ -46,7 +46,7 @@ final class TypstTests: XCTestCase {
         XCTAssertEqual(root["defaultTransition"] as? String, "push:1:0:horizontal:outward")
         XCTAssertEqual(root["disableMarkdown"] as? Bool, false)
         let pages = try XCTUnwrap(root["pages"] as? [[String: Any]])
-        let byIdx = Dictionary(uniqueKeysWithValues: pages.map { ($0["idx"] as! Int, $0) })
+        let byIdx = Dictionary(uniqueKeysWithValues: pages.compactMap { p in (p["idx"] as? Int).map { ($0, p) } })
         XCTAssertEqual(byIdx[2]?["note"] as? String, "Edited")
         XCTAssertEqual(byIdx[5]?["label"] as? String, "4")
         XCTAssertEqual(byIdx[5]?["overlay"] as? Int, 2)

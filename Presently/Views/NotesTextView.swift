@@ -38,6 +38,8 @@ struct NotesTextView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSScrollView {
         let scroll = NSTextView.scrollableTextView()
+        // scrollableTextView() always holds an NSTextView.
+        // swiftlint:disable:next force_cast
         let tv = scroll.documentView as! NSTextView
         tv.delegate = context.coordinator
         tv.allowsUndo = true

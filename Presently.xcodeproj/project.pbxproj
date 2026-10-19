@@ -283,6 +283,7 @@
 			);
 			dependencies = (
 				4648A8721D55A5C891B56DF7 /* PBXTargetDependency */,
+				040423BC97CEA6AC06DD5EED /* PBXTargetDependency */,
 			);
 			name = PresentlyTests;
 			packageProductDependencies = (
@@ -302,6 +303,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				631DAA385462AF5709EA0C7A /* PBXTargetDependency */,
 			);
 			name = Presently;
 			packageProductDependencies = (
@@ -342,6 +344,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3E92858E7783D1B8ED721346 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				CA1867BB2CA37465F10420DE /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BE469EF6B46D879725A2A780 /* Products */;
@@ -437,10 +440,18 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		040423BC97CEA6AC06DD5EED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 3402E27E276736F9506F13F9 /* SwiftLintBuildToolPlugin */;
+		};
 		4648A8721D55A5C891B56DF7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F84A6CD911EC101BBCDE276C /* Presently */;
 			targetProxy = 2738487121C348F1A19A7630 /* PBXContainerItemProxy */;
+		};
+		631DAA385462AF5709EA0C7A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 2D0BF19884F863EC464A9E53 /* SwiftLintBuildToolPlugin */;
 		};
 /* End PBXTargetDependency section */
 
@@ -701,9 +712,27 @@
 				minimumVersion = 2.6.0;
 			};
 		};
+		CA1867BB2CA37465F10420DE /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = exactVersion;
+				version = 0.65.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2D0BF19884F863EC464A9E53 /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CA1867BB2CA37465F10420DE /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		3402E27E276736F9506F13F9 /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CA1867BB2CA37465F10420DE /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
 		916552D7C9021FAFBD901B7A /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3E92858E7783D1B8ED721346 /* XCRemoteSwiftPackageReference "Sparkle" */;

@@ -21,10 +21,11 @@ jobs:
         run: xcodebuild -version
 
       # Ad-hoc signing: the runner has no Developer ID certificate for the team.
+      # -skipPackagePluginValidation: trusts the SwiftLint build tool plugin (Xcode asks once).
       - name: Test
         run: |
           xcodebuild test -project Presently.xcodeproj -scheme Presently \
-            -destination 'platform=macOS' \
+            -destination 'platform=macOS' -skipPackagePluginValidation \
             CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= \
             | tee xcodebuild.log
           exit ${PIPESTATUS[0]}
