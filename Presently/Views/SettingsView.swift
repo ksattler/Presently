@@ -32,7 +32,7 @@ private struct PresentationSettings: View {
             }
             Toggle("Audience View in a Window (Rehearsal)", isOn: $screens.windowed)
             Toggle("Presenter View in Full Screen", isOn: $screens.presenterFullScreen)
-            Toggle("Play Transitions from the PDF", isOn: $transitionsEnabled)
+            Toggle("Play Transitions", isOn: $transitionsEnabled)
             Toggle("Timer starts on the first page turn", isOn: $timerStartsOnFirstTurn)
             Slider(value: $spotlightRadius, in: LaserPointer.spotlightRadiusRange) {
                 Text("Spotlight size")

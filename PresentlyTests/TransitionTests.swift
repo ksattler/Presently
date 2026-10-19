@@ -49,13 +49,81 @@ final class TransitionTests: XCTestCase {
         XCTAssertEqual(deck.transition(from: 2, to: 3)?.style, .wipe)
     }
 
+    func testDocumentTransitionOnlyWhereANewSlideBegins() {
+        // Slides 1, 2 (three overlays), 3; page 3 has its own /Trans.
+        let deck = SlideDeck(pdf: PDFFixture.document(pages: [
+            .init(label: "1"), .init(label: "2"), .init(label: "2"), .init(label: "2", transition: "/S /Wipe"), .init(label: "3"),
+        ]), fileURL: nil)
+        deck.defaultTransition = PageTransition(style: .cube)
+        XCTAssertEqual(deck.transition(from: 0, to: 1)?.style, .cube, "new slide")
+        XCTAssertNil(deck.transition(from: 1, to: 2), "overlay step: no document transition")
+        XCTAssertEqual(deck.transition(from: 2, to: 3)?.style, .wipe, "/Trans from the PDF plays on every page")
+        XCTAssertEqual(deck.transition(from: 3, to: 4)?.style, .cube)
+        XCTAssertNil(deck.transition(from: 4, to: 1), "going back: instant")
+
+        deck.defaultTransition = nil
+        XCTAssertNil(deck.transition(from: 0, to: 1))
+    }
+
+    func testPdfpcStringsRoundTrip() {
+        for style in PageTransition.Style.allCases {
+            let t = PageTransition(style: style, duration: 0.7, horizontal: false, inward: false, direction: 270)
+            XCTAssertEqual(PageTransition.parse(pdfpc: t.pdfpcString), t, "\(style)")
+        }
+        XCTAssertEqual(PageTransition(style: .push).pdfpcString, "push:1:0:horizontal:inward")
+        XCTAssertEqual(PageTransition(style: .fadeThroughBlack, duration: 1.5).pdfpcString, "fadethroughblack:1.5:0:horizontal:inward")
+    }
+
+    func testOwnStylesAreNotReadFromThePDF() throws {
+        XCTAssertEqual(try transition("/S /Cube")?.style, .dissolve, "not a PDF style")
+        XCTAssertEqual(try transition("/S /FadeThroughBlack")?.style, .dissolve)
+    }
+
+    func testSavesTheDocumentTransitionInTheSidecar() throws {
+        let dir = try PDFFixture.temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let pdfURL = dir.appendingPathComponent("talk.pdf"), sidecarURL = dir.appendingPathComponent("talk.pdfpc")
+        let data = PDFFixture.data(pages: [.init(), .init()])
+        try data.write(to: pdfURL)
+        func root() throws -> [String: Any] {
+            try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: sidecarURL)) as? [String: Any])
+        }
+
+        let deck = try XCTUnwrap(SlideDeck(data: data, fileURL: pdfURL))
+        deck.defaultTransition = PageTransition(style: .wipe, duration: 0.5, direction: 90)
+        deck.saveNow()
+        XCTAssertEqual(try root()["defaultTransition"] as? String, "wipe:0.5:90:horizontal:inward", "pdfpc reads it")
+        XCTAssertNil(try root()[PdfpcFile.transitionKey])
+
+        deck.defaultTransition = PageTransition(style: .flip)
+        deck.saveNow()
+        XCTAssertNil(try root()["defaultTransition"], "pdfpc doesn't know flip")
+        XCTAssertEqual(try root()[PdfpcFile.transitionKey] as? String, "flip:1:0:horizontal:inward")
+        XCTAssertEqual(try XCTUnwrap(SlideDeck(data: data, fileURL: pdfURL)).defaultTransition, PageTransition(style: .flip), "loaded again")
+
+        deck.defaultTransition = nil
+        deck.saveNow()
+        XCTAssertNil(try root()["defaultTransition"])
+        XCTAssertNil(try root()[PdfpcFile.transitionKey])
+    }
+
+    func testNoSidecarWithoutChanges() throws {
+        let dir = try PDFFixture.temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let pdfURL = dir.appendingPathComponent("talk.pdf")
+        let data = PDFFixture.data(pages: [.init()])
+        try data.write(to: pdfURL)
+        try XCTUnwrap(SlideDeck(data: data, fileURL: pdfURL)).saveNow()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: dir.appendingPathComponent("talk.pdfpc").path))
+    }
+
     func testPageViewOverlaysAndCancels() {
         let doc = PDFFixture.document(pages: [.init(), .init()])
         let view = PDFPageNSView(frame: CGRect(x: 0, y: 0, width: 320, height: 240))
         view.show(doc.page(at: 0), index: 0, transition: nil)
         XCTAssertNil(view.transitionLayer)
 
-        let styles: [PageTransition.Style] = [.dissolve, .wipe, .push, .cover, .uncover, .split, .box, .blinds, .fly]
+        let styles = PageTransition.Style.allCases.filter { $0 != .replace }
         for (i, style) in styles.enumerated() {
             let target = (i + 1) % 2   // alternate between the two pages
             view.show(doc.page(at: target), index: target, transition: PageTransition(style: style, duration: 2))

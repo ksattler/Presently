@@ -4,9 +4,10 @@ import Foundation
 /// so notes are shared with pdfpc and tools that write its files.
 ///
 /// Interpreted: `note`s and `hidden` (skipped in the presentation) per page, `duration`
-/// (minutes), `endTime` ("HH:MM") and our own `presentlyEndPage` (last page of the talk; later
-/// pages are backup). Every other key — top level and per page — is kept and written back
-/// unchanged.
+/// (minutes), `endTime` ("HH:MM"), `defaultTransition` and our own `presentlyEndPage` (last page
+/// of the talk; later pages are backup) and `presentlyTransition` (a document transition in a
+/// style pdfpc doesn't know). Every other key — top level and per page — is kept and written
+/// back unchanged.
 struct PdfpcFile {
     static let fileExtension = "pdfpc"
 
@@ -22,14 +23,29 @@ struct PdfpcFile {
     /// differently (user slides), so it is left alone.
     var endPage: Int?
 
-    /// pdfpc's own keys, read only (kept in the file unchanged): the transition for pages without
-    /// `/Trans` (Typst can't write those), the talk's last *user slide* (0-based, overlays
-    /// count once — e.g. from Polylux) and whether notes are plain text.
-    var defaultTransition: PageTransition? { (topLevel["defaultTransition"] as? String).flatMap { PageTransition.parse(pdfpc: $0) } }
+    /// The transition for pages without `/Trans` (Typst can't write those; Touying writes
+    /// pdfpc's `defaultTransition`). Our own styles go to `presentlyTransition` so pdfpc keeps
+    /// understanding the file; it then plays no default transition. Only set when changed, so
+    /// the string another tool wrote stays as it was.
+    var defaultTransition: PageTransition? {
+        get {
+            (topLevel[Self.transitionKey] as? String).flatMap { PageTransition.parse(pdfpc: $0) }
+                ?? (topLevel["defaultTransition"] as? String).flatMap { PageTransition.parse(pdfpc: $0) }
+        }
+        set {
+            let standard = newValue.map(\.style.isStandard) ?? false
+            topLevel["defaultTransition"] = standard ? newValue?.pdfpcString : nil
+            topLevel[Self.transitionKey] = standard ? nil : newValue?.pdfpcString
+        }
+    }
+
+    /// pdfpc's own keys, read only (kept in the file unchanged): the talk's last *user slide*
+    /// (0-based, overlays count once — e.g. from Polylux) and whether notes are plain text.
     var endSlide: Int? { (topLevel["endSlide"] as? Int).flatMap { $0 >= 0 ? $0 : nil } }
     var disableMarkdown: Bool { topLevel["disableMarkdown"] as? Bool ?? false }
 
     static let endPageKey = "presentlyEndPage"
+    static let transitionKey = "presentlyTransition"
     /// Written before the app was renamed to Presently; read, replaced on save.
     static let legacyEndPageKey = "pdfpresenterEndPage"
 

@@ -291,12 +291,12 @@
         }
       }
     },
-    "**Transitions** from the PDF (e.g. from LaTeX Beamer) are played when advancing to the next page. Turn them off via *Presentation → Play Transitions from the PDF*.": {
+    "**Transitions** from the PDF (e.g. from LaTeX Beamer) are played when advancing to the next page. For the other slides, choose a transition for the document with the transition button in the toolbar – with a preview. It plays only where a new slide begins, not between overlays, and is saved in the pdfpc file. Turn all transitions off via *Presentation → Play Transitions*.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "**Übergänge** aus dem PDF (z. B. von LaTeX Beamer) werden beim Weiterblättern zur nächsten Seite abgespielt. Abschalten über *Präsentation → Übergänge aus dem PDF abspielen*."
+            "value": "**Übergänge** aus dem PDF (z. B. von LaTeX Beamer) werden beim Weiterblättern zur nächsten Seite abgespielt. Für die übrigen Folien wählst du mit dem Übergangs-Symbol in der Symbolleiste einen Übergang für das Dokument – mit Vorschau. Er wird nur abgespielt, wo eine neue Folie beginnt, nicht zwischen Overlays, und in der pdfpc-Datei gespeichert. Alle Übergänge abschalten über *Präsentation → Übergänge abspielen*."
           }
         }
       }
@@ -501,12 +501,32 @@
         }
       }
     },
+    "Blinds": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jalousie"
+          }
+        }
+      }
+    },
     "Blue": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Blau"
+          }
+        }
+      }
+    },
+    "Box": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechteck"
           }
         }
       }
@@ -591,6 +611,26 @@
         }
       }
     },
+    "Cover": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Überdecken"
+          }
+        }
+      }
+    },
+    "Cube": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Würfel"
+          }
+        }
+      }
+    },
     "Current": {
       "localizations": {
         "de": {
@@ -607,6 +647,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aktuelle Folie rechts"
+          }
+        }
+      }
+    },
+    "Direction": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Richtung"
           }
         }
       }
@@ -631,6 +681,16 @@
         }
       }
     },
+    "Dissolve": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auflösen"
+          }
+        }
+      }
+    },
     "Don't Skip Slide": {
       "localizations": {
         "de": {
@@ -647,6 +707,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fertig"
+          }
+        }
+      }
+    },
+    "Down": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach unten"
           }
         }
       }
@@ -707,6 +777,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dauer"
+          }
+        }
+      }
+    },
+    "Duration: %@ s": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dauer: %@ s"
           }
         }
       }
@@ -811,12 +891,52 @@
         }
       }
     },
+    "Fade": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Überblenden"
+          }
+        }
+      }
+    },
+    "Fade through Black": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über Schwarz blenden"
+          }
+        }
+      }
+    },
     "First / last page": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Erste / letzte Seite"
+          }
+        }
+      }
+    },
+    "Flip": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umdrehen"
+          }
+        }
+      }
+    },
+    "Fly In": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfliegen"
           }
         }
       }
@@ -867,6 +987,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erste Schritte"
+          }
+        }
+      }
+    },
+    "Glitter": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glitzern"
           }
         }
       }
@@ -941,12 +1071,42 @@
         }
       }
     },
+    "Horizontal": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Horizontal"
+          }
+        }
+      }
+    },
+    "In": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinein"
+          }
+        }
+      }
+    },
     "In the PDF: %@": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Im PDF: %@"
+          }
+        }
+      }
+    },
+    "Inward": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach innen"
           }
         }
       }
@@ -1011,12 +1171,42 @@
         }
       }
     },
+    "Left": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach links"
+          }
+        }
+      }
+    },
     "Limit": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Begrenzung"
+          }
+        }
+      }
+    },
+    "Lines": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linien"
+          }
+        }
+      }
+    },
+    "Movement": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bewegung"
           }
         }
       }
@@ -1047,6 +1237,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nächste Seite"
+          }
+        }
+      }
+    },
+    "No Transition": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Übergang"
           }
         }
       }
@@ -1201,6 +1401,26 @@
         }
       }
     },
+    "Out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heraus"
+          }
+        }
+      }
+    },
+    "Outward": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach außen"
+          }
+        }
+      }
+    },
     "Overview": {
       "localizations": {
         "de": {
@@ -1281,12 +1501,22 @@
         }
       }
     },
-    "Play Transitions from the PDF": {
+    "Play Transitions": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Übergänge aus dem PDF abspielen"
+            "value": "Übergänge abspielen"
+          }
+        }
+      }
+    },
+    "Plays when a new slide begins, not between the overlays of a slide. Transitions in the PDF take precedence. Saved in the pdfpc file next to the PDF.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird abgespielt, wenn eine neue Folie beginnt, nicht zwischen den Overlays einer Folie. Übergänge im PDF haben Vorrang. Gespeichert in der pdfpc-Datei neben dem PDF."
           }
         }
       }
@@ -1381,6 +1611,16 @@
         }
       }
     },
+    "Preview": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorschau"
+          }
+        }
+      }
+    },
     "Previous page": {
       "localizations": {
         "de": {
@@ -1397,6 +1637,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Beamer getrennt – Publikumsansicht kehrt beim Wiederverbinden zurück"
+          }
+        }
+      }
+    },
+    "Push": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schieben"
           }
         }
       }
@@ -1447,6 +1697,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Timer zurücksetzen (R)"
+          }
+        }
+      }
+    },
+    "Right": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach rechts"
           }
         }
       }
@@ -1557,6 +1817,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kleinere Schrift"
+          }
+        }
+      }
+    },
+    "Split": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teilen"
           }
         }
       }
@@ -1841,12 +2111,52 @@
         }
       }
     },
+    "Transition": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übergang"
+          }
+        }
+      }
+    },
+    "Transition between slides": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übergang zwischen Folien"
+          }
+        }
+      }
+    },
+    "Uncover": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufdecken"
+          }
+        }
+      }
+    },
     "Undo / clear drawing": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Strich zurück / alle löschen"
+          }
+        }
+      }
+    },
+    "Up": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach oben"
           }
         }
       }
@@ -1901,6 +2211,16 @@
         }
       }
     },
+    "Vertical": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vertikal"
+          }
+        }
+      }
+    },
     "View": {
       "localizations": {
         "de": {
@@ -1927,6 +2247,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Weiß"
+          }
+        }
+      }
+    },
+    "Wipe": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wischen"
           }
         }
       }

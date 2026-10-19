@@ -49,7 +49,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             String(localized: "**Rehearsal:** *Audience View in a Window (Rehearsal)* opens the audience view as a regular window – useful with a single display."),
             String(localized: "**Swap displays (S)** when the audience view ended up on the wrong display. The choice is remembered."),
             String(localized: "**Projector unplugged:** the presentation keeps running. The audience view is hidden (or moves to a free display) and comes back when the projector is reconnected."),
-            String(localized: "**Transitions** from the PDF (e.g. from LaTeX Beamer) are played when advancing to the next page. Turn them off via *Presentation → Play Transitions from the PDF*."),
+            String(localized: "**Transitions** from the PDF (e.g. from LaTeX Beamer) are played when advancing to the next page. For the other slides, choose a transition for the document with the transition button in the toolbar – with a preview. It plays only where a new slide begins, not between overlays, and is saved in the pdfpc file. Turn all transitions off via *Presentation → Play Transitions*."),
         ]
         case .presenterView: [
             String(localized: "While presenting, the document window shows the presenter view: current slide, next slide, upcoming pages, notes, elapsed time and clock."),

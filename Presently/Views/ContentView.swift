@@ -136,6 +136,7 @@ private struct BrowseView: View {
                     }
                     .help("Time per slide in the last presentation")
                 }
+                TransitionButton(deck: deck, currentIndex: session.currentIndex)
                 Menu {
                     PresentationScreenMenu()
                 } label: {

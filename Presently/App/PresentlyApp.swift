@@ -92,7 +92,7 @@ private struct TransitionsToggle: View {
     @AppStorage(PageTransition.enabledKey) private var enabled = true
 
     var body: some View {
-        Toggle("Play Transitions from the PDF", isOn: $enabled)
+        Toggle("Play Transitions", isOn: $enabled)
     }
 }
 
