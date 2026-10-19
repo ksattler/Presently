@@ -175,8 +175,7 @@ final class PresentationController: NSObject, NSWindowDelegate {
         let screens = NSScreen.screens
         let presenterID = presenterWindow?.screen?.displayID
         let update = Self.placementUpdate(intended: intended, presenter: presenterID,
-                                          available: screens.compactMap(\.displayID),
-                                          presenterLeavingFullScreen: fullScreenObserver != nil)
+                                          available: screens.compactMap(\.displayID))
         audienceDisplayID = update.intended
         switch update.placement {
         case .hide:
@@ -192,10 +191,6 @@ final class PresentationController: NSObject, NSWindowDelegate {
             hideMenuBar(ifOn: screen)
             if !aw.isVisible { aw.makeKeyAndOrderFront(nil) }
             session.audienceDisconnected = false
-            if let pw = presenterWindow, let target = update.movePresenterTo,
-               let other = screens.first(where: { $0.displayID == target }) {
-                movePresenter(pw, to: other)
-            }
         }
     }
 
@@ -203,25 +198,18 @@ final class PresentationController: NSObject, NSWindowDelegate {
         var placement: AudiencePlacement
         /// The audience's display from now on.
         var intended: CGDirectDisplayID
-        /// The presenter window has to make way to this display.
-        var movePresenterTo: CGDirectDisplayID?
     }
 
-    /// Everything `updateAudiencePlacement` decides, from display IDs only.
+    /// Everything `updateAudiencePlacement` decides, from display IDs only. The audience never
+    /// lands on the presenter's display while another one is free, so the presenter window
+    /// never has to make way.
     nonisolated static func placementUpdate(intended: CGDirectDisplayID, presenter: CGDirectDisplayID?,
-                                            available: [CGDirectDisplayID],
-                                            presenterLeavingFullScreen: Bool) -> PlacementUpdate {
+                                            available: [CGDirectDisplayID]) -> PlacementUpdate {
         let placement = audiencePlacement(intended: intended, presenter: presenter, available: available)
         var update = PlacementUpdate(placement: placement, intended: intended)
-        guard case .show(let id) = placement else { return update }
         // Moved off the presenter's display (projector plugged in later): that's home now.
         // Not when standing in for a disconnected display — it should come back there.
-        if intended == presenter { update.intended = id }
-        // The presenter view must not stay hidden under the audience window (unless a move
-        // is already under way).
-        if presenter == id, !presenterLeavingFullScreen {
-            update.movePresenterTo = available.first { $0 != id }
-        }
+        if case .show(let id) = placement, intended == presenter { update.intended = id }
         return update
     }
 

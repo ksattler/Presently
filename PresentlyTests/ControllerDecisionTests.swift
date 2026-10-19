@@ -69,9 +69,9 @@ final class ControllerDecisionTests: XCTestCase {
 
     // MARK: Displays connected / disconnected
 
-    private func update(_ intended: CGDirectDisplayID, _ presenter: CGDirectDisplayID?, _ available: [CGDirectDisplayID],
-                        leaving: Bool = false) -> C.PlacementUpdate {
-        C.placementUpdate(intended: intended, presenter: presenter, available: available, presenterLeavingFullScreen: leaving)
+    private func update(_ intended: CGDirectDisplayID, _ presenter: CGDirectDisplayID?, _ available: [CGDirectDisplayID])
+        -> C.PlacementUpdate {
+        C.placementUpdate(intended: intended, presenter: presenter, available: available)
     }
 
     func testNothingChangesWhileEverythingIsConnected() {
@@ -97,6 +97,21 @@ final class ControllerDecisionTests: XCTestCase {
         XCTAssertEqual(update(1, 1, [1]), .init(placement: .show(1), intended: 1))
         XCTAssertEqual(update(2, nil, [2]), .init(placement: .show(2), intended: 2), "presenter window gone")
         XCTAssertEqual(update(5, nil, [1]), .init(placement: .show(1), intended: 5), "stand-in, unknown presenter display")
+    }
+
+    func testAudienceNeverCoversThePresenterWhileAnotherDisplayIsFree() {
+        // Why the presenter window never has to make way after a display change.
+        let ids: [CGDirectDisplayID] = [1, 2, 3, 4]
+        for mask in 1..<(1 << ids.count) {
+            let available = ids.indices.filter { mask & (1 << $0) != 0 }.map { ids[$0] }
+            for intended in ids {
+                for presenter in [nil] + ids {
+                    guard case .show(let id) = update(intended, presenter, available).placement else { continue }
+                    XCTAssertTrue(id != presenter || available.allSatisfy { $0 == id },
+                                  "intended \(intended), presenter \(String(describing: presenter)), available \(available)")
+                }
+            }
+        }
     }
 
     // MARK: Small things
