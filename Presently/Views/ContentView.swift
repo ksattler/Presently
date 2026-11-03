@@ -62,8 +62,19 @@ private struct BrowseView: View {
     /// selection during view updates, and publishing session changes from there is not allowed.
     @State private var selection: Int?
 
+    init(session: PresentationSession, deck: SlideDeck,
+         startPresenting: @escaping () -> Void, showSlideTimes: @escaping () -> Void) {
+        self.session = session
+        self.deck = deck
+        self.startPresenting = startPresenting
+        self.showSlideTimes = showSlideTimes
+        // Selected from the start (e.g. the page shown last time), not only after onAppear.
+        _selection = State(initialValue: session.currentIndex)
+    }
+
     var body: some View {
         NavigationSplitView {
+            ScrollViewReader { proxy in
             List(selection: $selection) {
                 ForEach(0..<deck.pageCount, id: \.self) { i in
                     VStack(spacing: 4) {
@@ -111,9 +122,18 @@ private struct BrowseView: View {
                 }
             }
             .navigationSplitViewColumnWidth(min: 160, ideal: 200, max: 320)
-            .onAppear { selection = session.currentIndex }
+            .onAppear {
+                selection = session.currentIndex
+                // The list has no rows laid out yet in onAppear: scroll on the next turn.
+                DispatchQueue.main.async { proxy.scrollTo(session.currentIndex, anchor: .center) }
+            }
             .onChange(of: selection) { if let selection { session.go(to: selection) } }
-            .onChange(of: session.currentIndex) { selection = session.currentIndex }
+            .onChange(of: session.currentIndex) {
+                selection = session.currentIndex
+                // Paging with keys or a clicker: keep the page in sight (no-op if visible).
+                proxy.scrollTo(session.currentIndex)
+            }
+            }
         } detail: {
             VStack(spacing: 0) {
             NotesLayoutWarning(deck: deck)
